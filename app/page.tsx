@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { getPublishedTrips } from '@/lib/supabase'
 import { TripCard } from '@/components/TripCard'
 
-export const revalidate = 3600
+export const revalidate = 60
 
 export default async function HomePage() {
   const trips = await getPublishedTrips().catch(() => [])
