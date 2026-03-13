@@ -4,73 +4,58 @@ import Image from 'next/image'
 import type { FeaturedTrip } from '@/lib/supabase'
 
 export function TripCard({ trip }: { trip: FeaturedTrip }) {
-  const nights = trip.depart_date && trip.return_date
-    ? Math.round((new Date(trip.return_date).getTime() - new Date(trip.depart_date).getTime()) / 86400000)
-    : null
-
-  const departDate = trip.depart_date
-    ? new Date(trip.depart_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    : null
-
   return (
-    <Link href={`/trips/${trip.id}`} className="trip-card" style={{ display: 'block', textDecoration: 'none' }}>
+    <article className="card-hover" style={{ background: 'white', overflow: 'hidden' }}>
       {/* Image */}
-      <div style={{ position: 'relative', height: '220px', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 240 }}>
         {trip.cover_image_url ? (
-          <Image src={trip.cover_image_url} alt={trip.trip_name} fill style={{ objectFit: 'cover', transition: 'transform 0.5s ease' }} />
+          <Image src={trip.cover_image_url} alt={trip.trip_name} fill style={{ objectFit: 'cover' }} />
         ) : (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0c4a6e, #0ea5e9)' }}>
-            <span style={{ fontSize: '60px', opacity: 0.4 }}>🌊</span>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, var(--navy), #0ea5e9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 60, opacity: 0.3 }}>🌊</span>
           </div>
         )}
-        <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '8px' }}>
-          {trip.trip_type === 'group' && (
-            <span style={{ padding: '4px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: 700, background: '#fde047', color: '#0c4a6e' }}>👥 Group</span>
-          )}
-          {nights && (
-            <span style={{ padding: '4px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: 600, background: 'rgba(0,0,0,0.5)', color: 'white', backdropFilter: 'blur(4px)' }}>{nights} nights</span>
-          )}
-        </div>
+        {trip.popular && (
+          <div style={{ position: 'absolute', top: 16, left: 16, background: 'var(--gold)', padding: '4px 12px' }}>
+            <span style={{ fontSize: '0.6rem', fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--navy)' }}>Popular</span>
+          </div>
+        )}
+        {trip.starting_from && (
+          <div style={{ position: 'absolute', bottom: 16, right: 16, background: 'rgba(13,27,42,0.85)', padding: '6px 14px', backdropFilter: 'blur(4px)' }}>
+            <span style={{ fontSize: '0.7rem', color: 'white', letterSpacing: '0.08em' }}>From <strong style={{ color: 'var(--gold)' }}>{trip.starting_from}</strong> / person</span>
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <div style={{ padding: '20px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '8px', lineHeight: 1.3 }}>{trip.trip_name}</h3>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-          <span style={{ fontSize: '13px' }}>📍</span>
-          <span style={{ color: '#64748b', fontSize: '13px' }}>{trip.destination}</span>
+      <div style={{ padding: 28 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+          <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)' }}>{trip.trip_name}</h3>
+          {trip.duration && (
+            <span style={{ fontSize: '0.7rem', color: 'var(--slate)', letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap', paddingLeft: 8 }}>{trip.duration}</span>
+          )}
         </div>
 
-        {departDate && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '13px' }}>📅</span>
-            <span style={{ color: '#64748b', fontSize: '13px' }}>{departDate}</span>
-          </div>
+        {trip.description && (
+          <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 20 }}>{trip.description}</p>
         )}
 
-        {trip.tags && trip.tags.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-            {trip.tags.slice(0, 3).map((tag) => (
-              <span key={tag} style={{ padding: '3px 10px', borderRadius: '9999px', fontSize: '11px', background: '#e0f2fe', color: '#0369a1' }}>{tag}</span>
+        {trip.highlights && trip.highlights.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
+            {trip.highlights.map(h => (
+              <span key={h} style={{ fontSize: '0.7rem', padding: '4px 10px', background: 'var(--cream)', color: 'var(--slate)', letterSpacing: '0.05em' }}>{h}</span>
             ))}
           </div>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
-          {trip.budget_range ? (
-            <div>
-              <div style={{ fontSize: '11px', color: '#94a3b8' }}>From</div>
-              <div style={{ fontSize: '20px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif' }}>{trip.budget_range}</div>
-            </div>
-          ) : (
-            <span style={{ fontSize: '13px', color: '#94a3b8' }}>Contact for pricing</span>
-          )}
-          <span style={{ padding: '8px 18px', borderRadius: '9999px', fontSize: '13px', fontWeight: 700, background: 'linear-gradient(135deg, #0369a1, #0ea5e9)', color: 'white' }}>
-            View Trip →
-          </span>
-        </div>
+        <Link
+          href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`}
+          className="btn-navy"
+          style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+        >
+          Request This Trip
+        </Link>
       </div>
-    </Link>
+    </article>
   )
 }
