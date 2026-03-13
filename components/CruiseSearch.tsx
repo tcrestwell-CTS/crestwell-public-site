@@ -153,13 +153,20 @@ const CRUISE_TYPES = [
   { value: 'river', label: 'River Cruises' },
 ];
 
-// Operators available in this Widgety account (confirmed from live data)
-// Shown as fallback until API confirms the list
+// River-only operator slugs — used to filter the dropdown by cruise type
+// These are the known river cruise lines across all 20 Widgety operators
+const RIVER_OPERATOR_SLUGS = new Set([
+  'amawaterways',
+  'avalon-waterways',
+  'uniworld-boutique-river-cruises',
+  'tauck',                      // does both but primarily river
+  'celebrity-river-cruises',
+  'american-cruise-lines',      // does both river and coastal ocean
+]);
+
+// Fallback operator list shown before API loads
 const FALLBACK_OPERATORS = [
-  { value: 'any',                   label: 'All Cruise Lines' },
-  { value: 'american-cruise-lines', label: 'American Cruise Lines' },
-  { value: 'princess-cruises',      label: 'Princess Cruises' },
-  { value: 'cunard-line',           label: 'Cunard' },
+  { value: 'any', label: 'All Cruise Lines' },
 ];
 
 const DEFAULT_FILTERS: SearchFilters = {
@@ -190,7 +197,9 @@ export default function CruiseSearch() {
   const [totalPages, setTotalPages]   = useState(1);
   const [totalCount, setTotalCount]   = useState(0);
 
-  // Load all operators for dropdown + image map
+  // Store all 20 operators; filter dropdown by selected cruise type
+  const [allOperators, setAllOperators] = useState<WidgetyOperator[]>([]);
+
   useEffect(() => {
     fetch('/api/widgety/operators')
       .then(r => r.json())
@@ -200,14 +209,36 @@ export default function CruiseSearch() {
           const map = new Map<string, WidgetyOperator>();
           list.forEach(o => map.set(o.id, o));
           setOperatorMap(map);
+          setAllOperators(list);
+          // Show all by default (no cruise type filter selected yet)
           setOperatorOptions([
             { value: 'any', label: 'All Cruise Lines' },
             ...list.map(o => ({ value: o.id, label: o.title })),
           ]);
         }
       })
-      .catch(() => {}); // fallback list already set
+      .catch(() => {});
   }, []);
+
+  // When cruise type changes, update operator dropdown to match
+  useEffect(() => {
+    if (allOperators.length === 0) return;
+    let filtered = allOperators;
+    if (filters.cruiseType === 'ocean') {
+      filtered = allOperators.filter(o => !RIVER_OPERATOR_SLUGS.has(o.id));
+    } else if (filters.cruiseType === 'river') {
+      filtered = allOperators.filter(o => RIVER_OPERATOR_SLUGS.has(o.id));
+    }
+    setOperatorOptions([
+      { value: 'any', label: 'All Cruise Lines' },
+      ...filtered.map(o => ({ value: o.id, label: o.title })),
+    ]);
+    // Reset operator selection if current choice is no longer valid
+    setFilters(f => ({
+      ...f,
+      operator: filtered.some(o => o.id === f.operator) ? f.operator : 'any',
+    }));
+  }, [filters.cruiseType, allOperators]);
 
   const fetchCruises = useCallback(async (f: SearchFilters, pg: number) => {
     setLoading(true);
