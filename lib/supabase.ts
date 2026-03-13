@@ -54,6 +54,7 @@ export type Trip = {
   budget_range?: string;
   deposit_amount?: number;
   notes?: string;
+  tags?: string[];
   cover_image_url?: string;
   published?: boolean;
   itineraries?: {
