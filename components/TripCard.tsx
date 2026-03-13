@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Trip } from '@/lib/supabase'
+import type { FeaturedTrip } from '@/lib/supabase'
 
 export function TripCard({ trip }: { trip: Trip }) {
   const nights = trip.depart_date && trip.return_date
