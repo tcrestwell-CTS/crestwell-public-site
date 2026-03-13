@@ -67,7 +67,7 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
             <div style={{ padding: '24px', borderRadius: '16px', background: 'white', boxShadow: '0 2px 15px rgba(0,0,0,0.07)' }}>
               <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '24px' }}>Day-by-Day Itinerary</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {[...trip.itineraries.itinerary_items]
+               {[...(trip.itineraries?.itinerary_items ?? [])]
                   .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number)
                   .map((item: { id: string; day_number: number; title: string; description?: string }) => (
                     <div key={item.id} style={{ display: 'flex', gap: '16px' }}>
