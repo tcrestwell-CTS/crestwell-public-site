@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import type { QuoteRequest } from '@/lib/supabase';
@@ -39,11 +39,11 @@ const initialForm: Omit<QuoteRequest, 'id' | 'created_at' | 'status'> = {
   message: '',
 };
 
-export default function RequestQuotePage() {
+function RequestQuoteForm() {
   const searchParams = useSearchParams();
   const [form, setForm] = useState(() => ({
     ...initialForm,
-    trip_type: 'Cruise Vacation', // default when coming from cruise search
+    trip_type: 'Cruise Vacation',
     destination: searchParams.get('destination') || '',
     travelers_adults: parseInt(searchParams.get('travelers') || '2'),
   }));
@@ -116,7 +116,6 @@ export default function RequestQuotePage() {
       <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
-          {/* Search summary banner (shown when coming from cruise search) */}
           {(searchParams.get('destination') || searchParams.get('line') || searchParams.get('duration')) && (
             <div style={{
               background: 'var(--navy)',
@@ -168,7 +167,7 @@ export default function RequestQuotePage() {
                 }}>
                   {step > s ? '✓' : s}
                 </div>
-                <div style={{ marginLeft: 10, marginRight: s < 3 ? 0 : 0 }}>
+                <div style={{ marginLeft: 10 }}>
                   <div style={{ fontSize: '0.7rem', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: step >= s ? 'var(--navy)' : 'var(--slate)' }}>
                     {s === 1 ? 'Trip Details' : s === 2 ? 'Your Info' : 'Review'}
                   </div>
@@ -181,7 +180,6 @@ export default function RequestQuotePage() {
           <form onSubmit={handleSubmit}>
             <div style={{ background: 'white', padding: '48px', boxShadow: '0 4px 40px rgba(13,27,42,0.06)' }}>
 
-              {/* Step 1: Trip Details */}
               {step === 1 && (
                 <div>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Trip Details</h2>
@@ -270,7 +268,6 @@ export default function RequestQuotePage() {
                 </div>
               )}
 
-              {/* Step 2: Contact Info */}
               {step === 2 && (
                 <div>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Your Information</h2>
@@ -318,14 +315,12 @@ export default function RequestQuotePage() {
                 </div>
               )}
 
-              {/* Step 3: Review */}
               {step === 3 && (
                 <div>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Review & Submit</h2>
                   <p style={{ color: 'var(--slate)', fontSize: '0.875rem', marginBottom: 36 }}>Please confirm your details before we send this to our team.</p>
 
                   <div style={{ display: 'grid', gap: 24 }}>
-                    {/* Summary Cards */}
                     <div style={{ background: 'var(--cream)', padding: '24px', borderLeft: '3px solid var(--gold)' }}>
                       <div className="overline" style={{ marginBottom: 12 }}>Trip Details</div>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
@@ -391,7 +386,6 @@ export default function RequestQuotePage() {
             </div>
           </form>
 
-          {/* Trust badges */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 32, marginTop: 40, flexWrap: 'wrap' }}>
             {['No Booking Fees', '24hr Response', 'Expert Advisors', 'Best Price Promise'].map(b => (
               <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--slate)', fontSize: '0.75rem', letterSpacing: '0.06em' }}>
@@ -403,5 +397,13 @@ export default function RequestQuotePage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function RequestQuotePage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--navy)' }} />}>
+      <RequestQuoteForm />
+    </Suspense>
   );
 }
