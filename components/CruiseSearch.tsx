@@ -34,6 +34,7 @@ type WidgetyOperator = {
 type SearchFilters = {
   destination: string;
   operator: string;
+  cruiseType: string;
   duration: string;
   month: string;
   year: string;
@@ -146,20 +147,23 @@ const YEARS = [
   { value: '2027', label: '2027' },
 ];
 
+const CRUISE_TYPES = [
+  { value: 'any',   label: 'Ocean & River' },
+  { value: 'ocean', label: 'Ocean Cruises' },
+  { value: 'river', label: 'River Cruises' },
+];
+
+// Operators available in this Widgety account (confirmed from live data)
+// Shown as fallback until API confirms the list
 const FALLBACK_OPERATORS = [
-  { value: 'any',                            label: 'Any Cruise Line' },
-  { value: 'royal-caribbean-international',  label: 'Royal Caribbean' },
-  { value: 'carnival-cruise-lines-operator', label: 'Carnival' },
-  { value: 'norwegian-cruise-line',          label: 'Norwegian Cruise Line' },
-  { value: 'msc-cruises',                    label: 'MSC Cruises' },
-  { value: 'celebrity-cruises',              label: 'Celebrity Cruises' },
-  { value: 'princess-cruises',               label: 'Princess Cruises' },
-  { value: 'virgin-voyages',                 label: 'Virgin Voyages' },
-  { value: 'explora-journeys',               label: 'Explora Journeys' },
+  { value: 'any',                   label: 'All Cruise Lines' },
+  { value: 'american-cruise-lines', label: 'American Cruise Lines' },
+  { value: 'princess-cruises',      label: 'Princess Cruises' },
+  { value: 'cunard-line',           label: 'Cunard' },
 ];
 
 const DEFAULT_FILTERS: SearchFilters = {
-  destination: 'any', operator: 'any',
+  destination: 'any', operator: 'any', cruiseType: 'any',
   duration: 'any', month: 'any', year: 'any',
 };
 
@@ -175,7 +179,7 @@ function formatDate(dateStr: string) {
 export default function CruiseSearch() {
   const [filters, setFilters]         = useState<SearchFilters>(DEFAULT_FILTERS);
   const [applied, setApplied]         = useState<SearchFilters>(DEFAULT_FILTERS);
-  const [operatorOptions, setOperatorOptions] = useState<{ value: string; label: string }[]>(FALLBACK_OPERATORS);
+  const [operatorOptions, setOperatorOptions] = useState(FALLBACK_OPERATORS);
   // Map of slug → full operator object (for image lookup)
   const [operatorMap, setOperatorMap] = useState<Map<string, WidgetyOperator>>(new Map());
   const [cruises, setCruises]         = useState<WidgetyCruise[]>([]);
@@ -186,25 +190,46 @@ export default function CruiseSearch() {
   const [totalPages, setTotalPages]   = useState(1);
   const [totalCount, setTotalCount]   = useState(0);
 
-  // Load operators once on mount — build both the dropdown list and the image lookup map
+  // Load operators: build image map + dropdown (only show operators in account)
   useEffect(() => {
-    fetch('/api/widgety/operators')
+    // Fetch first page of cruises to discover which operators have inventory
+    const discoverOps = fetch('/api/widgety/cruises?page=1')
       .then(r => r.json())
-      .then(data => {
-        const list: WidgetyOperator[] = data.operators || data || [];
-        if (list.length > 0) {
-          // Dropdown options
-          setOperatorOptions([
-            { value: 'any', label: 'Any Cruise Line' },
-            ...list.map(o => ({ value: o.id, label: o.title })),
-          ]);
-          // Image lookup map: slug → operator
-          const map = new Map<string, WidgetyOperator>();
-          list.forEach(o => map.set(o.id, o));
-          setOperatorMap(map);
-        }
+      .then(d => {
+        const slugsInData = new Set<string>(
+          (d.cruises || []).map((c: any) =>
+            c.operator?.split('/operators/')[1]?.replace('.json', '')
+          ).filter(Boolean)
+        );
+        return slugsInData;
       })
-      .catch(() => {});
+      .catch(() => new Set<string>());
+
+    const fetchOps = fetch('/api/widgety/operators')
+      .then(r => r.json())
+      .then(data => data.operators || data || [])
+      .catch(() => [] as WidgetyOperator[]);
+
+    Promise.all([discoverOps, fetchOps]).then(([slugsInData, list]) => {
+      if (list.length > 0) {
+        // Image map for all operators
+        const map = new Map<string, WidgetyOperator>();
+        list.forEach((o: WidgetyOperator) => map.set(o.id, o));
+        setOperatorMap(map);
+
+        // Dropdown only includes operators that have cruise inventory
+        // Fall back to FALLBACK_OPERATORS if discovery returns nothing
+        const withInventory = list.filter((o: WidgetyOperator) =>
+          slugsInData.size === 0 || slugsInData.has(o.id)
+        );
+        if (withInventory.length > 0) {
+          setOperatorOptions([
+            { value: 'any', label: 'All Cruise Lines' },
+            ...withInventory.map((o: WidgetyOperator) => ({ value: o.id, label: o.title })),
+          ]);
+        }
+      }
+    });
   }, []);
 
   const fetchCruises = useCallback(async (f: SearchFilters, pg: number) => {
@@ -212,9 +237,13 @@ export default function CruiseSearch() {
     setError('');
     try {
       const params = new URLSearchParams({
-        destination: f.destination, operator: f.operator,
-        duration: f.duration, month: f.month,
-        year: f.year, page: String(pg), per_page: '9',
+        destination: f.destination,
+        operator:    f.operator,
+        cruise_type: f.cruiseType,
+        duration:    f.duration,
+        month:       f.month,
+        year:        f.year,
+        page:        String(pg),
       });
       const res = await fetch(`/api/widgety/cruises?${params}`);
       if (!res.ok) throw new Error(`${res.status}`);
@@ -275,6 +304,7 @@ export default function CruiseSearch() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 16, marginBottom: 24 }}>
             <FilterSelect label="Destination" value={filters.destination} onChange={update('destination')} options={DESTINATIONS} />
             <FilterSelect label="Cruise Line"  value={filters.operator}   onChange={update('operator')}    options={operatorOptions} />
+            <FilterSelect label="Cruise Type"  value={filters.cruiseType} onChange={update('cruiseType')}  options={CRUISE_TYPES} />
             <FilterSelect label="Duration"     value={filters.duration}   onChange={update('duration')}    options={DURATIONS} />
             <FilterSelect label="Month"        value={filters.month}      onChange={update('month')}       options={MONTHS} />
             <FilterSelect label="Year"         value={filters.year}       onChange={update('year')}        options={YEARS} />
