@@ -21,7 +21,7 @@ type Cruise = {
   ports: string[];
 };
 
-type Operator = { id: number; name: string };
+type Operator = { id: string; title: string };
 
 type SearchFilters = {
   destination: string;
@@ -74,14 +74,14 @@ const YEARS = [
 
 const FALLBACK_OPERATORS = [
   { value: 'any', label: 'Any Cruise Line' },
-  { value: 'rc', label: 'Royal Caribbean' },
-  { value: 'carnival', label: 'Carnival' },
-  { value: 'ncl', label: 'Norwegian' },
-  { value: 'msc', label: 'MSC Cruises' },
-  { value: 'celebrity', label: 'Celebrity Cruises' },
-  { value: 'princess', label: 'Princess Cruises' },
-  { value: 'virgin', label: 'Virgin Voyages' },
-  { value: 'explora', label: 'Explora Journeys' },
+  { value: 'royal-caribbean-international', label: 'Royal Caribbean' },
+  { value: 'carnival-cruise-lines-operator', label: 'Carnival' },
+  { value: 'norwegian-cruise-line', label: 'Norwegian Cruise Line' },
+  { value: 'msc-cruises', label: 'MSC Cruises' },
+  { value: 'celebrity-cruises', label: 'Celebrity Cruises' },
+  { value: 'princess-cruises', label: 'Princess Cruises' },
+  { value: 'virgin-voyages', label: 'Virgin Voyages' },
+  { value: 'explora-journeys', label: 'Explora Journeys' },
 ];
 
 const DEFAULT_FILTERS: SearchFilters = {
@@ -120,12 +120,13 @@ export default function CruiseSearch() {
     fetch('/api/widgety/operators')
       .then(r => r.json())
       .then(data => {
-  console.log('Widgety operators response:', JSON.stringify(data).slice(0, 500));
-  const list: Operator[] = data.operators || data || [];
+        // Widgety returns { operators: [...] }
+        // Each operator has: id (slug string), title (display name)
+        const list: Operator[] = data.operators || data || [];
         if (list.length > 0) {
           setOperators([
             { value: 'any', label: 'Any Cruise Line' },
-            ...list.map(o => ({ value: String(o.id), label: o.name })),
+            ...list.map(o => ({ value: o.id, label: o.title })),  // ← FIXED: id is already a slug, title is the display name
           ]);
         }
       })
