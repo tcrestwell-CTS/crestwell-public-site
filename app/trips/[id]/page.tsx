@@ -6,8 +6,10 @@ import { ContactForm } from '@/components/ContactForm'
 
 export const revalidate = 3600
 
-export default async function TripDetailPage({ params }: { params: { id: string } }) {
-  const trip = await getPublishedTrip(params.id).catch(() => null)
+// Next.js 15: params must be awaited
+export default async function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const trip = await getPublishedTrip(id).catch(() => null)
   if (!trip) notFound()
 
   const nights = trip.depart_date && trip.return_date
