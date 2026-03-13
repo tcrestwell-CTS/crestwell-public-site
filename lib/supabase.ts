@@ -1,8 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
 export const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -48,7 +45,7 @@ export type ContactMessage = {
   status?: 'new' | 'read' | 'replied';
 };
 
-export type Trip = {
+export type FeaturedTrip = {
   id: string;
   created_at?: string;
   trip_name: string;
@@ -72,18 +69,18 @@ export type Trip = {
   };
 };
 
-// ─── Trip query helpers ───────────────────────────────────────────────────────
+// ─── Featured Trip query helpers ──────────────────────────────────────────────
 
-export type GetPublishedTripsParams = {
+export type GetFeaturedTripsParams = {
   destination?: string;
   search?: string;
   startDate?: string;
   endDate?: string;
 };
 
-export async function getPublishedTrips(params: GetPublishedTripsParams = {}): Promise<Trip[]> {
+export async function getFeaturedTrips(params: GetFeaturedTripsParams = {}): Promise<FeaturedTrip[]> {
   let query = supabase
-    .from('trips')
+    .from('featured_trips')
     .select('*')
     .eq('published', true)
     .order('depart_date', { ascending: true });
@@ -106,14 +103,13 @@ export async function getPublishedTrips(params: GetPublishedTripsParams = {}): P
   return data ?? [];
 }
 
-export async function getPublishedTrip(id: string): Promise<Trip | null> {
+export async function getFeaturedTrip(id: string): Promise<FeaturedTrip | null> {
   const { data, error } = await supabase
-    .from('trips')
+    .from('featured_trips')
     .select('*, itineraries(itinerary_items(*))')
     .eq('id', id)
     .eq('published', true)
     .single();
-
   if (error) throw error;
   return data;
 }
