@@ -51,22 +51,13 @@ export type FeaturedTrip = {
   trip_name: string;
   destination: string;
   trip_type?: string;
-  depart_date?: string;
-  return_date?: string;
-  budget_range?: string;
-  deposit_amount?: number;
-  notes?: string;
-  tags?: string[];
+  duration?: string;
+  starting_from?: string;
+  highlights?: string[];
+  description?: string;
+  popular?: boolean;
   cover_image_url?: string;
   published?: boolean;
-  itineraries?: {
-    itinerary_items?: {
-      id: string;
-      day_number: number;
-      title: string;
-      description?: string;
-    }[];
-  };
 };
 
 // ─── Featured Trip query helpers ──────────────────────────────────────────────
@@ -74,8 +65,7 @@ export type FeaturedTrip = {
 export type GetFeaturedTripsParams = {
   destination?: string;
   search?: string;
-  startDate?: string;
-  endDate?: string;
+  trip_type?: string;
 };
 
 export async function getFeaturedTrips(params: GetFeaturedTripsParams = {}): Promise<FeaturedTrip[]> {
@@ -83,7 +73,7 @@ export async function getFeaturedTrips(params: GetFeaturedTripsParams = {}): Pro
     .from('featured_trips')
     .select('*')
     .eq('published', true)
-    .order('depart_date', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (params.destination) {
     query = query.ilike('destination', `%${params.destination}%`);
@@ -91,11 +81,8 @@ export async function getFeaturedTrips(params: GetFeaturedTripsParams = {}): Pro
   if (params.search) {
     query = query.or(`trip_name.ilike.%${params.search}%,destination.ilike.%${params.search}%`);
   }
-  if (params.startDate) {
-    query = query.gte('depart_date', params.startDate);
-  }
-  if (params.endDate) {
-    query = query.lte('depart_date', params.endDate);
+  if (params.trip_type) {
+    query = query.eq('trip_type', params.trip_type);
   }
 
   const { data, error } = await query;
@@ -106,7 +93,7 @@ export async function getFeaturedTrips(params: GetFeaturedTripsParams = {}): Pro
 export async function getFeaturedTrip(id: string): Promise<FeaturedTrip | null> {
   const { data, error } = await supabase
     .from('featured_trips')
-    .select('*, itineraries(itinerary_items(*))')
+    .select('*')
     .eq('id', id)
     .eq('published', true)
     .single();
