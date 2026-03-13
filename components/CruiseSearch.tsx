@@ -120,7 +120,8 @@ export default function CruiseSearch() {
     fetch('/api/widgety/operators')
       .then(r => r.json())
       .then(data => {
-        const list: Operator[] = data.operators || data || [];
+  console.log('Widgety operators response:', JSON.stringify(data).slice(0, 500));
+  const list: Operator[] = data.operators || data || [];
         if (list.length > 0) {
           setOperators([
             { value: 'any', label: 'Any Cruise Line' },
