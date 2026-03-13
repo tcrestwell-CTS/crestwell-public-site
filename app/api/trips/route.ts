@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const endDate     = searchParams.get('endDate') ?? undefined
 
   try {
-    const trips = await getPublishedTrips({ destination, search, startDate, endDate })
+    const trips = await getFeaturedTrips({ destination, search, startDate, endDate })
     return NextResponse.json({ trips })
   } catch (err) {
     console.error('Failed to fetch trips:', err)
