@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { FeaturedTrip } from '@/lib/supabase'
 
-export function TripCard({ trip }: { trip: Trip }) {
+export function TripCard({ trip }: { trip: FeaturedTrip }) {
   const nights = trip.depart_date && trip.return_date
     ? Math.round((new Date(trip.return_date).getTime() - new Date(trip.depart_date).getTime()) / 86400000)
     : null
