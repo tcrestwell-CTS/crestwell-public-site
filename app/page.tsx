@@ -79,7 +79,7 @@ export default function HomePage() {
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.35 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.3) 0%, rgba(13,27,42,0.6) 60%, rgba(13,27,42,0.95) 100%)' }} />
         <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px', maxWidth: 860, zIndex: 1 }}>
-          <div className="overline animate-fade-up" style={{ marginBottom: 24 }}>Georgia · Tennessee · Alabama</div>
+          <div className="overline animate-fade-up" style={{ marginBottom: 24 }}>Georgia · Tennessee · Alabama · Florida</div>
           <h1 className="font-display animate-fade-up delay-100" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, color: 'white', lineHeight: 1.08, letterSpacing: '-0.01em', marginBottom: 28 }}>
             See the World<br />
             <em style={{ color: 'var(--gold-light)' }}>One Port at a Time</em>
