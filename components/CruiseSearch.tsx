@@ -593,5 +593,3 @@ function Spinner() {
     </svg>
   );
 }
-
-const DEFAULT_CRUISE_IMAGE = 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80';
