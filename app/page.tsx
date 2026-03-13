@@ -288,7 +288,6 @@ export default function HomePage() {
                 cursor: 'default',
               }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderBottomColor = 'var(--gold)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderBottomColor = 'transparent'; }}
               >
                 <div style={{ fontSize: '2rem', marginBottom: 20 }}>{s.icon}</div>
                 <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>{s.title}</h3>
