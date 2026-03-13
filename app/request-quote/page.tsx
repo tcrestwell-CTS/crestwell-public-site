@@ -1,8 +1,6 @@
 'use client';
 import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import type { QuoteRequest } from '@/lib/supabase';
 
 const tripTypes = [
   'Cruise Vacation',
@@ -24,12 +22,12 @@ const budgets = [
   'Flexible / Not sure',
 ];
 
-const initialForm: Omit<QuoteRequest, 'id' | 'created_at' | 'status'> = {
+const initialForm = {
   first_name: '',
   last_name: '',
   email: '',
   phone: '',
-  trip_type: '',
+  trip_type: 'Cruise Vacation',
   destination: '',
   departure_date: '',
   travelers_adults: 2,
@@ -43,7 +41,7 @@ function RequestQuoteForm() {
   const searchParams = useSearchParams();
   const [form, setForm] = useState(() => ({
     ...initialForm,
-    trip_type: 'Cruise Vacation',
+    trip_type: searchParams.get('trip_type') || 'Cruise Vacation',
     destination: searchParams.get('destination') || '',
     travelers_adults: parseInt(searchParams.get('travelers') || '2'),
   }));
@@ -59,8 +57,12 @@ function RequestQuoteForm() {
     setSubmitting(true);
     setError('');
     try {
-      const { error: sbError } = await supabase.from('quote_requests').insert([{ ...form, status: 'new' }]);
-      if (sbError) throw sbError;
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Something went wrong. Please try again or email us directly.');
       setSubmitted(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again or email us directly.';
@@ -116,34 +118,18 @@ function RequestQuoteForm() {
       <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
-          {(searchParams.get('destination') || searchParams.get('line') || searchParams.get('duration')) && (
-            <div style={{
-              background: 'var(--navy)',
-              padding: '16px 24px',
-              marginBottom: 32,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 16,
-              flexWrap: 'wrap',
-            }}>
+          {(searchParams.get('trip_name') || searchParams.get('destination') || searchParams.get('trip_type')) && (
+            <div style={{ background: 'var(--navy)', padding: '16px 24px', marginBottom: 32, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
               <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', flexShrink: 0 }}>
-                Your Search
+                Your Trip
               </span>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', flex: 1 }}>
                 {[
+                  searchParams.get('trip_name'),
                   searchParams.get('destination'),
-                  searchParams.get('line'),
-                  searchParams.get('duration'),
-                  searchParams.get('month'),
-                  searchParams.get('travelers') ? `${searchParams.get('travelers')} travelers` : null,
+                  searchParams.get('trip_type'),
                 ].filter(Boolean).map((tag, i) => (
-                  <span key={i} style={{
-                    padding: '4px 12px',
-                    background: 'rgba(201,168,76,0.15)',
-                    border: '1px solid rgba(201,168,76,0.3)',
-                    color: 'rgba(255,255,255,0.8)',
-                    fontSize: '0.75rem',
-                  }}>
+                  <span key={i} style={{ padding: '4px 12px', background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)', color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem' }}>
                     {tag}
                   </span>
                 ))}
