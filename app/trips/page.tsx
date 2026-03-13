@@ -37,7 +37,7 @@ export default function TripsPage() {
 
   useEffect(() => {
     fetch('/api/trips').then(r => r.json()).then(d => {
-      const unique = [...new Set((d.trips ?? []).map((t: Trip) => t.destination))].sort() as string[]
+      const unique = Array.from(new Set((d.trips ?? []).map((t: Trip) => t.destination))).sort() as string[]
       setDestinations(unique)
     })
   }, [])
