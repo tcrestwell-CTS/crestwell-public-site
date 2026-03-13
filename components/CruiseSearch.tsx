@@ -190,46 +190,23 @@ export default function CruiseSearch() {
   const [totalPages, setTotalPages]   = useState(1);
   const [totalCount, setTotalCount]   = useState(0);
 
-  // Load operators: build image map + dropdown (only show operators in account)
+  // Load all operators for dropdown + image map
   useEffect(() => {
-    // Fetch first page of cruises to discover which operators have inventory
-    const discoverOps = fetch('/api/widgety/cruises?page=1')
+    fetch('/api/widgety/operators')
       .then(r => r.json())
-      .then(d => {
-        const slugsInData = new Set<string>(
-          (d.cruises || []).map((c: any) =>
-            c.operator?.split('/operators/')[1]?.replace('.json', '')
-          ).filter(Boolean)
-        );
-        return slugsInData;
-      })
-      .catch(() => new Set<string>());
-
-    const fetchOps = fetch('/api/widgety/operators')
-      .then(r => r.json())
-      .then(data => data.operators || data || [])
-      .catch(() => [] as WidgetyOperator[]);
-
-    Promise.all([discoverOps, fetchOps]).then(([slugsInData, list]) => {
-      if (list.length > 0) {
-        // Image map for all operators
-        const map = new Map<string, WidgetyOperator>();
-        list.forEach((o: WidgetyOperator) => map.set(o.id, o));
-        setOperatorMap(map);
-
-        // Dropdown only includes operators that have cruise inventory
-        // Fall back to FALLBACK_OPERATORS if discovery returns nothing
-        const withInventory = list.filter((o: WidgetyOperator) =>
-          slugsInData.size === 0 || slugsInData.has(o.id)
-        );
-        if (withInventory.length > 0) {
+      .then(data => {
+        const list: WidgetyOperator[] = data.operators || data || [];
+        if (list.length > 0) {
+          const map = new Map<string, WidgetyOperator>();
+          list.forEach(o => map.set(o.id, o));
+          setOperatorMap(map);
           setOperatorOptions([
             { value: 'any', label: 'All Cruise Lines' },
-            ...withInventory.map((o: WidgetyOperator) => ({ value: o.id, label: o.title })),
+            ...list.map(o => ({ value: o.id, label: o.title })),
           ]);
         }
-      }
-    });
+      })
+      .catch(() => {}); // fallback list already set
   }, []);
 
   const fetchCruises = useCallback(async (f: SearchFilters, pg: number) => {
