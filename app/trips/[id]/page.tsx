@@ -48,35 +48,21 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
 
             {/* Main content */}
             <div>
-              {trip.notes && (
+              {trip.description && (
                 <div style={{ marginBottom: 48 }}>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 20 }}>About This Trip</h2>
-                  <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.8 }}>{trip.notes}</p>
+                  <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.8 }}>{trip.description}</p>
                 </div>
               )}
 
-              {/* Itinerary */}
-              {trip.itineraries?.itinerary_items && (trip.itineraries.itinerary_items?.length ?? 0) > 0 && (
-                <div>
-                  <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '24px' }}>
-                    Day-by-Day Itinerary
-                  </h2>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {[...(trip.itineraries?.itinerary_items ?? [])]
-                      .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number)
-                      .map((item: { id: string; day_number: number; title: string; description?: string }) => (
-                        <div key={item.id} style={{ display: 'flex', gap: '16px' }}>
-                          <div style={{ width: 48, height: 48, background: 'var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--navy)' }}>Day {item.day_number}</span>
-                          </div>
-                          <div style={{ flex: 1, paddingTop: 8 }}>
-                            <h3 style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--navy)', marginBottom: 4 }}>{item.title}</h3>
-                            {item.description && (
-                              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{item.description}</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+              {/* Highlights */}
+              {trip.highlights && trip.highlights.length > 0 && (
+                <div style={{ marginBottom: 48 }}>
+                  <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 20 }}>Port Highlights</h2>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                    {trip.highlights.map(h => (
+                      <span key={h} style={{ fontSize: '0.85rem', padding: '8px 16px', background: 'white', color: 'var(--navy)', border: '1px solid #e2e8f0', letterSpacing: '0.05em' }}>{h}</span>
+                    ))}
                   </div>
                 </div>
               )}
@@ -94,42 +80,21 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
                       <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>{trip.destination}</div>
                     </div>
                   )}
-                  {trip.depart_date && (
+                  {trip.duration && (
                     <div>
-                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Departure Date</div>
-                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>
-                        {new Date(trip.depart_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                      </div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Duration</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>{trip.duration}</div>
                     </div>
                   )}
-                  {trip.return_date && (
-                    <div>
-                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Return Date</div>
-                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>
-                        {new Date(trip.return_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                      </div>
-                    </div>
-                  )}
-                  {trip.budget_range && (
+                  {trip.starting_from && (
                     <div>
                       <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Starting From</div>
-                      <div style={{ fontSize: '1.1rem', color: 'var(--gold)', fontWeight: 600 }}>{trip.budget_range}</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--gold)', fontWeight: 600 }}>{trip.starting_from} / person</div>
                     </div>
                   )}
-                  {trip.deposit_amount && (
-                    <div>
-                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Deposit</div>
-                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>${trip.deposit_amount.toLocaleString()}</div>
-                    </div>
-                  )}
-                  {trip.tags && trip.tags.length > 0 && (
-                    <div>
-                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 8 }}>Tags</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {trip.tags.map(tag => (
-                          <span key={tag} style={{ padding: '3px 10px', borderRadius: '9999px', fontSize: '11px', background: '#e0f2fe', color: '#0369a1' }}>{tag}</span>
-                        ))}
-                      </div>
+                  {trip.popular && (
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ background: 'var(--gold)', padding: '4px 12px', fontSize: '0.65rem', fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--navy)' }}>Popular Trip</span>
                     </div>
                   )}
                 </div>
