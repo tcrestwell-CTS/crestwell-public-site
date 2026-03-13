@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const WIDGETY_BASE = 'https://developer.widgety.co.uk/v2';
+const url = `${WIDGETY_BASE}/holidays.json?${widgetyParams.toString()}`;
 const APP_ID = process.env.WIDGETY_APP_ID!;
 const APP_TOKEN = process.env.WIDGETY_APP_TOKEN!;
 
