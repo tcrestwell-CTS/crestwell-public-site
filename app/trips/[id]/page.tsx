@@ -63,7 +63,7 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
           )}
 
           {/* Itinerary */}
-          {trip.itineraries?.itinerary_items?.length > 0 && (
+          {(trip.itineraries?.itinerary_items?.length ?? 0) > 0 && (
             <div style={{ padding: '24px', borderRadius: '16px', background: 'white', boxShadow: '0 2px 15px rgba(0,0,0,0.07)' }}>
               <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '24px' }}>Day-by-Day Itinerary</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
