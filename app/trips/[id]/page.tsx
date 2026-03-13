@@ -1,114 +1,164 @@
-import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
-import { getPublishedTrip } from '@/lib/supabase'
-import { ContactForm } from '@/components/ContactForm'
+import { getFeaturedTrip } from '@/lib/supabase';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-export const revalidate = 3600
-
-// Next.js 15: params must be awaited
 export default async function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const trip = await getPublishedTrip(id).catch(() => null)
-  if (!trip) notFound()
+  const { id } = await params;
+  const trip = await getFeaturedTrip(id).catch(() => null);
 
-  const nights = trip.depart_date && trip.return_date
-    ? Math.round((new Date(trip.return_date).getTime() - new Date(trip.depart_date).getTime()) / 86400000)
-    : null
+  if (!trip) notFound();
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh' }}>
+    <>
       {/* Hero */}
-      <div style={{ position: 'relative', height: '55vh', minHeight: '380px', overflow: 'hidden' }}>
-        {trip.cover_image_url ? (
-          <Image src={trip.cover_image_url} alt={trip.trip_name} fill style={{ objectFit: 'cover' }} priority />
-        ) : (
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #0c4a6e, #0369a1)' }} />
-        )}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(12,74,110,0.85) 0%, rgba(12,74,110,0.2) 60%, transparent 100%)' }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '32px', maxWidth: '900px' }}>
-          {trip.trip_type === 'group' && (
-            <span style={{ display: 'inline-block', padding: '4px 12px', borderRadius: '9999px', fontSize: '12px', fontWeight: 700, background: '#fde047', color: '#0c4a6e', marginBottom: '12px' }}>👥 Group Trip</span>
+      <section style={{ background: 'var(--navy)', paddingTop: 140, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: trip.cover_image_url
+            ? `url(${trip.cover_image_url})`
+            : 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.3,
+        }} />
+        <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+          {trip.trip_type && (
+            <div className="overline animate-fade-up" style={{ marginBottom: 16 }}>{trip.trip_type}</div>
           )}
-          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 700, color: 'white', fontFamily: 'Playfair Display, serif', marginBottom: '8px', lineHeight: 1.2 }}>{trip.trip_name}</h1>
-          <p style={{ color: '#bae6fd', fontSize: '20px' }}>{trip.destination}</p>
+          <h1 className="font-display animate-fade-up delay-100" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', fontWeight: 300, color: 'white', lineHeight: 1.1, marginBottom: 16 }}>
+            {trip.trip_name}
+          </h1>
+          <p className="animate-fade-up delay-200" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1rem', marginBottom: 32 }}>
+            {trip.destination}
+          </p>
+          <Link
+            href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`}
+            className="btn-primary animate-fade-up delay-300"
+            style={{ textDecoration: 'none' }}
+          >
+            Request a Quote
+          </Link>
         </div>
-      </div>
+      </section>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 1rem', display: 'grid', gridTemplateColumns: '1fr 360px', gap: '32px' }}>
-        {/* Left */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {/* Quick info */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', padding: '24px', borderRadius: '16px', background: 'white', boxShadow: '0 2px 15px rgba(0,0,0,0.07)' }}>
-            {[
-              { icon: '📅', label: 'Departure', value: trip.depart_date ? new Date(trip.depart_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' },
-              { icon: '🔙', label: 'Return', value: trip.return_date ? new Date(trip.return_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' },
-              { icon: '🌙', label: 'Duration', value: nights ? `${nights} nights` : '—' },
-              { icon: '📍', label: 'Destination', value: trip.destination },
-            ].map(({ icon, label, value }) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', marginBottom: '4px' }}>{icon}</div>
-                <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
-                <div style={{ fontWeight: 600, color: '#1e293b', fontSize: '13px', marginTop: '2px' }}>{value}</div>
-              </div>
-            ))}
-          </div>
+      {/* Trip Details */}
+      <section className="section-pad" style={{ background: 'var(--cream)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 48, alignItems: 'start' }}>
 
-          {/* Description */}
-          {trip.notes && (
-            <div style={{ padding: '24px', borderRadius: '16px', background: 'white', boxShadow: '0 2px 15px rgba(0,0,0,0.07)' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '16px' }}>About This Trip</h2>
-              <p style={{ color: '#475569', lineHeight: 1.8 }}>{trip.notes}</p>
+            {/* Main content */}
+            <div>
+              {trip.notes && (
+                <div style={{ marginBottom: 48 }}>
+                  <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 20 }}>About This Trip</h2>
+                  <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.8 }}>{trip.notes}</p>
+                </div>
+              )}
+
+              {/* Itinerary */}
+              {trip.itineraries?.itinerary_items && (trip.itineraries.itinerary_items?.length ?? 0) > 0 && (
+                <div>
+                  <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '24px' }}>
+                    Day-by-Day Itinerary
+                  </h2>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {[...(trip.itineraries?.itinerary_items ?? [])]
+                      .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number)
+                      .map((item: { id: string; day_number: number; title: string; description?: string }) => (
+                        <div key={item.id} style={{ display: 'flex', gap: '16px' }}>
+                          <div style={{ width: 48, height: 48, background: 'var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--navy)' }}>Day {item.day_number}</span>
+                          </div>
+                          <div style={{ flex: 1, paddingTop: 8 }}>
+                            <h3 style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--navy)', marginBottom: 4 }}>{item.title}</h3>
+                            {item.description && (
+                              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{item.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
 
-          {/* Itinerary */}
-          {(trip.itineraries?.itinerary_items?.length ?? 0) > 0 && (
-            <div style={{ padding: '24px', borderRadius: '16px', background: 'white', boxShadow: '0 2px 15px rgba(0,0,0,0.07)' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif', marginBottom: '24px' }}>Day-by-Day Itinerary</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-               {[...(trip.itineraries?.itinerary_items ?? [])]
-                  .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number)
-                  .map((item: { id: string; day_number: number; title: string; description?: string }) => (
-                    <div key={item.id} style={{ display: 'flex', gap: '16px' }}>
-                      <div style={{ flexShrink: 0, width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 700, color: 'white', background: 'linear-gradient(135deg, #0369a1, #0ea5e9)' }}>
-                        {item.day_number}
-                      </div>
-                      <div style={{ paddingTop: '8px' }}>
-                        <h4 style={{ fontWeight: 700, color: '#1e293b', marginBottom: '4px' }}>{item.title}</h4>
-                        {item.description && <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6 }}>{item.description}</p>}
+            {/* Sidebar */}
+            <div style={{ position: 'sticky', top: 100 }}>
+              <div style={{ background: 'white', padding: '32px', boxShadow: '0 4px 40px rgba(13,27,42,0.06)' }}>
+                <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Trip Summary</h3>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
+                  {trip.destination && (
+                    <div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Destination</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>{trip.destination}</div>
+                    </div>
+                  )}
+                  {trip.depart_date && (
+                    <div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Departure Date</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>
+                        {new Date(trip.depart_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                       </div>
                     </div>
-                  ))}
+                  )}
+                  {trip.return_date && (
+                    <div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Return Date</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>
+                        {new Date(trip.return_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                      </div>
+                    </div>
+                  )}
+                  {trip.budget_range && (
+                    <div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Starting From</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--gold)', fontWeight: 600 }}>{trip.budget_range}</div>
+                    </div>
+                  )}
+                  {trip.deposit_amount && (
+                    <div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Deposit</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 500 }}>${trip.deposit_amount.toLocaleString()}</div>
+                    </div>
+                  )}
+                  {trip.tags && trip.tags.length > 0 && (
+                    <div>
+                      <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 8 }}>Tags</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {trip.tags.map(tag => (
+                          <span key={tag} style={{ padding: '3px 10px', borderRadius: '9999px', fontSize: '11px', background: '#e0f2fe', color: '#0369a1' }}>{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <Link
+                  href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`}
+                  className="btn-primary"
+                  style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+                >
+                  Request a Quote
+                </Link>
+
+                <p style={{ fontSize: '0.75rem', color: 'var(--slate)', textAlign: 'center', marginTop: 12, lineHeight: 1.6 }}>
+                  Free consultation · No booking fees · 24hr response
+                </p>
               </div>
             </div>
-          )}
-
-          <Link href="/trips" style={{ color: '#0369a1', fontSize: '14px', textDecoration: 'none' }}>← Back to all trips</Link>
-        </div>
-
-        {/* Right - Inquiry */}
-        <div>
-          <div style={{ padding: '24px', borderRadius: '16px', background: 'white', boxShadow: '0 4px 25px rgba(0,0,0,0.1)', position: 'sticky', top: '80px' }}>
-            {trip.budget_range && (
-              <div style={{ marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid #f1f5f9' }}>
-                <div style={{ fontSize: '12px', color: '#94a3b8' }}>Starting from</div>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#0c4a6e', fontFamily: 'Playfair Display, serif' }}>{trip.budget_range}</div>
-                <div style={{ fontSize: '13px', color: '#94a3b8' }}>per person</div>
-              </div>
-            )}
-            {trip.deposit_amount && (
-              <div style={{ padding: '10px', borderRadius: '10px', marginBottom: '12px', background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', fontSize: '13px' }}>
-                ✓ Secure your spot with a ${trip.deposit_amount} deposit
-              </div>
-            )}
-            <div style={{ padding: '10px', borderRadius: '10px', marginBottom: '16px', background: '#fef9c3', border: '1px solid #fde047', color: '#713f12', fontSize: '13px' }}>
-              💳 Financing available via Affirm
-            </div>
-            <ContactForm tripName={trip.trip_name} tripId={trip.id} />
           </div>
         </div>
-      </div>
-    </div>
-  )
+      </section>
+
+      {/* Back link */}
+      <section style={{ background: 'white', padding: '32px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <Link href="/trips" style={{ color: 'var(--slate)', fontSize: '0.85rem', textDecoration: 'none', letterSpacing: '0.05em' }}>
+            ← Back to All Trips
+          </Link>
+        </div>
+      </section>
+    </>
+  );
 }
