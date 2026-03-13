@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const url = `${WIDGETY_BASE}/holidays.json?${widgetyParams.toString()}`;
-
+const WIDGETY_BASE = 'https://www.widgety.co.uk/api';
 const WIDGETY_HEADERS = {
   'Application-Id': process.env.WIDGETY_APP_ID!,
   'Application-Token': process.env.WIDGETY_APP_TOKEN!,
@@ -12,7 +11,7 @@ export async function GET() {
   try {
     const res = await fetch(`${WIDGETY_BASE}/operators.json?market=US&cruise_type=ocean`, {
       headers: WIDGETY_HEADERS,
-      next: { revalidate: 86400 }, // Cache for 24 hours - operators don't change often
+      next: { revalidate: 86400 },
     });
 
     if (!res.ok) {
