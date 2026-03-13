@@ -57,7 +57,7 @@ export type Trip = {
   cover_image_url?: string;
   published?: boolean;
   itineraries?: {
-    itinerary_items: {
+    itinerary_items?: {
       id: string;
       day_number: number;
       title: string;
