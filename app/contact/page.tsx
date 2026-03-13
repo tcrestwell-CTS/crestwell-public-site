@@ -76,6 +76,17 @@ export default function ContactPage() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+
+              <div style={{ display: 'flex', gap: 16 }}>
+                <div style={{ width: 44, height: 44, background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ color: 'var(--gold)', fontSize: '1rem' }}>📞</span>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Phone</div>
+                  <a href="tel:8885086893" style={{ color: 'var(--navy)', fontSize: '0.9rem', textDecoration: 'none', fontWeight: 400 }}>888.508.6893</a>
+                </div>
+              </div>
+
               <div style={{ display: 'flex', gap: 16 }}>
                 <div style={{ width: 44, height: 44, background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <span style={{ color: 'var(--gold)', fontSize: '1rem' }}>✉</span>
