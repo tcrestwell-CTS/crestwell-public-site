@@ -1,105 +1,3 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-
-const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'Destinations', href: '/destinations' },
-  { label: 'Request Quote', href: '/request-quote' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-];
-
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handler);
-    return () => window.removeEventListener('scroll', handler);
-  }, []);
-
-  return (
-    <nav
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        transition: 'all 0.4s ease',
-        background: scrolled ? 'rgba(13, 27, 42, 0.97)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(201, 168, 76, 0.15)' : 'none',
-      }}
-    >
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
-          {/* Logo */}
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 500, color: 'white', letterSpacing: '0.02em' }}>
-              Crestwell
-            </span>
-            <span style={{ fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 400, marginTop: 2 }}>
-              Travel Services
-            </span>
-          </Link>
-
-          {/* Desktop Nav */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 40 }} className="desktop-nav">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="nav-link">
-                {item.label}
-              </Link>
-            ))}
-            <Link href="/request-quote" className="btn-primary" style={{ textDecoration: 'none' }}>
-              Get a Quote
-            </Link>
-          </div>
-
-          {/* Mobile Hamburger */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: 8 }}
-            className="mobile-menu-btn"
-            aria-label="Toggle menu"
-          >
-            <div style={{ width: 24, height: 2, background: 'white', marginBottom: 5, transition: 'all 0.3s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
-            <div style={{ width: 24, height: 2, background: 'white', marginBottom: 5, opacity: menuOpen ? 0 : 1, transition: 'all 0.3s' }} />
-            <div style={{ width: 24, height: 2, background: 'white', transition: 'all 0.3s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div style={{ padding: '16px 0 24px', borderTop: '1px solid rgba(255,255,255,0.1)' }} className="mobile-menu">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="nav-link"
-                style={{ display: 'block', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link href="/request-quote" className="btn-primary" style={{ display: 'inline-block', marginTop: 16, textDecoration: 'none' }}>
-              Get a Quote
-            </Link>
-          </div>
-        )}
-      </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: block !important; }
-        }
-      `}</style>
-    </nav>
-  );
-}
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import CruiseSearch from '@/components/CruiseSearch';
@@ -174,12 +72,12 @@ const testimonials = [
     location: 'Atlanta, GA',
   },
   {
-    quote: 'Our family trip to the Bahamas was the best vacation we\'ve ever taken. They knew exactly what we needed.',
+    quote: "Our family trip to the Bahamas was the best vacation we've ever taken. They knew exactly what we needed.",
     name: 'The Johnson Family',
     location: 'Chattanooga, TN',
   },
   {
-    quote: 'I\'ve booked three cruises through Crestwell now. I won\'t use anyone else — the service is unmatched.',
+    quote: "I've booked three cruises through Crestwell now. I won't use anyone else — the service is unmatched.",
     name: 'Diane P.',
     location: 'Birmingham, AL',
   },
@@ -200,7 +98,6 @@ export default function HomePage() {
           background: 'var(--navy)',
         }}
       >
-        {/* Background image */}
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)',
@@ -208,13 +105,11 @@ export default function HomePage() {
           backgroundPosition: 'center',
           opacity: 0.35,
         }} />
-        {/* Gradient overlay */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(180deg, rgba(13,27,42,0.3) 0%, rgba(13,27,42,0.6) 60%, rgba(13,27,42,0.95) 100%)',
         }} />
 
-        {/* Hero content */}
         <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px', maxWidth: 860, zIndex: 1 }}>
           <div className="overline animate-fade-up" style={{ marginBottom: 24 }}>
             Georgia · Tennessee · Alabama
@@ -239,7 +134,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <div style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: 0.5 }}>
           <div style={{ width: 1, height: 48, background: 'linear-gradient(180deg, transparent, var(--gold))' }} />
         </div>
@@ -280,15 +174,13 @@ export default function HomePage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 2 }}>
             {services.map((s, i) => (
-              <div key={i} className="card-hover" style={{
+              <div key={i} className="card-hover service-card" style={{
                 background: 'white',
                 padding: '48px 36px',
                 borderBottom: '3px solid transparent',
-                transition: 'all 0.3s ease',
+                transition: 'border-bottom-color 0.3s ease',
                 cursor: 'default',
-              }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderBottomColor = 'var(--gold)'; }}
-              >
+              }}>
                 <div style={{ fontSize: '2rem', marginBottom: 20 }}>{s.icon}</div>
                 <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>{s.title}</h3>
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>{s.description}</p>
@@ -402,36 +294,30 @@ export default function HomePage() {
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem', marginBottom: 32 }}>
             Get exclusive cruise deals, travel tips, and destination guides straight to your inbox.
           </p>
-          <NewsletterForm />
+          <form action="/api/newsletter" method="POST" style={{ display: 'flex', gap: 0, maxWidth: 440, margin: '0 auto' }}>
+            <input
+              type="email"
+              name="email"
+              placeholder="Your email address"
+              required
+              style={{
+                flex: 1,
+                padding: '14px 20px',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRight: 'none',
+                color: 'white',
+                fontSize: '0.875rem',
+                fontFamily: 'var(--font-body)',
+                outline: 'none',
+              }}
+            />
+            <button type="submit" className="btn-primary" style={{ whiteSpace: 'nowrap' }}>
+              Subscribe
+            </button>
+          </form>
         </div>
       </section>
     </>
-  );
-}
-
-function NewsletterForm() {
-  return (
-    <form action="/api/newsletter" method="POST" style={{ display: 'flex', gap: 0, maxWidth: 440, margin: '0 auto' }}>
-      <input
-        type="email"
-        name="email"
-        placeholder="Your email address"
-        required
-        style={{
-          flex: 1,
-          padding: '14px 20px',
-          background: 'rgba(255,255,255,0.08)',
-          border: '1px solid rgba(255,255,255,0.15)',
-          borderRight: 'none',
-          color: 'white',
-          fontSize: '0.875rem',
-          fontFamily: 'var(--font-body)',
-          outline: 'none',
-        }}
-      />
-      <button type="submit" className="btn-primary" style={{ whiteSpace: 'nowrap' }}>
-        Subscribe
-      </button>
-    </form>
   );
 }
