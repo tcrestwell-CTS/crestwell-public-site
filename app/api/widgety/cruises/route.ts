@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const WIDGETY_BASE = 'https://www.widgety.co.uk/api';
-const APP_ID = process.env.WIDGETY_APP_ID!;
-const APP_TOKEN = process.env.WIDGETY_APP_TOKEN!;
-
 const WIDGETY_HEADERS = {
-  'Application-Id': APP_ID,
-  'Application-Token': APP_TOKEN,
-  'Content-Type': 'application/json',
+  'Application-Id': process.env.WIDGETY_APP_ID!,
+  'Application-Token': process.env.WIDGETY_APP_TOKEN!,
   'Accept': 'application/json',
 };
 
@@ -27,7 +23,7 @@ export async function GET(request: NextRequest) {
   if (destination && destination !== 'any') widgetyParams.set('region', destination);
   if (operator && operator !== 'any')       widgetyParams.set('operator_id', operator);
   if (month && month !== 'any')             widgetyParams.set('departure_month', month);
-  if (year && year !== 'any')              widgetyParams.set('departure_year', year);
+  if (year && year !== 'any')               widgetyParams.set('departure_year', year);
 
   if (duration && duration !== 'any') {
     const durationMap: Record<string, { min: string; max: string }> = {
@@ -51,7 +47,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const url = `${WIDGETY_BASE}/holidays.json?${widgetyParams.toString()}`;
-    const res = await fetch(url, { headers: WIDGETY_HEADERS, next: { revalidate: 300 } });
+    const res = await fetch(url, {
+      headers: WIDGETY_HEADERS,
+      next: { revalidate: 300 },
+    });
 
     if (!res.ok) {
       const text = await res.text();
