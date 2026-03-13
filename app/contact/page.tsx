@@ -1,7 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import type { ContactMessage } from '@/lib/supabase';
 
 const subjects = [
   'General Inquiry',
@@ -13,7 +11,7 @@ const subjects = [
   'Other',
 ];
 
-const initialForm: Omit<ContactMessage, 'id' | 'created_at' | 'status'> = {
+const initialForm = {
   name: '',
   email: '',
   phone: '',
@@ -34,8 +32,12 @@ export default function ContactPage() {
     setSubmitting(true);
     setError('');
     try {
-      const { error: sbError } = await supabase.from('contact_messages').insert([{ ...form, status: 'new' }]);
-      if (sbError) throw sbError;
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Something went wrong. Please try again.');
       setSubmitted(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
@@ -76,7 +78,6 @@ export default function ContactPage() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-
               <div style={{ display: 'flex', gap: 16 }}>
                 <div style={{ width: 44, height: 44, background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <span style={{ color: 'var(--gold)', fontSize: '1rem' }}>📞</span>
