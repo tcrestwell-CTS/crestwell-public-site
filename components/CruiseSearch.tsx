@@ -42,36 +42,68 @@ type SearchFilters = {
 // ─── Region fallback images (Unsplash) ───────────────────────────────────────
 // Only used when operator image is unavailable
 
-const REGION_IMAGES: Record<string, string> = {
-  caribbean:     'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
-  mediterranean: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80',
-  alaska:        'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=80',
-  norway:        'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80',
-  river:         'https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800&q=80',
-  europe:        'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=800&q=80',
-};
-
 const DEFAULT_CRUISE_IMAGE = 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80';
 
+// Regions and cruise names vary per card — use these for visual variety.
+// Checked top-to-bottom; first match wins.
+const REGION_IMAGE_MAP: { keyword: string; url: string }[] = [
+  { keyword: 'caribbean',     url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
+  { keyword: 'bahamas',       url: 'https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=800&q=80' },
+  { keyword: 'bermuda',       url: 'https://images.unsplash.com/photo-1565073624497-7144969f8561?w=800&q=80' },
+  { keyword: 'mediterranean', url: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80' },
+  { keyword: 'alaska',        url: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=80' },
+  { keyword: 'norway',        url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80' },
+  { keyword: 'fjord',         url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80' },
+  { keyword: 'hawaii',        url: 'https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=800&q=80' },
+  { keyword: 'mexico',        url: 'https://images.unsplash.com/photo-1512813498716-3e640fed3f5f?w=800&q=80' },
+  { keyword: 'south america', url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800&q=80' },
+  { keyword: 'south pacific', url: 'https://images.unsplash.com/photo-1589197331516-4d84b72ebde3?w=800&q=80' },
+  { keyword: 'pacific',       url: 'https://images.unsplash.com/photo-1589197331516-4d84b72ebde3?w=800&q=80' },
+  { keyword: 'asia',          url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80' },
+  { keyword: 'japan',         url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80' },
+  { keyword: 'australia',     url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80' },
+  { keyword: 'europe',        url: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=800&q=80' },
+  { keyword: 'british isles', url: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80' },
+  { keyword: 'transatlantic', url: 'https://images.unsplash.com/photo-1473615695634-bfd05d49cb7f?w=800&q=80' },
+  { keyword: 'east coast',    url: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80' },
+  { keyword: 'mississippi',   url: 'https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800&q=80' },
+  { keyword: 'columbia',      url: 'https://images.unsplash.com/photo-1473615695634-bfd05d49cb7f?w=800&q=80' },
+  { keyword: 'river',         url: 'https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800&q=80' },
+  { keyword: 'florida',       url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
+  { keyword: 'gulf',          url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
+  { keyword: 'sea island',    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
+  { keyword: 'canada',        url: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=80' },
+  { keyword: 'africa',        url: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80' },
+  { keyword: 'antarctic',     url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=800&q=80' },
+  { keyword: 'arctic',        url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=800&q=80' },
+  { keyword: 'world',         url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80' },
+];
+
 function getImageForCruise(cruise: WidgetyCruise, operatorMap: Map<string, WidgetyOperator>): string {
-  // 1. Extract operator slug from the operator URL and look up in our map
+  // Combine regions + cruise name for keyword matching
+  const haystack = [
+    ...(cruise.regions || []),
+    cruise.name || '',
+  ].join(' ').toLowerCase();
+
+  // 1. Region / name keyword match (varies per card)
+  for (const { keyword, url } of REGION_IMAGE_MAP) {
+    if (haystack.includes(keyword)) return url;
+  }
+
+  // 2. River cruise type
+  if ((cruise.cruise_type || []).some(t => t.toLowerCase() === 'river')) {
+    return 'https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800&q=80';
+  }
+
+  // 3. Operator cover image (same per operator, last resort)
   const slug = cruise.operator?.split('/operators/')[1]?.replace('.json', '');
   const op = slug ? operatorMap.get(slug) : undefined;
   if (op?.cover_image_href) return op.cover_image_href;
 
-  // 2. Region keyword fallback
-  const regionStr = (cruise.regions || []).join(' ').toLowerCase();
-  for (const [key, url] of Object.entries(REGION_IMAGES)) {
-    if (regionStr.includes(key)) return url;
-  }
-
-  // 3. River cruise type fallback
-  if ((cruise.cruise_type || []).some(t => t.toLowerCase() === 'river')) {
-    return REGION_IMAGES.river;
-  }
-
   return DEFAULT_CRUISE_IMAGE;
 }
+
 
 // ─── Static filter data ───────────────────────────────────────────────────────
 
