@@ -1,29 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const WIDGETY_BASE = 'https://www.widgety.co.uk/api';
-const WIDGETY_HEADERS = {
-  'Application-Id': process.env.WIDGETY_APP_ID!,
-  'Application-Token': process.env.WIDGETY_APP_TOKEN!,
-  'Accept': 'application/json;api_version=2',
-};
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-
   const widgetyParams = new URLSearchParams();
 
-  const destination = searchParams.get('destination');
-  const operator    = searchParams.get('operator');
-  const duration    = searchParams.get('duration');
-  const month       = searchParams.get('month');
-  const year        = searchParams.get('year');
-  const page        = searchParams.get('page') || '1';
-  const perPage     = searchParams.get('per_page') || '12';
+  // Credentials as query params
+  widgetyParams.set('token', process.env.WIDGETY_APP_TOKEN!);
+  widgetyParams.set('app_id', process.env.WIDGETY_APP_ID!);
 
-  if (destination && destination !== 'any') widgetyParams.set('region', destination);
-  if (operator && operator !== 'any')       widgetyParams.set('operator_id', operator);
-  if (month && month !== 'any')             widgetyParams.set('departure_month', month);
-  if (year && year !== 'any')               widgetyParams.set('departure_year', year);
+  const operator = searchParams.get('operator');
+  const duration = searchParams.get('duration');
+  const month    = searchParams.get('month');
+  const year     = searchParams.get('year');
+  const page     = searchParams.get('page') || '1';
+  const perPage  = searchParams.get('per_page') || '12';
+
+  if (operator && operator !== 'any') widgetyParams.set('operator', operator);
+  if (month && month !== 'any')       widgetyParams.set('start_date_range_beginning', `${year || new Date().getFullYear()}-${month.padStart(2, '0')}-01`);
 
   if (duration && duration !== 'any') {
     const durationMap: Record<string, { min: string; max: string }> = {
@@ -41,14 +36,14 @@ export async function GET(request: NextRequest) {
   }
 
   widgetyParams.set('page', page);
-  widgetyParams.set('per_page', perPage);
-  widgetyParams.set('market', 'US');
-  widgetyParams.set('currency', 'USD');
+  widgetyParams.set('limit', perPage);
 
   try {
-    const url = `${WIDGETY_BASE}/holidays.json?${widgetyParams.toString()}`;
+    const url = `${WIDGETY_BASE}/cruises.json?${widgetyParams.toString()}`;
     const res = await fetch(url, {
-      headers: WIDGETY_HEADERS,
+      headers: {
+        'Accept': 'application/json;api_version=2',
+      },
       next: { revalidate: 300 },
     });
 
