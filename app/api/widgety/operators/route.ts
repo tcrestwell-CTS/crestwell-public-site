@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const WIDGETY_BASE = 'https://api.widgety.co.uk/v3';
+const WIDGETY_BASE = 'https://developer.widgety.co.uk/v3';
 
 const WIDGETY_HEADERS = {
   'Application-Id': process.env.WIDGETY_APP_ID!,
