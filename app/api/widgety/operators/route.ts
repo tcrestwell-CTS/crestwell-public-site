@@ -4,7 +4,7 @@ const WIDGETY_BASE = 'https://www.widgety.co.uk/api';
 const WIDGETY_HEADERS = {
   'Application-Id': process.env.WIDGETY_APP_ID!,
   'Application-Token': process.env.WIDGETY_APP_TOKEN!,
-  'Accept': 'application/json',
+  'Accept': 'application/json;api_version=2',
 };
 
 export async function GET() {
