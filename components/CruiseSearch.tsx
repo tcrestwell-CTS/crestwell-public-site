@@ -4,24 +4,32 @@ import Link from 'next/link';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Cruise = {
-  id: number;
+type WidgetyCruise = {
+  ref: string;
   name: string;
-  operator_name: string;
-  ship_name: string;
-  nights: number;
-  departure_date: string;
-  departure_port: string;
-  destination_name: string;
-  region: string;
-  price_from: number | null;
-  currency: string;
-  itinerary_summary: string;
-  image_url: string | null;
-  ports: string[];
+  cruise_nights: number;
+  cruise_type: string[];
+  starts_on: string;
+  ends_on: string;
+  starts_at: string;
+  ends_at: string;
+  regions: string[];
+  operator: string;        // URL e.g. "https://www.widgety.co.uk/api/operators/norwegian-cruise-line.json"
+  operator_title: string;
+  ship: string;
+  ship_title: string;
+  rating: string | null;
+  description: string;
+  vendor_id: string;
 };
 
-type Operator = { id: string; title: string };
+type WidgetyOperator = {
+  id: string;              // slug e.g. "norwegian-cruise-line"
+  title: string;
+  cover_image_href: string;   // full CDN URL
+  profile_image_href: string; // full CDN URL
+  href: string;            // API URL
+};
 
 type SearchFilters = {
   destination: string;
@@ -30,6 +38,40 @@ type SearchFilters = {
   month: string;
   year: string;
 };
+
+// ─── Region fallback images (Unsplash) ───────────────────────────────────────
+// Only used when operator image is unavailable
+
+const REGION_IMAGES: Record<string, string> = {
+  caribbean:     'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
+  mediterranean: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80',
+  alaska:        'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=80',
+  norway:        'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80',
+  river:         'https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800&q=80',
+  europe:        'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=800&q=80',
+};
+
+const DEFAULT_CRUISE_IMAGE = 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80';
+
+function getImageForCruise(cruise: WidgetyCruise, operatorMap: Map<string, WidgetyOperator>): string {
+  // 1. Extract operator slug from the operator URL and look up in our map
+  const slug = cruise.operator?.split('/operators/')[1]?.replace('.json', '');
+  const op = slug ? operatorMap.get(slug) : undefined;
+  if (op?.cover_image_href) return op.cover_image_href;
+
+  // 2. Region keyword fallback
+  const regionStr = (cruise.regions || []).join(' ').toLowerCase();
+  for (const [key, url] of Object.entries(REGION_IMAGES)) {
+    if (regionStr.includes(key)) return url;
+  }
+
+  // 3. River cruise type fallback
+  if ((cruise.cruise_type || []).some(t => t.toLowerCase() === 'river')) {
+    return REGION_IMAGES.river;
+  }
+
+  return DEFAULT_CRUISE_IMAGE;
+}
 
 // ─── Static filter data ───────────────────────────────────────────────────────
 
@@ -58,30 +100,30 @@ const DURATIONS = [
 
 const MONTHS = [
   { value: 'any', label: 'Any Month' },
-  { value: '1', label: 'January' },  { value: '2', label: 'February' },
-  { value: '3', label: 'March' },    { value: '4', label: 'April' },
-  { value: '5', label: 'May' },      { value: '6', label: 'June' },
-  { value: '7', label: 'July' },     { value: '8', label: 'August' },
-  { value: '9', label: 'September' },{ value: '10', label: 'October' },
-  { value: '11', label: 'November' },{ value: '12', label: 'December' },
+  { value: '1',  label: 'January' },  { value: '2',  label: 'February' },
+  { value: '3',  label: 'March' },    { value: '4',  label: 'April' },
+  { value: '5',  label: 'May' },      { value: '6',  label: 'June' },
+  { value: '7',  label: 'July' },     { value: '8',  label: 'August' },
+  { value: '9',  label: 'September' },{ value: '10', label: 'October' },
+  { value: '11', label: 'November' }, { value: '12', label: 'December' },
 ];
 
 const YEARS = [
-  { value: 'any', label: 'Any Year' },
+  { value: 'any',  label: 'Any Year' },
   { value: '2026', label: '2026' },
   { value: '2027', label: '2027' },
 ];
 
 const FALLBACK_OPERATORS = [
-  { value: 'any', label: 'Any Cruise Line' },
-  { value: 'royal-caribbean-international', label: 'Royal Caribbean' },
+  { value: 'any',                            label: 'Any Cruise Line' },
+  { value: 'royal-caribbean-international',  label: 'Royal Caribbean' },
   { value: 'carnival-cruise-lines-operator', label: 'Carnival' },
-  { value: 'norwegian-cruise-line', label: 'Norwegian Cruise Line' },
-  { value: 'msc-cruises', label: 'MSC Cruises' },
-  { value: 'celebrity-cruises', label: 'Celebrity Cruises' },
-  { value: 'princess-cruises', label: 'Princess Cruises' },
-  { value: 'virgin-voyages', label: 'Virgin Voyages' },
-  { value: 'explora-journeys', label: 'Explora Journeys' },
+  { value: 'norwegian-cruise-line',          label: 'Norwegian Cruise Line' },
+  { value: 'msc-cruises',                    label: 'MSC Cruises' },
+  { value: 'celebrity-cruises',              label: 'Celebrity Cruises' },
+  { value: 'princess-cruises',               label: 'Princess Cruises' },
+  { value: 'virgin-voyages',                 label: 'Virgin Voyages' },
+  { value: 'explora-journeys',               label: 'Explora Journeys' },
 ];
 
 const DEFAULT_FILTERS: SearchFilters = {
@@ -90,11 +132,6 @@ const DEFAULT_FILTERS: SearchFilters = {
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function formatPrice(price: number | null, currency = 'USD') {
-  if (!price) return 'Call for pricing';
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(price);
-}
 
 function formatDate(dateStr: string) {
   if (!dateStr) return '';
@@ -106,8 +143,10 @@ function formatDate(dateStr: string) {
 export default function CruiseSearch() {
   const [filters, setFilters]         = useState<SearchFilters>(DEFAULT_FILTERS);
   const [applied, setApplied]         = useState<SearchFilters>(DEFAULT_FILTERS);
-  const [operators, setOperators]     = useState<{ value: string; label: string }[]>(FALLBACK_OPERATORS);
-  const [cruises, setCruises]         = useState<Cruise[]>([]);
+  const [operatorOptions, setOperatorOptions] = useState<{ value: string; label: string }[]>(FALLBACK_OPERATORS);
+  // Map of slug → full operator object (for image lookup)
+  const [operatorMap, setOperatorMap] = useState<Map<string, WidgetyOperator>>(new Map());
+  const [cruises, setCruises]         = useState<WidgetyCruise[]>([]);
   const [loading, setLoading]         = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [error, setError]             = useState('');
@@ -115,22 +154,25 @@ export default function CruiseSearch() {
   const [totalPages, setTotalPages]   = useState(1);
   const [totalCount, setTotalCount]   = useState(0);
 
-  // Load operators once on mount
+  // Load operators once on mount — build both the dropdown list and the image lookup map
   useEffect(() => {
     fetch('/api/widgety/operators')
       .then(r => r.json())
       .then(data => {
-        // Widgety returns { operators: [...] }
-        // Each operator has: id (slug string), title (display name)
-        const list: Operator[] = data.operators || data || [];
+        const list: WidgetyOperator[] = data.operators || data || [];
         if (list.length > 0) {
-          setOperators([
+          // Dropdown options
+          setOperatorOptions([
             { value: 'any', label: 'Any Cruise Line' },
-            ...list.map(o => ({ value: o.id, label: o.title })),  // ← FIXED: id is already a slug, title is the display name
+            ...list.map(o => ({ value: o.id, label: o.title })),
           ]);
+          // Image lookup map: slug → operator
+          const map = new Map<string, WidgetyOperator>();
+          list.forEach(o => map.set(o.id, o));
+          setOperatorMap(map);
         }
       })
-      .catch(() => {}); // Fallback already set
+      .catch(() => {});
   }, []);
 
   const fetchCruises = useCallback(async (f: SearchFilters, pg: number) => {
@@ -146,12 +188,12 @@ export default function CruiseSearch() {
       if (!res.ok) throw new Error(`${res.status}`);
       const data = await res.json();
 
-      const list: Cruise[] = data.cruises || data.holidays || (Array.isArray(data) ? data : []);
-      const meta = data.meta || data.pagination || {};
+      const list: WidgetyCruise[] = data.cruises || (Array.isArray(data) ? data : []);
+      const total = data.total || list.length;
 
       setCruises(list);
-      setTotalPages(meta.total_pages || Math.ceil((meta.total_count || list.length) / 9) || 1);
-      setTotalCount(meta.total_count || list.length);
+      setTotalPages(Math.ceil(total / 9) || 1);
+      setTotalCount(total);
     } catch {
       setError('Unable to load live results right now. Please try again or request a custom quote.');
       setCruises([]);
@@ -161,7 +203,6 @@ export default function CruiseSearch() {
     }
   }, []);
 
-  // Load on mount
   useEffect(() => { fetchCruises(DEFAULT_FILTERS, 1); }, [fetchCruises]);
 
   const handleSearch = () => {
@@ -200,11 +241,11 @@ export default function CruiseSearch() {
         {/* Search bar */}
         <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(201,168,76,0.25)', backdropFilter: 'blur(12px)', padding: '32px 32px 28px', marginBottom: 48 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 16, marginBottom: 24 }}>
-            <FilterSelect label="Destination"  value={filters.destination} onChange={update('destination')} options={DESTINATIONS} />
-            <FilterSelect label="Cruise Line"  value={filters.operator}    onChange={update('operator')}    options={operators} />
-            <FilterSelect label="Duration"     value={filters.duration}    onChange={update('duration')}    options={DURATIONS} />
-            <FilterSelect label="Month"        value={filters.month}       onChange={update('month')}       options={MONTHS} />
-            <FilterSelect label="Year"         value={filters.year}        onChange={update('year')}        options={YEARS} />
+            <FilterSelect label="Destination" value={filters.destination} onChange={update('destination')} options={DESTINATIONS} />
+            <FilterSelect label="Cruise Line"  value={filters.operator}   onChange={update('operator')}    options={operatorOptions} />
+            <FilterSelect label="Duration"     value={filters.duration}   onChange={update('duration')}    options={DURATIONS} />
+            <FilterSelect label="Month"        value={filters.month}      onChange={update('month')}       options={MONTHS} />
+            <FilterSelect label="Year"         value={filters.year}       onChange={update('year')}        options={YEARS} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <button
@@ -212,18 +253,12 @@ export default function CruiseSearch() {
               disabled={loading}
               style={{
                 background: loading ? 'rgba(201,168,76,0.5)' : 'var(--gold)',
-                color: 'var(--navy)',
-                border: 'none',
-                padding: '15px 52px',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
+                color: 'var(--navy)', border: 'none',
+                padding: '15px 52px', fontSize: '0.78rem', fontWeight: 600,
+                letterSpacing: '0.15em', textTransform: 'uppercase',
                 fontFamily: 'var(--font-body)',
                 cursor: loading ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
+                display: 'flex', alignItems: 'center', gap: 10,
                 transition: 'all 0.25s',
               }}
               onMouseEnter={e => { if (!loading) (e.currentTarget.style.background = 'var(--gold-light)'); }}
@@ -237,7 +272,6 @@ export default function CruiseSearch() {
 
         {/* Results */}
         <div id="cruise-results">
-          {/* Meta bar */}
           {!initialLoad && !error && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
               <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem' }}>
@@ -254,7 +288,6 @@ export default function CruiseSearch() {
             </div>
           )}
 
-          {/* Error */}
           {error && (
             <div style={{ background: 'rgba(255,80,80,0.07)', border: '1px solid rgba(255,80,80,0.2)', padding: '28px', textAlign: 'center', marginBottom: 32 }}>
               <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.875rem', marginBottom: 16 }}>{error}</p>
@@ -262,21 +295,20 @@ export default function CruiseSearch() {
             </div>
           )}
 
-          {/* Skeleton */}
           {loading && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
               {[...Array(6)].map((_, i) => <CruiseSkeleton key={i} delay={i * 0.1} />)}
             </div>
           )}
 
-          {/* Cards */}
           {!loading && !error && cruises.length > 0 && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
-              {cruises.map(c => <CruiseCard key={c.id} cruise={c} />)}
+              {cruises.map(c => (
+                <CruiseCard key={c.ref} cruise={c} operatorMap={operatorMap} />
+              ))}
             </div>
           )}
 
-          {/* Empty */}
           {!loading && !error && !initialLoad && cruises.length === 0 && (
             <div style={{ textAlign: 'center', padding: '64px 24px' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: 16, opacity: 0.4 }}>⚓</div>
@@ -286,7 +318,6 @@ export default function CruiseSearch() {
             </div>
           )}
 
-          {/* Pagination */}
           {!loading && totalPages > 1 && (
             <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 48, flexWrap: 'wrap' }}>
               <PagBtn disabled={page <= 1} onClick={() => handlePageChange(page - 1)} label="← Prev" />
@@ -317,14 +348,23 @@ export default function CruiseSearch() {
 
 // ─── Cruise Card ──────────────────────────────────────────────────────────────
 
-function CruiseCard({ cruise }: { cruise: Cruise }) {
+function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMap: Map<string, WidgetyOperator> }) {
   const [hovered, setHovered] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  const imageUrl = imgError ? DEFAULT_CRUISE_IMAGE : getImageForCruise(cruise, operatorMap);
+  const region = (cruise.regions || [])[0] || '';
+  const cruiseType = (cruise.cruise_type || [])[0] || '';
+
+  // Extract operator slug for profile image (small logo overlay)
+  const operatorSlug = cruise.operator?.split('/operators/')[1]?.replace('.json', '');
+  const operatorData = operatorSlug ? operatorMap.get(operatorSlug) : undefined;
 
   const quoteParams = new URLSearchParams({
-    destination: cruise.region || cruise.destination_name || '',
-    line: cruise.operator_name || '',
-    duration: `${cruise.nights} nights`,
-    cruise_id: String(cruise.id),
+    destination: region,
+    line: cruise.operator_title || '',
+    duration: `${cruise.cruise_nights} nights`,
+    cruise_id: cruise.ref || '',
     cruise_name: cruise.name || '',
   });
 
@@ -344,59 +384,94 @@ function CruiseCard({ cruise }: { cruise: Cruise }) {
     >
       {/* Image */}
       <div style={{ height: 190, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
-        {cruise.image_url ? (
-          <div style={{ width: '100%', height: '100%', backgroundImage: `url(${cruise.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.05)' : 'scale(1)' }} />
+        <div
+          style={{
+            width: '100%', height: '100%',
+            backgroundImage: `url(${imageUrl})`,
+            backgroundSize: 'cover', backgroundPosition: 'center',
+            transition: 'transform 0.5s ease',
+            transform: hovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        />
+        {/* Invisible img tag to catch load errors for background-image */}
+        <img
+          src={imageUrl}
+          alt=""
+          onError={() => setImgError(true)}
+          style={{ display: 'none' }}
+        />
+
+        {/* Operator logo (profile_image_href) — small square top-left */}
+        {operatorData?.profile_image_href ? (
+          <div style={{ position: 'absolute', top: 10, left: 10, width: 36, height: 36, background: 'rgba(255,255,255,0.92)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 3 }}>
+            <img
+              src={operatorData.profile_image_href}
+              alt={cruise.operator_title}
+              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+            />
+          </div>
         ) : (
-          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1e2d42 0%, #162033 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', opacity: 0.25 }}>🚢</div>
+          <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(13,27,42,0.88)', padding: '4px 10px', backdropFilter: 'blur(6px)' }}>
+            <span style={{ fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--gold)' }}>
+              {cruise.operator_title || 'Cruise'}
+            </span>
+          </div>
         )}
-        {/* Operator tag */}
-        <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(13,27,42,0.88)', padding: '4px 10px', backdropFilter: 'blur(6px)' }}>
-          <span style={{ fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--gold)' }}>{cruise.operator_name || 'Cruise'}</span>
-        </div>
+
         {/* Nights badge */}
         <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'var(--gold)', padding: '4px 10px' }}>
-          <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--navy)', letterSpacing: '0.06em' }}>{cruise.nights}N</span>
+          <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--navy)', letterSpacing: '0.06em' }}>
+            {cruise.cruise_nights}N
+          </span>
         </div>
+
+        {/* Ocean / River badge */}
+        {cruiseType && (
+          <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(13,27,42,0.75)', padding: '4px 8px', backdropFilter: 'blur(4px)' }}>
+            <span style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>
+              {cruiseType}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Body */}
       <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <h3 className="font-display" style={{ fontSize: '1.1rem', fontWeight: 400, color: 'white', lineHeight: 1.35, marginBottom: 4 }}>
-          {cruise.name || `${cruise.nights}-Night ${cruise.destination_name || cruise.region || 'Cruise'}`}
+          {cruise.name || `${cruise.cruise_nights}-Night ${region || 'Cruise'}`}
         </h3>
-        {cruise.ship_name && (
-          <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.05em', marginBottom: 14 }}>{cruise.ship_name}</p>
+        {cruise.ship_title && (
+          <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.05em', marginBottom: 14 }}>
+            {cruise.ship_title}
+          </p>
         )}
 
         {/* Meta */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 14 }}>
-          {cruise.departure_date && <Meta icon="📅" text={formatDate(cruise.departure_date)} />}
-          {cruise.departure_port && <Meta icon="⚓" text={cruise.departure_port} />}
-          {(cruise.destination_name || cruise.region) && <Meta icon="🗺" text={cruise.destination_name || cruise.region} />}
+          {cruise.starts_on && <Meta icon="📅" text={formatDate(cruise.starts_on)} />}
+          {cruise.starts_at && <Meta icon="⚓" text={cruise.starts_at} />}
+          {region           && <Meta icon="🗺" text={region} />}
+          {cruise.rating    && <Meta icon="⭐" text={cruise.rating} />}
         </div>
 
-        {/* Port chips */}
-        {cruise.ports?.length > 0 && (
+        {/* Extra region chips when multiple */}
+        {cruise.regions?.length > 1 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 16 }}>
-            {cruise.ports.slice(0, 4).map((p, i) => (
-              <span key={i} style={{ fontSize: '0.66rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}>{p}</span>
+            {cruise.regions.slice(0, 4).map((r, i) => (
+              <span key={i} style={{ fontSize: '0.66rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}>{r}</span>
             ))}
-            {cruise.ports.length > 4 && (
-              <span style={{ fontSize: '0.66rem', color: 'rgba(255,255,255,0.2)', padding: '3px 0' }}>+{cruise.ports.length - 4} more</span>
-            )}
           </div>
         )}
 
         <div style={{ flex: 1 }} />
 
-        {/* Price + CTA */}
+        {/* CTA */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)', gap: 10, flexWrap: 'wrap' }}>
           <div>
-            <div style={{ fontSize: '0.58rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>From</div>
-            <div style={{ fontSize: '1.15rem', fontWeight: 400, fontFamily: 'var(--font-display)', color: cruise.price_from ? 'var(--gold)' : 'rgba(255,255,255,0.35)' }}>
-              {formatPrice(cruise.price_from, cruise.currency)}
+            <div style={{ fontSize: '0.58rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>Pricing</div>
+            <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-display)', color: 'rgba(255,255,255,0.4)' }}>
+              Request a quote
             </div>
-            {cruise.price_from && <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.2)' }}>per person</div>}
           </div>
           <Link
             href={`/request-quote?${quoteParams}`}
@@ -404,15 +479,10 @@ function CruiseCard({ cruise }: { cruise: Cruise }) {
               background: hovered ? 'var(--gold)' : 'transparent',
               color: hovered ? 'var(--navy)' : 'var(--gold)',
               border: '1px solid var(--gold)',
-              padding: '9px 18px',
-              fontSize: '0.68rem',
-              fontWeight: 500,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              fontFamily: 'var(--font-body)',
-              transition: 'all 0.25s',
-              whiteSpace: 'nowrap',
+              padding: '9px 18px', fontSize: '0.68rem', fontWeight: 500,
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              textDecoration: 'none', fontFamily: 'var(--font-body)',
+              transition: 'all 0.25s', whiteSpace: 'nowrap',
             }}
           >
             Get Quote
@@ -523,3 +593,5 @@ function Spinner() {
     </svg>
   );
 }
+
+const DEFAULT_CRUISE_IMAGE = 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80';
