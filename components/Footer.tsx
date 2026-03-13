@@ -62,6 +62,12 @@ export default function Footer() {
             <div className="overline" style={{ marginBottom: 20 }}>Contact</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
+                <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate-light)', marginBottom: 4 }}>Phone</div>
+                <a href="tel:8885086893" style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem', textDecoration: 'none' }}>
+                  888.508.6893
+                </a>
+              </div>
+              <div>
                 <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate-light)', marginBottom: 4 }}>Email</div>
                 <a href="mailto:info@crestwellgetaways.com" style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem', textDecoration: 'none' }}>
                   info@crestwellgetaways.com
