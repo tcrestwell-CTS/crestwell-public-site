@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -23,6 +24,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <Script
+          id="bbb-seal"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var bbb = bbb || [];
+              bbb.push(["bbbid", "chattanooga"]);
+              bbb.push(["bid", "80012178"]);
+              bbb.push(["chk", "C5735AFA23"]);
+              bbb.push(["pos", "bottom-left"]);
+              (function () {
+                var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+                var bbb = document.createElement("script");
+                bbb.type = "text/javascript";
+                bbb.async = true;
+                bbb.src = scheme + "seal-chattanooga.bbb.org/badge/badge.min.js";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bbb, s);
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );
