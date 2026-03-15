@@ -2,6 +2,39 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+const ACCREDITATIONS = [
+  {
+    src: '/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
+    alt: 'ASTA — American Society of Travel Advisors',
+    width: 140,
+    height: 60,
+  },
+  {
+    src: '/images/CLIA-Cruise-Lines-International-Association-Logo.jpg',
+    alt: 'CLIA — Cruise Lines International Association',
+    width: 80,
+    height: 60,
+  },
+  {
+    src: '/images/TRUE-Image.jpg',
+    alt: 'TRUE Certification',
+    width: 100,
+    height: 60,
+  },
+  {
+    src: '/images/Carnival-Expert-Diamond-Level-Graduate_logo.jpg',
+    alt: 'Carnival Expert — Diamond Level Graduate',
+    width: 160,
+    height: 60,
+  },
+  {
+    src: '/images/c7e7a302-e75d-491e-9dd2-b7990834a0a0.jpg',
+    alt: "Norwegian Cruise Line — Master's Degree",
+    width: 70,
+    height: 60,
+  },
+];
+
 export default function Footer() {
   return (
     <footer style={{ background: 'var(--navy)', color: 'white' }}>
@@ -38,7 +71,9 @@ export default function Footer() {
                 { label: 'Contact', href: '/contact' },
               ].map(item => (
                 <li key={item.href}>
-                  <Link href={item.href} style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.02em' }}
+                  <Link
+                    href={item.href}
+                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.02em' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}>
                     {item.label}
@@ -87,21 +122,36 @@ export default function Footer() {
 
         {/* Accreditations */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, marginBottom: 32 }}>
-          <div className="overline" style={{ marginBottom: 20, textAlign: 'center' }}>Accreditations & Certifications</div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(201,168,76,0.15)',
-              padding: '20px 32px',
-            }}>
-              <Image
-                src="/images/logo_acc.jpg"
-                alt="Accreditations: ASTA, CLIA, TRUE, ABTP, Carnival Expert Diamond Level Graduate, Norwegian Master's Degree"
-                width={900}
-                height={120}
-                style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }}
-              />
-            </div>
+          <div className="overline" style={{ marginBottom: 24, textAlign: 'center' }}>Accreditations & Certifications</div>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 32,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            {ACCREDITATIONS.map(({ src, alt, width, height }) => (
+              <div
+                key={src}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '10px 16px',
+                  background: 'rgba(255,255,255,0.92)',
+                  borderRadius: 4,
+                  minWidth: 80,
+                }}
+              >
+                <Image
+                  src={src}
+                  alt={alt}
+                  width={width}
+                  height={height}
+                  style={{ objectFit: 'contain', height: 48, width: 'auto' }}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -112,7 +162,10 @@ export default function Footer() {
           </p>
           <div style={{ display: 'flex', gap: 24 }}>
             {['Terms & Conditions', 'Privacy Policy'].map(item => (
-              <Link key={item} href="#" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', textDecoration: 'none', transition: 'color 0.2s' }}
+              <Link
+                key={item}
+                href="#"
+                style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}>
                 {item}
