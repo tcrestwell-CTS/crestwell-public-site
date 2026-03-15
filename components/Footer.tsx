@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -86,22 +87,21 @@ export default function Footer() {
 
         {/* Accreditations */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, marginBottom: 32 }}>
-          <div className="overline" style={{ marginBottom: 16, textAlign: 'center' }}>Accreditations & Certifications</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
-            {['ASTA', 'CLIA', 'TRUE', 'ABTP', 'Carnival Diamond Expert', 'Norwegian Masters'].map(badge => (
-              <div key={badge} style={{
-                padding: '8px 20px',
-                border: '1px solid rgba(201, 168, 76, 0.25)',
-                borderRadius: 2,
-                fontSize: '0.7rem',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.5)',
-                fontFamily: 'var(--font-body)',
-              }}>
-                {badge}
-              </div>
-            ))}
+          <div className="overline" style={{ marginBottom: 20, textAlign: 'center' }}>Accreditations & Certifications</div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(201,168,76,0.15)',
+              padding: '20px 32px',
+            }}>
+              <Image
+                src="/images/logo_acc.jpg"
+                alt="Accreditations: ASTA, CLIA, TRUE, ABTP, Carnival Expert Diamond Level Graduate, Norwegian Master's Degree"
+                width={900}
+                height={120}
+                style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }}
+              />
+            </div>
           </div>
         </div>
 
