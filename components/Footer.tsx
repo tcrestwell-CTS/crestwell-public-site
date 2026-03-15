@@ -161,14 +161,17 @@ export default function Footer() {
             © {new Date().getFullYear()} Crestwell Travel Services. All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: 24 }}>
-            {['Terms & Conditions', 'Privacy Policy'].map(item => (
+            {[
+              { label: 'Terms & Conditions', href: '/terms' },
+              { label: 'Privacy Policy', href: '/privacy' },
+            ].map(item => (
               <Link
-                key={item}
-                href="#"
+                key={item.href}
+                href={item.href}
                 style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}>
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>
