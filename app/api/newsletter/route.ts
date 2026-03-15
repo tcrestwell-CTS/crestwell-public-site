@@ -19,10 +19,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Valid email required' }, { status: 400 });
     }
 
-    // Use service role key server-side — bypasses RLS safely for trusted API routes
+    // Anon key is fine here — RLS is disabled on newsletter_subscribers (public insert table)
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
     const { error } = await supabase
