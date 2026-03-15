@@ -4,8 +4,9 @@ import Link from 'next/link';
 
 const navItems = [
   { label: 'Home', href: '/' },
+  { label: 'Cruises', href: '/cruises' },
+  { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Destinations', href: '/destinations' },
-  { label: 'Request Quote', href: '/request-quote' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -47,7 +48,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 40 }} className="desktop-nav">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }} className="desktop-nav">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className="nav-link">
                 {item.label}
