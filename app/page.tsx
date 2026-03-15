@@ -15,53 +15,117 @@ const partners = [
 ];
 
 const services = [
-  {
-    icon: '⚓',
-    title: 'Cruise Vacations',
-    description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.',
-  },
-  {
-    icon: '🌴',
-    title: 'All-Inclusive Resorts',
-    description: 'Sandals, Secrets, Beaches, and more. Unlimited dining, drinks, and experiences included.',
-  },
-  {
-    icon: '👨‍👩‍👧‍👦',
-    title: 'Family Vacations',
-    description: 'Disney, Universal, Aulani — kid-friendly adventures with seamless logistics handled for you.',
-  },
-  {
-    icon: '🥂',
-    title: 'Group Travel',
-    description: 'Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.',
-  },
+  { icon: '⚓', title: 'Cruise Vacations', description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.' },
+  { icon: '🌴', title: 'All-Inclusive Resorts', description: 'Sandals, Secrets, Beaches, and more. Unlimited dining, drinks, and experiences included.' },
+  { icon: '👨‍👩‍👧‍👦', title: 'Family Vacations', description: 'Disney, Universal, Aulani — kid-friendly adventures with seamless logistics handled for you.' },
+  { icon: '🥂', title: 'Group Travel', description: 'Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.' },
 ];
 
 const testimonials = [
-  {
-    quote: 'Crestwell made our anniversary cruise completely effortless. Every detail was handled perfectly.',
-    name: 'Sarah & Marcus T.',
-    location: 'Atlanta, GA',
-  },
-  {
-    quote: "Our family trip to the Bahamas was the best vacation we've ever taken. They knew exactly what we needed.",
-    name: 'The Johnson Family',
-    location: 'Chattanooga, TN',
-  },
-  {
-    quote: "I've booked three cruises through Crestwell now. I won't use anyone else — the service is unmatched.",
-    name: 'Diane P.',
-    location: 'Birmingham, AL',
-  },
+  { quote: 'Crestwell made our anniversary cruise completely effortless. Every detail was handled perfectly.', name: 'Sarah & Marcus T.', location: 'Atlanta, GA' },
+  { quote: "Our family trip to the Bahamas was the best vacation we've ever taken. They knew exactly what we needed.", name: 'The Johnson Family', location: 'Chattanooga, TN' },
+  { quote: "I've booked three cruises through Crestwell now. I won't use anyone else — the service is unmatched.", name: 'Diane P.', location: 'Birmingham, AL' },
 ];
 
+// ── Newsletter section as its own client component ────────────────────────────
+function NewsletterSection() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    setErrorMsg('');
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong');
+      setStatus('success');
+      setEmail('');
+    } catch (err: any) {
+      setStatus('error');
+      setErrorMsg(err.message || 'Something went wrong. Please try again.');
+    }
+  };
+
+  return (
+    <section style={{ background: 'var(--navy-mid)', padding: '64px 32px', textAlign: 'center' }}>
+      <div style={{ maxWidth: 520, margin: '0 auto' }}>
+        <div className="overline" style={{ marginBottom: 16 }}>Stay in the Loop</div>
+        <h2 className="font-display" style={{ fontSize: '2rem', fontWeight: 300, color: 'white', marginBottom: 12 }}>
+          Deals & Inspiration, Delivered
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem', marginBottom: 32 }}>
+          Get exclusive cruise deals, travel tips, and destination guides straight to your inbox.
+        </p>
+
+        {status === 'success' ? (
+          <div style={{
+            background: 'rgba(201,168,76,0.12)',
+            border: '1px solid rgba(201,168,76,0.4)',
+            padding: '24px 32px',
+            maxWidth: 440,
+            margin: '0 auto',
+          }}>
+            <div style={{ color: 'var(--gold)', fontSize: '1.5rem', marginBottom: 8 }}>✓</div>
+            <p style={{ color: 'var(--gold)', fontSize: '0.9rem', fontWeight: 500, marginBottom: 4 }}>You're subscribed!</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem' }}>
+              Look out for exclusive deals and travel inspiration in your inbox.
+            </p>
+          </div>
+        ) : (
+          <>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 0, maxWidth: 440, margin: '0 auto' }}>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Your email address"
+                required
+                disabled={status === 'loading'}
+                style={{
+                  flex: 1, padding: '14px 20px',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRight: 'none', color: 'white',
+                  fontSize: '0.875rem', fontFamily: 'var(--font-body)',
+                  outline: 'none',
+                  opacity: status === 'loading' ? 0.6 : 1,
+                }}
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="btn-primary"
+                style={{ whiteSpace: 'nowrap', cursor: status === 'loading' ? 'not-allowed' : 'pointer', opacity: status === 'loading' ? 0.7 : 1 }}
+              >
+                {status === 'loading' ? 'Subscribing…' : 'Subscribe'}
+              </button>
+            </form>
+            {status === 'error' && (
+              <p style={{ color: 'rgba(255,100,100,0.85)', fontSize: '0.8rem', marginTop: 12 }}>
+                {errorMsg}
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────────
 export default function HomePage() {
   const [featuredTrips, setFeaturedTrips] = useState<FeaturedTrip[]>([]);
 
   useEffect(() => {
     getFeaturedTrips()
       .then(trips => {
-        // Show popular trips first, fall back to any published trips, max 4
         const popular = trips.filter(t => t.popular);
         const shown = popular.length >= 2 ? popular : trips;
         setFeaturedTrips(shown.slice(0, 4));
@@ -72,10 +136,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section style={{
-        position: 'relative', minHeight: '100vh', display: 'flex',
-        alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--navy)',
-      }}>
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--navy)' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.35 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.3) 0%, rgba(13,27,42,0.6) 60%, rgba(13,27,42,0.95) 100%)' }} />
         <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px', maxWidth: 860, zIndex: 1 }}>
@@ -92,7 +153,7 @@ export default function HomePage() {
             <Link href="/destinations" className="btn-outline" style={{ textDecoration: 'none' }}>Explore Destinations</Link>
           </div>
         </div>
-        <div style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: 0.5 }}>
+        <div style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', opacity: 0.5 }}>
           <div style={{ width: 1, height: 48, background: 'linear-gradient(180deg, transparent, var(--gold))' }} />
         </div>
       </section>
@@ -122,9 +183,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
             <div className="overline" style={{ marginBottom: 16 }}>What We Do</div>
-            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2 }}>
-              Every Journey, Expertly Crafted
-            </h2>
+            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2 }}>Every Journey, Expertly Crafted</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 2 }}>
             {services.map((s, i) => (
@@ -145,28 +204,14 @@ export default function HomePage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 56, flexWrap: 'wrap', gap: 16 }}>
               <div>
                 <div className="overline" style={{ marginBottom: 12 }}>Popular Itineraries</div>
-                <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2 }}>
-                  Where Will You Go?
-                </h2>
+                <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2 }}>Where Will You Go?</h2>
               </div>
               <Link href="/destinations" className="btn-navy" style={{ textDecoration: 'none' }}>View All Destinations</Link>
             </div>
-
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
               {featuredTrips.map(trip => (
-                <Link
-                  key={trip.id}
-                  href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`}
-                  className="card-hover"
-                  style={{ overflow: 'hidden', background: 'var(--navy)', cursor: 'pointer', textDecoration: 'none', display: 'block' }}
-                >
-                  <div style={{
-                    height: 220,
-                    backgroundImage: `url(${trip.cover_image_url || 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80'})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    position: 'relative',
-                  }}>
+                <Link key={trip.id} href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`} className="card-hover" style={{ overflow: 'hidden', background: 'var(--navy)', cursor: 'pointer', textDecoration: 'none', display: 'block' }}>
+                  <div style={{ height: 220, backgroundImage: `url(${trip.cover_image_url || 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80'})`, backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
                     {trip.trip_type && (
                       <div style={{ position: 'absolute', top: 16, left: 16, background: 'rgba(13,27,42,0.8)', padding: '4px 12px', backdropFilter: 'blur(4px)' }}>
                         <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)' }}>{trip.trip_type}</span>
@@ -180,14 +225,10 @@ export default function HomePage() {
                   </div>
                   <div style={{ padding: '28px 28px 32px' }}>
                     <h3 className="font-display" style={{ fontSize: '1.35rem', fontWeight: 400, color: 'white', marginBottom: 10 }}>{trip.trip_name}</h3>
-                    {trip.description && (
-                      <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>{trip.description}</p>
-                    )}
+                    {trip.description && <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>{trip.description}</p>}
                     <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <span style={{ color: 'var(--gold)', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Request a Quote →</span>
-                      {trip.starting_from && (
-                        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>From {trip.starting_from}</span>
-                      )}
+                      {trip.starting_from && <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>From {trip.starting_from}</span>}
                     </div>
                   </div>
                 </Link>
@@ -203,8 +244,7 @@ export default function HomePage() {
         <div style={{ position: 'relative', maxWidth: 680, margin: '0 auto' }}>
           <div className="gold-divider overline" style={{ marginBottom: 28, justifyContent: 'center' }}>Current Deals</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 300, color: 'white', lineHeight: 1.15, marginBottom: 20 }}>
-            Explore 1,670+<br />
-            <em style={{ color: 'var(--gold-light)' }}>Cruise Vacations</em>
+            Explore 1,670+<br /><em style={{ color: 'var(--gold-light)' }}>Cruise Vacations</em>
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: 40 }}>
             From weekend getaways to extended voyages — our team finds the right cruise at the best price, every time. Let us do the searching for you.
@@ -236,25 +276,7 @@ export default function HomePage() {
       </section>
 
       {/* ── NEWSLETTER ── */}
-      <section style={{ background: 'var(--navy-mid)', padding: '64px 32px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 520, margin: '0 auto' }}>
-          <div className="overline" style={{ marginBottom: 16 }}>Stay in the Loop</div>
-          <h2 className="font-display" style={{ fontSize: '2rem', fontWeight: 300, color: 'white', marginBottom: 12 }}>Deals & Inspiration, Delivered</h2>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem', marginBottom: 32 }}>
-            Get exclusive cruise deals, travel tips, and destination guides straight to your inbox.
-          </p>
-          <form action="/api/newsletter" method="POST" style={{ display: 'flex', gap: 0, maxWidth: 440, margin: '0 auto' }}>
-            <input
-              type="email"
-              name="email"
-              placeholder="Your email address"
-              required
-              style={{ flex: 1, padding: '14px 20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRight: 'none', color: 'white', fontSize: '0.875rem', fontFamily: 'var(--font-body)', outline: 'none' }}
-            />
-            <button type="submit" className="btn-primary" style={{ whiteSpace: 'nowrap' }}>Subscribe</button>
-          </form>
-        </div>
-      </section>
+      <NewsletterSection />
     </>
   );
 }
