@@ -176,7 +176,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CRUISE SEARCH ── */}
-      <CruiseSearch redirectTo="/cruises" />
+      <CruiseSearch redirectTo="/cruises" searchOnly />
 
       {/* ── SERVICES ── */}
       <section className="section-pad" style={{ background: 'var(--cream)' }}>
