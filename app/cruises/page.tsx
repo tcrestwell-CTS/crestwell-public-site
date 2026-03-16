@@ -1,22 +1,31 @@
-import type { Metadata } from 'next';
-import CruiseSearch from '@/components/CruiseSearch';
+'use client';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Cruise Vacations',
-  description: 'Search real-time cruise availability from the world\'s top cruise lines. Ocean and river cruises, expertly matched to you by Crestwell Travel Services.',
-};
+import CruiseSearch from '@/components/CruiseSearch';
 
 const highlights = [
   { icon: '🌊', title: 'Ocean Cruises', description: 'Caribbean, Mediterranean, Alaska, and beyond — we match you with the right ship and itinerary.' },
-  { icon: '🏞️', title: 'River Cruises', description: 'Europe\'s iconic waterways, the Mississippi, and more. Intimate ships, immersive destinations.' },
+  { icon: '🏞️', title: 'River Cruises', description: "Europe's iconic waterways, the Mississippi, and more. Intimate ships, immersive destinations." },
   { icon: '💎', title: 'Luxury Lines', description: 'Silversea, Seabourn, Explora Journeys, Cunard — white-glove service at every port.' },
   { icon: '👨‍👩‍👧‍👦', title: 'Family Cruises', description: 'Disney, Royal Caribbean, and Norwegian — ships packed with activities for every age.' },
   { icon: '🥂', title: 'Adults Only', description: 'Virgin Voyages and boutique lines for couples seeking a more refined onboard experience.' },
   { icon: '🗺️', title: 'World Voyages', description: 'Extended itineraries spanning multiple continents — the ultimate bucket list experience.' },
 ];
 
-export default function CruisesPage() {
+function CruisesContent() {
+  const searchParams = useSearchParams();
+
+  // Read any filter params passed from the homepage search
+  const initialFilters = {
+    destination: searchParams.get('destination') || 'any',
+    operator:    searchParams.get('operator')    || 'any',
+    cruiseType:  searchParams.get('cruise_type') || 'any',
+    duration:    searchParams.get('duration')    || 'any',
+    month:       searchParams.get('month')       || 'any',
+    year:        searchParams.get('year')        || 'any',
+  };
+
   return (
     <>
       {/* Hero */}
@@ -38,7 +47,7 @@ export default function CruisesPage() {
         </div>
       </section>
 
-      {/* Why book with us */}
+      {/* What we offer */}
       <section style={{ background: 'var(--cream)', padding: '64px 32px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
@@ -59,9 +68,9 @@ export default function CruisesPage() {
         </div>
       </section>
 
-      {/* Cruise Search */}
+      {/* Cruise Search — pre-populated with any filters from homepage */}
       <div id="cruise-search">
-        <CruiseSearch />
+        <CruiseSearch initialFilters={initialFilters} />
       </div>
 
       {/* CTA */}
@@ -80,5 +89,13 @@ export default function CruisesPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function CruisesPage() {
+  return (
+    <Suspense fallback={<div style={{ background: 'var(--navy)', minHeight: '100vh' }} />}>
+      <CruisesContent />
+    </Suspense>
   );
 }
