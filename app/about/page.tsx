@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -7,12 +8,36 @@ export const metadata: Metadata = {
 };
 
 const accreditations = [
-  { name: 'ASTA', full: 'American Society of Travel Advisors' },
-  { name: 'CLIA', full: 'Cruise Lines International Association' },
-  { name: 'TRUE', full: 'Travel & Retail Unified Exchange' },
-  { name: 'ABTP', full: 'Association of Black Travel Professionals' },
-  { name: 'Carnival Diamond', full: 'Carnival Cruise Line Diamond Expert' },
-  { name: 'Norwegian Masters', full: 'Norwegian Cruise Line Masters Degree' },
+  {
+    name: 'ASTA',
+    full: 'American Society of Travel Advisors',
+    src: '/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
+    width: 140,
+  },
+  {
+    name: 'CLIA',
+    full: 'Cruise Lines International Association',
+    src: '/images/CLIA-Cruise-Lines-International-Association-Logo.jpg',
+    width: 80,
+  },
+  {
+    name: 'TRUE',
+    full: 'Travel & Retail Unified Exchange',
+    src: '/images/TRUE-Image.jpg',
+    width: 100,
+  },
+  {
+    name: 'Carnival Diamond Expert',
+    full: 'Carnival Cruise Line Diamond Level Graduate',
+    src: '/images/Carnival-Expert-Diamond-Level-Graduate_logo.jpg',
+    width: 160,
+  },
+  {
+    name: "Norwegian Master's Degree",
+    full: 'Norwegian Cruise Line University',
+    src: '/images/c7e7a302-e75d-491e-9dd2-b7990834a0a0.jpg',
+    width: 70,
+  },
 ];
 
 const values = [
@@ -29,12 +54,12 @@ const values = [
   {
     icon: '💰',
     title: 'Best Pricing',
-    description: 'We have access to exclusive rates and promotions that aren\'t available when booking direct. You pay less.',
+    description: "We have access to exclusive rates and promotions that aren't available when booking direct. You pay less.",
   },
   {
     icon: '📞',
     title: 'Concierge Support',
-    description: 'From booking to disembarkation, we\'re here if anything comes up. Your peace of mind is our priority.',
+    description: "From booking to disembarkation, we're here if anything comes up. Your peace of mind is our priority.",
   },
 ];
 
@@ -120,7 +145,7 @@ export default function AboutPage() {
       {/* Accreditations */}
       <section className="section-pad" style={{ background: 'var(--navy)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="overline" style={{ marginBottom: 12 }}>Industry Recognition</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'white' }}>
               Accreditations & Certifications
@@ -129,12 +154,27 @@ export default function AboutPage() {
               Our certifications reflect a commitment to professional excellence and deep product knowledge.
             </p>
           </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
             {accreditations.map((a, i) => (
-              <div key={i} style={{ border: '1px solid rgba(201, 168, 76, 0.2)', padding: '28px 28px', display: 'flex', gap: 16, alignItems: 'center' }}>
-                <div style={{ width: 48, height: 48, background: 'rgba(201, 168, 76, 0.1)', border: '1px solid rgba(201, 168, 76, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)' }}>{a.name.slice(0, 3)}</span>
+              <div key={i} style={{ border: '1px solid rgba(201,168,76,0.2)', padding: '28px', display: 'flex', gap: 20, alignItems: 'center' }}>
+                {/* Logo */}
+                <div style={{
+                  width: 80, height: 64, flexShrink: 0,
+                  background: 'rgba(255,255,255,0.92)',
+                  borderRadius: 3,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  padding: 8,
+                }}>
+                  <Image
+                    src={a.src}
+                    alt={a.name}
+                    width={a.width}
+                    height={48}
+                    style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                  />
                 </div>
+                {/* Text */}
                 <div>
                   <div style={{ fontWeight: 500, fontSize: '0.875rem', color: 'white', marginBottom: 4 }}>{a.name}</div>
                   <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.4 }}>{a.full}</div>
