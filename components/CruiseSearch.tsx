@@ -187,9 +187,10 @@ function formatDate(dateStr: string) {
 type CruiseSearchProps = {
   redirectTo?: string;
   initialFilters?: Partial<SearchFilters>;
+  searchOnly?: boolean; // hides results, used on homepage
 };
 
-export default function CruiseSearch({ redirectTo, initialFilters }: CruiseSearchProps = {}) {
+export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }: CruiseSearchProps = {}) {
   const router = useRouter();
   const [filters, setFilters]         = useState<SearchFilters>({ ...DEFAULT_FILTERS, ...initialFilters });
   const [applied, setApplied]         = useState<SearchFilters>({ ...DEFAULT_FILTERS, ...initialFilters });
@@ -279,7 +280,15 @@ export default function CruiseSearch({ redirectTo, initialFilters }: CruiseSearc
     }
   }, []);
 
-  useEffect(() => { fetchCruises({ ...DEFAULT_FILTERS, ...initialFilters }, 1); }, [fetchCruises]);
+  // Run initial search on mount — skip when searchOnly (homepage just redirects)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (searchOnly) return;
+    const startFilters = { ...DEFAULT_FILTERS, ...initialFilters };
+    setFilters(startFilters);
+    setApplied(startFilters);
+    fetchCruises(startFilters, 1);
+  }, [fetchCruises]);
 
   const handleSearch = () => {
     if (redirectTo) {
@@ -360,8 +369,8 @@ export default function CruiseSearch({ redirectTo, initialFilters }: CruiseSearc
           </div>
         </div>
 
-        {/* Results */}
-        <div id="cruise-results">
+        {/* Results — hidden in searchOnly mode */}
+        <div id="cruise-results" style={{ display: searchOnly ? 'none' : 'block' }}>
           {!initialLoad && !error && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
               <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem' }}>
