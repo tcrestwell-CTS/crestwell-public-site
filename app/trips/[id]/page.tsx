@@ -150,7 +150,7 @@ export default function TripDetailPage() {
       .eq('slug', id)
       .eq('published', true)
       .single()
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: FeaturedTripDetail | null; error: any }) => {
         if (!error && data) setTrip(data as FeaturedTripDetail);
         setLoading(false);
       });
