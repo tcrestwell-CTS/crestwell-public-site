@@ -40,8 +40,10 @@ export async function GET(req: NextRequest) {
   const page        = parseInt(sp.get('page') || '1', 10);
 
   const needsDurationFilter = duration !== 'any';
-  const fetchLimit = needsDurationFilter ? 100 : PER_PAGE;
-  const fetchPage  = needsDurationFilter ? 1   : page;
+  // When no operator filter, fetch a large batch so we can interleave by operator
+  const needsShuffle = operator === 'any' && !needsDurationFilter;
+  const fetchLimit = needsDurationFilter ? 100 : needsShuffle ? 50 : PER_PAGE;
+  const fetchPage  = needsDurationFilter || needsShuffle ? 1 : page;
 
   const params = new URLSearchParams({
     token:  TOKEN,
@@ -101,8 +103,32 @@ export async function GET(req: NextRequest) {
       cruises = cruises.slice(start, start + PER_PAGE);
     }
 
+    // Interleave by operator so cards show diverse cruise lines
+    // Groups cruises by operator slug then round-robins through groups
+    else if (needsShuffle && cruises.length > PER_PAGE) {
+      const groups: Record<string, any[]> = {};
+      for (const c of cruises) {
+        const slug = c.operator?.split('/operators/')[1]?.replace('.json', '') || 'other';
+        if (!groups[slug]) groups[slug] = [];
+        groups[slug].push(c);
+      }
+      const buckets = Object.values(groups);
+      const interleaved: any[] = [];
+      const maxLen = Math.max(...buckets.map(b => b.length));
+      for (let i = 0; i < maxLen; i++) {
+        for (const bucket of buckets) {
+          if (bucket[i]) interleaved.push(bucket[i]);
+        }
+      }
+      // Apply page offset on interleaved results
+      const start = (page - 1) * PER_PAGE;
+      cruises = interleaved.slice(start, start + PER_PAGE);
+      // total stays as reported by API
+    }
+
     return NextResponse.json({ cruises, total, page, per_page: PER_PAGE });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
+}
 }
