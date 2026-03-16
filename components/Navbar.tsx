@@ -74,23 +74,49 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu — full overlay with solid navy background */}
         {menuOpen && (
-          <div style={{ padding: '16px 0 24px', borderTop: '1px solid rgba(255,255,255,0.1)' }} className="mobile-menu">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="nav-link"
-                style={{ display: 'block', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link href="/request-quote" className="btn-primary" style={{ display: 'inline-block', marginTop: 16, textDecoration: 'none' }}>
-              Get a Quote
-            </Link>
+          <div style={{
+            position: 'fixed',
+            top: 72,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(13, 27, 42, 0.98)',
+            backdropFilter: 'blur(12px)',
+            zIndex: 99,
+            overflowY: 'auto',
+            borderTop: '1px solid rgba(201, 168, 76, 0.2)',
+          }}>
+            <div style={{ padding: '24px 32px 40px' }}>
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="nav-link"
+                  style={{
+                    display: 'block',
+                    padding: '16px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    fontSize: '1rem',
+                    letterSpacing: '0.05em',
+                  }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div style={{ marginTop: 28 }}>
+                <Link
+                  href="/request-quote"
+                  className="btn-primary"
+                  style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Get a Quote
+                </Link>
+              </div>
+            </div>
           </div>
         )}
       </div>
