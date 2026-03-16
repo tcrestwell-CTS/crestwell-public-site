@@ -5,8 +5,10 @@ import Link from 'next/link';
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Cruises', href: '/cruises' },
+  { label: 'Cruise Lines', href: '/cruise-lines' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Destinations', href: '/destinations' },
+  { label: 'Travel Tips', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
