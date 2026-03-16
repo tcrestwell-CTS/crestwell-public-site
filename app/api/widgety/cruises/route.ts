@@ -26,23 +26,38 @@ const REGION_MAP: Record<string, string> = {
   world:         'World',
 };
 
-// Round-robin interleave by operator slug so cards show diverse cruise lines
-function interleaveByOperator(cruises: any[]): any[] {
+// Fisher-Yates shuffle
+function shuffle(arr: any[]): any[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Interleave by operator then shuffle within each page-sized window
+// so every page load shows a different mix of cruise lines
+function diversifyAndShuffle(cruises: any[], pageStart: number): any[] {
   const groups: Record<string, any[]> = {};
   for (const c of cruises) {
     const slug = c.operator?.split('/operators/')[1]?.replace('.json', '') || 'other';
     if (!groups[slug]) groups[slug] = [];
     groups[slug].push(c);
   }
-  const buckets = Object.values(groups);
-  const result: any[] = [];
+  // Shuffle within each operator group first
+  const buckets = Object.values(groups).map(b => shuffle(b));
+  // Round-robin interleave across operators
+  const interleaved: any[] = [];
   const maxLen = Math.max(...buckets.map(b => b.length));
   for (let i = 0; i < maxLen; i++) {
     for (const bucket of buckets) {
-      if (bucket[i]) result.push(bucket[i]);
+      if (bucket[i]) interleaved.push(bucket[i]);
     }
   }
-  return result;
+  // Slice the page window then shuffle just those 9 cards
+  const page = interleaved.slice(pageStart, pageStart + PER_PAGE);
+  return shuffle(page);
 }
 
 export async function GET(req: NextRequest) {
@@ -92,7 +107,7 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(`${WIDGETY_BASE}?${params}`, {
       headers: { Accept: 'application/json;api_version=2' },
-      next: { revalidate: 300 },
+      cache: 'no-store',
     });
 
     if (!res.ok) {
@@ -112,9 +127,8 @@ export async function GET(req: NextRequest) {
     }
 
     if (needsShuffle && cruises.length > PER_PAGE) {
-      cruises = interleaveByOperator(cruises);
       const start = (page - 1) * PER_PAGE;
-      cruises = cruises.slice(start, start + PER_PAGE);
+      cruises = diversifyAndShuffle(cruises, start);
     }
 
     return NextResponse.json({ cruises, total, page, per_page: PER_PAGE });
