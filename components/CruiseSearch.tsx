@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -183,9 +184,15 @@ function formatDate(dateStr: string) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function CruiseSearch() {
-  const [filters, setFilters]         = useState<SearchFilters>(DEFAULT_FILTERS);
-  const [applied, setApplied]         = useState<SearchFilters>(DEFAULT_FILTERS);
+type CruiseSearchProps = {
+  redirectTo?: string;
+  initialFilters?: Partial<SearchFilters>;
+};
+
+export default function CruiseSearch({ redirectTo, initialFilters }: CruiseSearchProps = {}) {
+  const router = useRouter();
+  const [filters, setFilters]         = useState<SearchFilters>({ ...DEFAULT_FILTERS, ...initialFilters });
+  const [applied, setApplied]         = useState<SearchFilters>({ ...DEFAULT_FILTERS, ...initialFilters });
   const [operatorOptions, setOperatorOptions] = useState(FALLBACK_OPERATORS);
   // Map of slug → full operator object (for image lookup)
   const [operatorMap, setOperatorMap] = useState<Map<string, WidgetyOperator>>(new Map());
@@ -272,9 +279,22 @@ export default function CruiseSearch() {
     }
   }, []);
 
-  useEffect(() => { fetchCruises(DEFAULT_FILTERS, 1); }, [fetchCruises]);
+  useEffect(() => { fetchCruises({ ...DEFAULT_FILTERS, ...initialFilters }, 1); }, [fetchCruises]);
 
   const handleSearch = () => {
+    if (redirectTo) {
+      // Build query string from current filters and navigate to results page
+      const params = new URLSearchParams();
+      if (filters.destination !== 'any') params.set('destination', filters.destination);
+      if (filters.operator    !== 'any') params.set('operator',    filters.operator);
+      if (filters.cruiseType  !== 'any') params.set('cruise_type', filters.cruiseType);
+      if (filters.duration    !== 'any') params.set('duration',    filters.duration);
+      if (filters.month       !== 'any') params.set('month',       filters.month);
+      if (filters.year        !== 'any') params.set('year',        filters.year);
+      const qs = params.toString();
+      router.push(`${redirectTo}${qs ? '?' + qs : ''}`);
+      return;
+    }
     setPage(1);
     setApplied({ ...filters });
     fetchCruises(filters, 1);
