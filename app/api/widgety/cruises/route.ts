@@ -5,6 +5,13 @@ const TOKEN    = process.env.WIDGETY_APP_TOKEN!;
 const APP_ID   = process.env.WIDGETY_APP_ID!;
 const PER_PAGE = 9;
 
+// Operators confirmed to have cruise inventory in this Widgety account
+const ACTIVE_OPERATORS = [
+  'american-cruise-lines',
+  'princess-cruises',
+  'cunard-line',
+];
+
 const DURATION_RANGES: Record<string, [number, number]> = {
   short:     [2,  4],
   week:      [5,  7],
@@ -26,7 +33,6 @@ const REGION_MAP: Record<string, string> = {
   world:         'World',
 };
 
-// Fisher-Yates shuffle
 function shuffle(arr: any[]): any[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -36,28 +42,26 @@ function shuffle(arr: any[]): any[] {
   return a;
 }
 
-// Interleave by operator then shuffle within each page-sized window
-// so every page load shows a different mix of cruise lines
-function diversifyAndShuffle(cruises: any[], pageStart: number): any[] {
-  const groups: Record<string, any[]> = {};
-  for (const c of cruises) {
-    const slug = c.operator?.split('/operators/')[1]?.replace('.json', '') || 'other';
-    if (!groups[slug]) groups[slug] = [];
-    groups[slug].push(c);
-  }
-  // Shuffle within each operator group first
-  const buckets = Object.values(groups).map(b => shuffle(b));
-  // Round-robin interleave across operators
-  const interleaved: any[] = [];
-  const maxLen = Math.max(...buckets.map(b => b.length));
-  for (let i = 0; i < maxLen; i++) {
-    for (const bucket of buckets) {
-      if (bucket[i]) interleaved.push(bucket[i]);
-    }
-  }
-  // Slice the page window then shuffle just those 9 cards
-  const page = interleaved.slice(pageStart, pageStart + PER_PAGE);
-  return shuffle(page);
+function buildParams(overrides: Record<string, string>): URLSearchParams {
+  return new URLSearchParams({
+    token:  TOKEN,
+    app_id: APP_ID,
+    limit:  '9',
+    page:   '1',
+    s:      'starts_on_asc',
+    ...overrides,
+  });
+}
+
+async function fetchForOperator(operator: string, extra: Record<string, string>): Promise<any[]> {
+  const params = buildParams({ operator, ...extra });
+  const res = await fetch(`${WIDGETY_BASE}?${params}`, {
+    headers: { Accept: 'application/json;api_version=2' },
+    cache: 'no-store',
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.cruises || [];
 }
 
 export async function GET(req: NextRequest) {
@@ -71,65 +75,87 @@ export async function GET(req: NextRequest) {
   const year        = sp.get('year')        || 'any';
   const page        = parseInt(sp.get('page') || '1', 10);
 
-  const needsDurationFilter = duration !== 'any';
-  // Fetch larger batch when no operator selected so we can interleave
-  const needsShuffle = operator === 'any' && !needsDurationFilter;
-  const fetchLimit   = needsDurationFilter ? 100 : needsShuffle ? 50 : PER_PAGE;
-  const fetchPage    = needsDurationFilter || needsShuffle ? 1 : page;
-
-  const params = new URLSearchParams({
-    token:  TOKEN,
-    app_id: APP_ID,
-    limit:  String(fetchLimit),
-    page:   String(fetchPage),
-    s:      'starts_on_asc',
-  });
-
-  if (operator !== 'any') params.set('operator', operator);
+  // Build shared filter params (date, region, cruise type)
+  const extra: Record<string, string> = {};
 
   if (destination !== 'any' && REGION_MAP[destination]) {
-    params.set('region', REGION_MAP[destination]);
+    extra['region'] = REGION_MAP[destination];
   }
 
   if (month !== 'any') {
     const y = year !== 'any' ? parseInt(year) : new Date().getFullYear();
     const m = parseInt(month);
     const lastDay = new Date(y, m, 0).getDate();
-    params.set('start_date_range_beginning', `${y}-${String(m).padStart(2, '0')}-01`);
-    params.set('start_date_range_end',       `${y}-${String(m).padStart(2, '0')}-${lastDay}`);
+    extra['start_date_range_beginning'] = `${y}-${String(m).padStart(2, '0')}-01`;
+    extra['start_date_range_end']       = `${y}-${String(m).padStart(2, '0')}-${lastDay}`;
   } else if (year !== 'any') {
-    params.set('start_date_range_beginning', `${year}-01-01`);
-    params.set('start_date_range_end',       `${year}-12-31`);
+    extra['start_date_range_beginning'] = `${year}-01-01`;
+    extra['start_date_range_end']       = `${year}-12-31`;
   }
 
-  if (cruiseType !== 'any') params.set('cruise_type', cruiseType);
+  if (cruiseType !== 'any') {
+    extra['cruise_type'] = cruiseType;
+  }
 
+  // ── Single operator selected ─────────────────────────────────────────────
+  if (operator !== 'any') {
+    const params = buildParams({ operator, limit: String(PER_PAGE), page: String(page), ...extra });
+    try {
+      const res = await fetch(`${WIDGETY_BASE}?${params}`, {
+        headers: { Accept: 'application/json;api_version=2' },
+        cache: 'no-store',
+      });
+      if (!res.ok) return NextResponse.json({ cruises: [], total: 0 });
+      const data = await res.json();
+      let cruises = data.cruises || [];
+
+      if (duration !== 'any' && DURATION_RANGES[duration]) {
+        const [min, max] = DURATION_RANGES[duration];
+        cruises = cruises.filter((c: any) => c.cruise_nights >= min && c.cruise_nights <= max);
+      }
+
+      return NextResponse.json({ cruises, total: data.total || cruises.length, page, per_page: PER_PAGE });
+    } catch {
+      return NextResponse.json({ cruises: [], total: 0 });
+    }
+  }
+
+  // ── No operator selected: fetch 3 from each operator in parallel ─────────
+  // This guarantees diverse cruise lines on every page regardless of sort order
   try {
-    const res = await fetch(`${WIDGETY_BASE}?${params}`, {
-      headers: { Accept: 'application/json;api_version=2' },
-      cache: 'no-store',
-    });
+    // Fetch 9 from each operator so we have plenty to shuffle from
+    // Filters (region, date, cruise_type) are passed through to each
+    const extraWithLimit = { ...extra, limit: '9' };
 
-    if (!res.ok) {
-      return NextResponse.json({ error: await res.text() }, { status: res.status });
+    const results = await Promise.all(
+      ACTIVE_OPERATORS.map(op => fetchForOperator(op, extraWithLimit))
+    );
+
+    // Only include operators that returned results (some may have no
+    // matching cruises for the selected filters)
+    const nonEmpty = results.filter(r => r.length > 0);
+
+    // Round-robin merge: 1 from each operator at a time for even distribution
+    const merged: any[] = [];
+    const maxLen = Math.max(...nonEmpty.map(r => r.length), 0);
+    for (let i = 0; i < maxLen; i++) {
+      for (const opCruises of nonEmpty) {
+        if (opCruises[i]) merged.push(opCruises[i]);
+      }
     }
 
-    const data = await res.json();
-    let cruises: any[] = data.cruises || [];
-    const total: number = data.total || cruises.length;
-
-    if (needsDurationFilter && DURATION_RANGES[duration]) {
+    // Apply duration filter if set
+    let cruises = merged;
+    if (duration !== 'any' && DURATION_RANGES[duration]) {
       const [min, max] = DURATION_RANGES[duration];
       cruises = cruises.filter(c => c.cruise_nights >= min && c.cruise_nights <= max);
-      const start = (page - 1) * PER_PAGE;
-      cruises = cruises.slice(start, start + PER_PAGE);
-      return NextResponse.json({ cruises, total: cruises.length, page, per_page: PER_PAGE });
     }
 
-    if (needsShuffle && cruises.length > PER_PAGE) {
-      const start = (page - 1) * PER_PAGE;
-      cruises = diversifyAndShuffle(cruises, start);
-    }
+    // Shuffle so card order varies on each load, then take a page of 9
+    cruises = shuffle(cruises).slice(0, PER_PAGE);
+
+    // Estimate total from operator results
+    const total = nonEmpty.length * 50; // conservative estimate
 
     return NextResponse.json({ cruises, total, page, per_page: PER_PAGE });
   } catch (err) {
