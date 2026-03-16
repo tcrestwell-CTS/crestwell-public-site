@@ -26,7 +26,7 @@ const resorts = [
     tag: 'Adults Only',
     description: 'Sophisticated adults-only escapes with unlimited luxury, gourmet dining, and world-class spas. Perfect for romantic getaways and honeymoons.',
     destinations: ['Mexico', 'Jamaica', 'Dominican Republic', 'Costa Rica', 'Panama'],
-    image: 'https://images.unsplash.com/photo-1512813498716-3e640fed3f5f?w=800&q=80',
+    image: 'https://assets.hyatt.com/content/dam/hyatt/hyattdam/images/2021/10/20/1606/SEMRC-P0001-Aerial-Pools.jpg/SEMRC-P0001-Aerial-Pools.16x9.jpg',
   },
   {
     name: 'Excellence Resorts',
