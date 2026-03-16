@@ -19,6 +19,21 @@ const initialForm = {
   message: '',
 };
 
+const socialLinks = [
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/profile.php?id=61572819131364',
+  },
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/crestwelltravels/',
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/106245287/',
+  },
+];
+
 export default function ContactPage() {
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
@@ -122,23 +137,34 @@ export default function ContactPage() {
             {/* Social Links */}
             <div style={{ marginTop: 48, paddingTop: 36, borderTop: '1px solid #e2e8f0' }}>
               <div className="overline" style={{ marginBottom: 16 }}>Follow Along</div>
-              <div style={{ display: 'flex', gap: 12 }}>
-                {['Facebook', 'Instagram', 'LinkedIn'].map(s => (
-                  <a key={s} href="#" style={{
-                    padding: '8px 16px',
-                    border: '1px solid var(--navy)',
-                    color: 'var(--navy)',
-                    fontSize: '0.7rem',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s',
-                    fontFamily: 'var(--font-body)',
-                  }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--navy)'; (e.currentTarget as HTMLElement).style.color = 'white'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--navy)'; }}
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                {socialLinks.map(s => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      padding: '8px 16px',
+                      border: '1px solid var(--navy)',
+                      color: 'var(--navy)',
+                      fontSize: '0.7rem',
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s',
+                      fontFamily: 'var(--font-body)',
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.background = 'var(--navy)';
+                      (e.currentTarget as HTMLElement).style.color = 'white';
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.background = 'transparent';
+                      (e.currentTarget as HTMLElement).style.color = 'var(--navy)';
+                    }}
                   >
-                    {s}
+                    {s.label}
                   </a>
                 ))}
               </div>
