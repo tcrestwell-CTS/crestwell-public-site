@@ -16,7 +16,7 @@ const highlights = [
 function CruisesContent() {
   const searchParams = useSearchParams();
 
-  // Read any filter params passed from the homepage search
+  // Read filters passed from homepage search redirect
   const initialFilters = {
     destination: searchParams.get('destination') || 'any',
     operator:    searchParams.get('operator')    || 'any',
@@ -25,6 +25,10 @@ function CruisesContent() {
     month:       searchParams.get('month')       || 'any',
     year:        searchParams.get('year')        || 'any',
   };
+
+  // Build a stable key from the params so CruiseSearch remounts
+  // when the URL changes (e.g. user hits back then searches again)
+  const searchKey = searchParams.toString() || 'default';
 
   return (
     <>
@@ -68,9 +72,9 @@ function CruisesContent() {
         </div>
       </section>
 
-      {/* Cruise Search — pre-populated with any filters from homepage */}
+      {/* Cruise Search with results — key forces remount when URL params change */}
       <div id="cruise-search">
-        <CruiseSearch initialFilters={initialFilters} />
+        <CruiseSearch key={searchKey} initialFilters={initialFilters} />
       </div>
 
       {/* CTA */}
@@ -94,7 +98,7 @@ function CruisesContent() {
 
 export default function CruisesPage() {
   return (
-    <Suspense fallback={<div style={{ background: 'var(--navy)', minHeight: '100vh' }} />}>
+    <Suspense fallback={<div style={{ background: 'var(--navy)', minHeight: '60vh' }} />}>
       <CruisesContent />
     </Suspense>
   );
