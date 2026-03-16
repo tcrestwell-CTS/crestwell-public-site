@@ -4,6 +4,11 @@ import Image from 'next/image'
 import type { FeaturedTrip } from '@/lib/supabase'
 
 export function TripCard({ trip }: { trip: FeaturedTrip }) {
+  // Link to detail page if slug exists, otherwise fall back to request-quote
+  const href = (trip as any).slug
+    ? `/trips/${(trip as any).slug}`
+    : `/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`;
+
   return (
     <article className="card-hover" style={{ background: 'white', overflow: 'hidden' }}>
       {/* Image */}
@@ -35,11 +40,9 @@ export function TripCard({ trip }: { trip: FeaturedTrip }) {
             <span style={{ fontSize: '0.7rem', color: 'var(--slate)', letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap', paddingLeft: 8 }}>{trip.duration}</span>
           )}
         </div>
-
         {trip.description && (
           <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 20 }}>{trip.description}</p>
         )}
-
         {trip.highlights && trip.highlights.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
             {trip.highlights.map(h => (
@@ -47,13 +50,8 @@ export function TripCard({ trip }: { trip: FeaturedTrip }) {
             ))}
           </div>
         )}
-
-        <Link
-          href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`}
-          className="btn-navy"
-          style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
-        >
-          Request This Trip
+        <Link href={href} className="btn-navy" style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}>
+          {(trip as any).slug ? 'View Trip Details' : 'Request This Trip'}
         </Link>
       </div>
     </article>
