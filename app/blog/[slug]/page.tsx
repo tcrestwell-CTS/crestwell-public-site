@@ -180,8 +180,8 @@ function BlogPostContent() {
       {(!post.hero_image_url || heroError) && <div style={{ height: 72 }} />}
 
       {/* Article */}
-      <section style={{ background: 'white', padding: '48px 32px 80px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 280px', gap: 64, alignItems: 'start' }}>
+      <section style={{ background: 'white', padding: 'clamp(24px, 5vw, 48px) clamp(16px, 4vw, 32px) 80px' }}>
+        <div className="blog-layout" style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 280px', gap: 64, alignItems: 'start' }}>
 
           {/* Main content */}
           <article>
@@ -319,23 +319,46 @@ function BlogPostContent() {
 
       {/* Prose styles */}
       <style>{`
-        .prose-content h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--navy); margin: 1.75rem 0 0.75rem; }
-        .prose-content h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--navy); margin: 1.5rem 0 0.6rem; }
+        /* Prose content styles */
+        .prose-content { word-break: break-word; overflow-wrap: break-word; }
+        .prose-content h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--navy); margin: 1.75rem 0 0.75rem; line-height: 1.3; }
+        .prose-content h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--navy); margin: 1.5rem 0 0.6rem; line-height: 1.3; }
         .prose-content p { font-size: 0.95rem; line-height: 1.85; color: #374151; margin-bottom: 1rem; }
         .prose-content ul, .prose-content ol { padding-left: 1.5rem; margin-bottom: 1rem; }
         .prose-content li { margin-bottom: 0.5rem; line-height: 1.75; font-size: 0.95rem; color: #374151; }
         .prose-content blockquote { border-left: 4px solid var(--gold); padding-left: 1rem; font-style: italic; color: #6b7280; margin: 1.5rem 0; }
-        .prose-content code:not(pre code) { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.875em; }
-        .prose-content pre { background: #111827; color: #f9fafb; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1rem; }
-        .prose-content pre code { background: none; padding: 0; }
-        .prose-content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; display: block; overflow-x: auto; }
-        .prose-content th, .prose-content td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; font-size: 0.875rem; }
+        .prose-content code:not(pre code) { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.875em; word-break: break-all; }
+        .prose-content pre { background: #111827; color: #f9fafb; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1rem; max-width: 100%; }
+        .prose-content pre code { background: none; padding: 0; white-space: pre-wrap; }
+        .prose-content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .prose-content th, .prose-content td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; font-size: 0.875rem; white-space: nowrap; }
         .prose-content tr:nth-child(even) { background: #f9fafb; }
         .prose-content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 1.5rem auto; }
         .prose-content a { color: var(--navy); text-decoration: underline; }
         .prose-content a:hover { color: var(--gold); }
+        .prose-content iframe { max-width: 100%; }
+
+        /* Layout breakpoints */
+        .blog-layout { grid-template-columns: minmax(0, 1fr) 280px; }
+
         @media (max-width: 900px) {
-          div[style*="grid-template-columns: minmax(0,1fr) 280px"] { grid-template-columns: 1fr !important; }
+          .blog-layout {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
+          /* Move sidebar above related posts on mobile */
+          .blog-layout aside {
+            order: -1;
+          }
+          .blog-layout aside > div {
+            position: static !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .prose-content h2 { font-size: 1.25rem; }
+          .prose-content h3 { font-size: 1.1rem; }
+          .prose-content p, .prose-content li { font-size: 0.9rem; }
         }
       `}</style>
     </>
