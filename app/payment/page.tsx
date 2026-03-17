@@ -170,45 +170,104 @@ export default function PaymentPage() {
     if (!customerName || !customerEmail) { setError('Name and email are required'); return; }
     if (!window.affirm) { setError('Affirm is loading. Please try again in a moment.'); return; }
     setStatus('processing'); setError('');
-    const [firstName, ...rest] = customerName.split(' ');
-    window.affirm.checkout({
-      merchant: {
-        user_cancel_url: `${SITE_DOMAIN}/payment`,
-        user_confirmation_url: `${SITE_DOMAIN}/payment`,
-        user_confirmation_url_action: 'POST',
-        name: 'Crestwell Travel Services',
-      },
-      billing: { name: { first: firstName, last: rest.join(' ') }, email: customerEmail, phone_number: customerPhone },
-      items: [{
-        display_name: paymentType === 'package' ? PACKAGES.find(p => p.id === selectedPackage)?.name : (tripName || 'Travel Payment'),
-        sku: bookingRef || `CTS-${Date.now()}`,
-        unit_price: amountCents, qty: 1,
-      }],
-      order_id: bookingRef || `CTS-${Date.now()}`,
-      currency: 'USD',
-      total: amountCents,
-    });
-    window.affirm.checkout.open({
-      onFail: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('error'); },
-      onSuccess: async ({ checkout_token }: { checkout_token: string }) => {
-        try {
-          const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              checkout_token, amount_cents: amountCents, customer_name: customerName,
-              customer_email: customerEmail, booking_ref: bookingRef,
-              trip_name: paymentType === 'package' ? PACKAGES.find(p => p.id === selectedPackage)?.name : tripName,
-              payment_type: paymentType,
-            }),
-          });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-          setSuccessData({ amount: amountCents, method: 'affirm', name: customerName, bookingRef });
-          setStatus('success');
-        } catch (err: any) { setError(err.message || 'Affirm charge failed.'); setStatus('error'); }
-      },
-    });
+
+    const nameParts = customerName.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '-';
+    const orderId = bookingRef || `CTS-${Date.now()}`;
+    const itemName = paymentType === 'package'
+      ? (PACKAGES.find(p => p.id === selectedPackage)?.name || 'Travel Package')
+      : (tripName || 'Travel Service');
+
+    try {
+      window.affirm.checkout({
+        merchant: {
+          user_cancel_url: `${SITE_DOMAIN}/payment`,
+          user_confirmation_url: `${SITE_DOMAIN}/payment`,
+          user_confirmation_url_action: 'GET',
+          name: 'Crestwell Travel Services',
+          public_api_key: process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || '',
+        },
+        shipping: {
+          name: { full: customerName },
+          address: {
+            line1: '123 Travel Lane',
+            city: 'Chattanooga',
+            state: 'TN',
+            zipcode: '37401',
+            country: 'USA',
+          },
+          email: customerEmail,
+          phone_number: customerPhone || '0000000000',
+        },
+        billing: {
+          name: { full: customerName },
+          address: {
+            line1: '123 Travel Lane',
+            city: 'Chattanooga',
+            state: 'TN',
+            zipcode: '37401',
+            country: 'USA',
+          },
+          email: customerEmail,
+          phone_number: customerPhone || '0000000000',
+        },
+        items: [{
+          display_name: itemName,
+          sku: orderId,
+          unit_price: amountCents,
+          qty: 1,
+          item_image_url: 'https://crestwell-public-site.vercel.app/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
+          item_url: `${SITE_DOMAIN}/payment`,
+        }],
+        metadata: {
+          shipping_type: 'travel_service',
+          booking_ref: orderId,
+        },
+        order_id: orderId,
+        currency: 'USD',
+        total: amountCents,
+        tax_amount: 0,
+        shipping_amount: 0,
+        discounts: {},
+      });
+
+      window.affirm.checkout.open({
+        onFail: (e: any) => {
+          console.error('Affirm onFail:', e);
+          setError('Affirm checkout was cancelled or unavailable.');
+          setStatus('idle');
+        },
+        onSuccess: async ({ checkout_token }: { checkout_token: string }) => {
+          try {
+            const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                checkout_token,
+                amount_cents: amountCents,
+                customer_name: customerName,
+                customer_email: customerEmail,
+                booking_ref: orderId,
+                trip_name: itemName,
+                payment_type: paymentType,
+              }),
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            setSuccessData({ amount: amountCents, method: 'affirm', name: customerName, bookingRef: orderId });
+            setStatus('success');
+          } catch (err: any) {
+            setError(err.message || 'Affirm charge failed. Please contact us.');
+            setStatus('error');
+          }
+        },
+      });
+    } catch (err: any) {
+      console.error('Affirm checkout error:', err);
+      setError('Failed to open Affirm. Please try again or pay by card.');
+      setStatus('idle');
+    }
   };
 
   if (status === 'success' && successData) {
