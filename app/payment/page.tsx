@@ -85,22 +85,51 @@ export default function PaymentPage() {
     : parseDollarAmount(customAmount);
 
   const mountStripe = () => {
-    if (!window.Stripe || stripeRef.current) return;
-    stripeRef.current = window.Stripe(STRIPE_PK);
+    if (!window.Stripe) return;
+    if (!stripeRef.current) {
+      stripeRef.current = window.Stripe(STRIPE_PK);
+    }
+    if (cardRef.current) return; // already created
     const elements = stripeRef.current.elements();
     cardRef.current = elements.create('card', {
       style: {
-        base: { fontFamily: 'Georgia, serif', fontSize: '15px', color: '#0d1b2a', '::placeholder': { color: '#94a3b8' } },
+        base: {
+          fontFamily: '"Georgia", serif',
+          fontSize: '16px',
+          color: '#0d1b2a',
+          fontWeight: '400',
+          '::placeholder': { color: '#94a3b8' },
+          iconColor: '#0d1b2a',
+        },
+        invalid: { color: '#dc2626', iconColor: '#dc2626' },
       },
     });
-    if (cardMountRef.current && !cardMountRef.current.children.length) {
-      cardRef.current.mount(cardMountRef.current);
-      setStripeReady(true);
-    }
+    // Wait for DOM node then mount
+    const tryMount = () => {
+      if (cardMountRef.current) {
+        cardRef.current.mount(cardMountRef.current);
+        setStripeReady(true);
+      } else {
+        setTimeout(tryMount, 50);
+      }
+    };
+    tryMount();
   };
 
   useEffect(() => {
-    if (tab === 'stripe') setTimeout(mountStripe, 150);
+    if (tab === 'stripe') {
+      if (window.Stripe) {
+        mountStripe();
+      }
+      // If Stripe.js not loaded yet, Script onLoad will call mountStripe
+    } else {
+      // Unmount card when switching away so it can remount cleanly
+      if (cardRef.current) {
+        cardRef.current.unmount();
+        cardRef.current = null;
+        setStripeReady(false);
+      }
+    }
   }, [tab]);
 
   const handleStripeSubmit = async (e: React.FormEvent) => {
@@ -193,18 +222,19 @@ export default function PaymentPage() {
   }
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '12px 14px', border: '1px solid rgba(13,27,42,0.15)',
-    fontSize: '0.875rem', fontFamily: 'var(--font-body)', color: 'var(--navy)',
+    width: '100%', padding: '12px 14px', border: '1px solid rgba(13,27,42,0.35)',
+    fontSize: '0.9rem', fontFamily: 'var(--font-body)', color: '#0d1b2a',
     background: 'white', outline: 'none', boxSizing: 'border-box',
+    fontWeight: 400,
   };
   const labelStyle: React.CSSProperties = {
     display: 'block', fontSize: '0.68rem', letterSpacing: '0.12em',
-    textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 6, fontFamily: 'var(--font-body)',
+    textTransform: 'uppercase', color: '#374151', marginBottom: 6, fontFamily: 'var(--font-body)',
   };
 
   return (
     <>
-      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={mountStripe} />
+      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={() => { if (tab === 'stripe') mountStripe(); }} />
       <Script id="affirm-js" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
         _affirm_config = { public_api_key: "${process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || ''}", script: "https://cdn1.affirm.com/js/v2/affirm.js" };
         (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,_affirm_config,"affirm","checkout","ui","script","ready");
@@ -312,7 +342,7 @@ export default function PaymentPage() {
             {tab === 'stripe' && (
               <form onSubmit={handleStripeSubmit} style={{ padding: '28px 32px' }}>
                 <label style={labelStyle}>Card Details</label>
-                <div ref={cardMountRef} style={{ padding: '14px', border: '1px solid rgba(13,27,42,0.15)', marginBottom: 20, minHeight: 46 }} />
+                <div ref={cardMountRef} style={{ padding: '14px 16px', border: '1px solid rgba(13,27,42,0.4)', marginBottom: 20, minHeight: 52, background: 'white', borderRadius: 2 }} />
                 {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '12px 14px', marginBottom: 16, fontSize: '0.82rem', color: '#dc2626' }}>{error}</div>}
                 <button type="submit" disabled={status === 'processing' || !stripeReady || amountCents < 50} className="btn-primary" style={{ width: '100%', border: 'none', cursor: 'pointer', fontSize: '0.85rem', padding: '14px', opacity: status === 'processing' || !stripeReady || amountCents < 50 ? 0.6 : 1 }}>
                   {status === 'processing' ? 'Processing…' : `Pay ${amountCents > 0 ? formatCents(amountCents) : 'Securely'}`}
@@ -326,11 +356,11 @@ export default function PaymentPage() {
               <div style={{ padding: '28px 32px' }}>
                 <div style={{ background: 'var(--cream)', padding: '20px', marginBottom: 20, borderLeft: '3px solid var(--gold)' }}>
                   <p style={{ fontSize: '0.85rem', color: 'var(--navy)', marginBottom: 6, fontWeight: 500 }}>Buy Now, Pay Over Time</p>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--slate)', lineHeight: 1.7 }}>Split your travel payment into manageable monthly installments. Quick application, no hidden fees. Minimum $50.</p>
+                  <p style={{ fontSize: '0.8rem', color: '#374151', lineHeight: 1.7 }}>Split your travel payment into manageable monthly installments. Quick application, no hidden fees. Minimum $50.</p>
                 </div>
                 {amountCents >= 5000 && (
                   <div style={{ background: 'white', border: '1px solid rgba(13,27,42,0.1)', padding: '16px', marginBottom: 20, textAlign: 'center' }}>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--slate)', marginBottom: 4 }}>Estimated monthly payment</p>
+                    <p style={{ fontSize: '0.75rem', color: '#4b5563', marginBottom: 4 }}>Estimated monthly payment</p>
                     <p className="font-display" style={{ fontSize: '1.5rem', color: 'var(--navy)', fontWeight: 300 }}>{formatCents(Math.ceil(amountCents / 12))}<span style={{ fontSize: '0.8rem', color: 'var(--slate)' }}>/mo</span></p>
                     <p style={{ fontSize: '0.68rem', color: 'var(--slate)', marginTop: 4 }}>over 12 months · actual terms set by Affirm</p>
                   </div>
@@ -346,7 +376,7 @@ export default function PaymentPage() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--slate)', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '0.8rem', color: '#374151', lineHeight: 1.7 }}>
               Questions? Call <a href="tel:8885086893" style={{ color: 'var(--navy)', fontWeight: 500, textDecoration: 'none' }}>888.508.6893</a> or email <a href="mailto:info@crestwellgetaways.com" style={{ color: 'var(--navy)', fontWeight: 500, textDecoration: 'none' }}>info@crestwellgetaways.com</a>
             </p>
           </div>
