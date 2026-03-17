@@ -69,7 +69,7 @@ export default function Footer() {
                 { label: 'Request a Quote', href: '/request-quote' },
                 { label: 'About Us', href: '/about' },
                 { label: 'Contact', href: '/contact' },
-                { label: 'Make a Payment', href: '/payment' },
+                { label: 'Payments', href: '/payment' },
               ].map(item => (
                 <li key={item.href}>
                   <Link
@@ -112,7 +112,7 @@ export default function Footer() {
               </div>
               <div>
                 <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate-light)', marginBottom: 4 }}>Service Area</div>
-                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem' }}>Georgia · Tennessee · Alabama</div>
+                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem' }}>Georgia · Tennessee · Alabama · Florida</div>
               </div>
               <Link href="/request-quote" className="btn-primary" style={{ display: 'inline-block', marginTop: 8, textDecoration: 'none', textAlign: 'center' }}>
                 Get a Quote
