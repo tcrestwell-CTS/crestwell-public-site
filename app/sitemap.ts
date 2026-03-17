@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .order('published_at', { ascending: false });
 
     if (posts) {
-      blogEntries = posts.map(post => ({
+      blogEntries = posts.map((post: { slug: string; updated_at: string; published_at: string }) => ({
         url: `${SITE_URL}/blog/${post.slug}`,
         lastModified: new Date(post.updated_at || post.published_at || now),
         changeFrequency: 'weekly' as const,
@@ -83,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .not('slug', 'is', null);
 
     if (trips) {
-      tripEntries = trips.map(trip => ({
+      tripEntries = trips.map((trip: { slug: string; created_at: string }) => ({
         url: `${SITE_URL}/trips/${trip.slug}`,
         lastModified: new Date(trip.created_at || now),
         changeFrequency: 'monthly' as const,
