@@ -17,8 +17,41 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* Core Meta Tags */}
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Discover curated vacations, luxury all-inclusive stays, group travel, and personalized getaway planning with Crestwell Getaways. Expertly crafted trips for families, couples, and adventure seekers." />
+        <meta name="robots" content="index, follow" />
+        {/* Google Search Console Verification */}
+        <meta name="google-site-verification" content="B9Gt4g3dHtK4WGm22Iv_ucUai4QFAa-eRjlI7tMAuNY" />
+        {/* Open Graph */}
+        <meta property="og:site_name" content="Crestwell Getaways" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://crestwellgetaways.com" />
+        <meta property="og:title" content="Crestwell Getaways | Curated Vacations, Luxury Stays & All-Inclusive Travel" />
+        <meta property="og:description" content="Discover curated vacations, luxury all-inclusive stays, group travel, and personalized getaway planning with Crestwell Getaways." />
+        <meta property="og:image" content="https://crestwell-public-site.vercel.app/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Crestwell Getaways | Curated Vacations & All-Inclusive Travel" />
+        <meta name="twitter:description" content="Expertly crafted trips for families, couples, and adventure seekers." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Google Analytics GA4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-PSD3RNQKRH"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PSD3RNQKRH', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
       </head>
       <body>
         <Navbar />
