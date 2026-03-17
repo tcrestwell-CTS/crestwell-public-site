@@ -11,7 +11,7 @@ const navItems = [
   { label: 'Travel Tips', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
-  { label: 'Make a Payment', href: '/payment' },
+  { label: 'Payments', href: '/payment' },
 ];
 
 export default function Navbar() {
