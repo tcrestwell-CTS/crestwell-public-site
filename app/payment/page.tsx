@@ -73,6 +73,10 @@ export default function PaymentPage() {
   const [customAmount, setCustomAmount] = useState('');
   const [selectedPackage, setSelectedPackage] = useState(PACKAGES[0].id);
   const [notes, setNotes] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
+  const [customerCity, setCustomerCity] = useState('');
+  const [customerState, setCustomerState] = useState('');
+  const [customerZip, setCustomerZip] = useState('');
   const [stripeReady, setStripeReady] = useState(false);
   const [successData, setSuccessData] = useState<{ amount: number; method: string; name: string; bookingRef: string } | null>(null);
 
@@ -168,6 +172,9 @@ export default function PaymentPage() {
   const handleAffirmCheckout = async () => {
     if (amountCents < 5000) { setError('Affirm requires a minimum of $50'); return; }
     if (!customerName || !customerEmail) { setError('Name and email are required'); return; }
+    if (!customerAddress || !customerCity || !customerState || !customerZip) {
+      setError('Please fill in your full address — required by Affirm'); return;
+    }
     if (!window.affirm) { setError('Affirm is loading. Please try again in a moment.'); return; }
     setStatus('processing'); setError('');
 
@@ -191,10 +198,11 @@ export default function PaymentPage() {
         shipping: {
           name: { full: customerName },
           address: {
-            line1: '123 Travel Lane',
-            city: 'Chattanooga',
-            state: 'TN',
-            zipcode: '37401',
+            line1: customerAddress || '1 Travel Plaza',
+            line2: '',
+            city: customerCity || 'Chattanooga',
+            state: customerState || 'TN',
+            zipcode: customerZip || '37401',
             country: 'USA',
           },
           email: customerEmail,
@@ -203,10 +211,11 @@ export default function PaymentPage() {
         billing: {
           name: { full: customerName },
           address: {
-            line1: '123 Travel Lane',
-            city: 'Chattanooga',
-            state: 'TN',
-            zipcode: '37401',
+            line1: customerAddress || '1 Travel Plaza',
+            line2: '',
+            city: customerCity || 'Chattanooga',
+            state: customerState || 'TN',
+            zipcode: customerZip || '37401',
             country: 'USA',
           },
           email: customerEmail,
@@ -381,6 +390,27 @@ export default function PaymentPage() {
                     <input type="text" value={tripName} onChange={e => setTripName(e.target.value)} placeholder="Caribbean Cruise" style={inputStyle} />
                   </div>
                 )}
+                {/* Address fields - shown when Affirm tab is active */}
+                {tab === 'affirm' && (<>
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    <label style={labelStyle}>Street Address * <span style={{ color: 'var(--gold)', fontSize: '0.65rem' }}>(Required for Affirm)</span></label>
+                    <input type="text" value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} placeholder="123 Main St" style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>City *</label>
+                    <input type="text" value={customerCity} onChange={e => setCustomerCity(e.target.value)} placeholder="Chattanooga" style={inputStyle} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>State *</label>
+                      <input type="text" value={customerState} onChange={e => setCustomerState(e.target.value.toUpperCase().slice(0,2))} placeholder="TN" maxLength={2} style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>ZIP *</label>
+                      <input type="text" value={customerZip} onChange={e => setCustomerZip(e.target.value)} placeholder="37401" maxLength={5} style={inputStyle} />
+                    </div>
+                  </div>
+                </>)}
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={labelStyle}>Notes (optional)</label>
                   <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Any additional info..." rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
