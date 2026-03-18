@@ -1,7 +1,8 @@
 'use client';
+import { Suspense } from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import TokenGate, { type TokenData } from '@/components/TokenGate';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -101,9 +102,14 @@ async function getIpAddress(): Promise<string> {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function FinancingApplicationPage() {
+function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token: string }) {
   const [step, setStep] = useState<Step>(1);
-  const [form, setForm] = useState<FormData>(initialForm);
+  const [form, setForm] = useState<FormData>({
+    ...initialForm,
+    first_name: tokenData.client_name?.split(' ')[0] || '',
+    last_name: tokenData.client_name?.split(' ').slice(1).join(' ') || '',
+    email: tokenData.client_email || '',
+  });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [applicationNumber, setApplicationNumber] = useState('');
@@ -181,38 +187,26 @@ export default function FinancingApplicationPage() {
     setError('');
     try {
       const ip = await getIpAddress();
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+      // Submit via Edge Function — uses service role key server-side
+      // RLS stays ENABLED on loan_applications table
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/submit-loan-application`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...form,
+            ip_address: ip,
+            user_agent: navigator.userAgent,
+          }),
+        }
       );
 
-      const payload = {
-        ...form,
-        ip_address: ip,
-        user_agent: navigator.userAgent,
-        monthly_income: form.monthly_income ? parseFloat(form.monthly_income) : null,
-        other_income: form.other_income ? parseFloat(form.other_income) : null,
-        loan_amount_requested: parseFloat(form.loan_amount_requested),
-        down_payment: form.down_payment ? parseFloat(form.down_payment) : null,
-        preferred_term_months: form.preferred_term_months ? parseInt(form.preferred_term_months) : null,
-        monthly_rent_mortgage: form.monthly_rent_mortgage ? parseFloat(form.monthly_rent_mortgage) : null,
-        monthly_car_payment: form.monthly_car_payment ? parseFloat(form.monthly_car_payment) : null,
-        monthly_other_debt: form.monthly_other_debt ? parseFloat(form.monthly_other_debt) : null,
-        date_of_birth: form.date_of_birth || null,
-        travel_date: form.travel_date || null,
-        signed_at: new Date().toISOString(),
-        status: 'pending',
-      };
+      const result = await res.json();
+      if (!res.ok || result.error) throw new Error(result.error || 'Submission failed');
 
-      const { data, error: dbError } = await supabase
-        .from('loan_applications')
-        .insert(payload)
-        .select('application_number')
-        .single();
-
-      if (dbError) throw new Error(dbError.message);
-
-      setApplicationNumber(data?.application_number || '');
+      setApplicationNumber(result.application_number || '');
       setSubmitted(true);
     } catch (err: any) {
       setError(err.message || 'Submission failed. Please try again or call us.');
@@ -637,5 +631,22 @@ export default function FinancingApplicationPage() {
         }
       `}</style>
     </>
+  );
+}
+
+
+function FinancingPageWithGate() {
+  return (
+    <TokenGate linkType="financing">
+      {(tokenData, token) => <FinancingApplicationInner tokenData={tokenData} token={token} />}
+    </TokenGate>
+  );
+}
+
+export default function FinancingApplicationPage() {
+  return (
+    <Suspense fallback={<div style={{ background: 'var(--navy)', minHeight: '100vh' }} />}>
+      <FinancingPageWithGate />
+    </Suspense>
   );
 }
