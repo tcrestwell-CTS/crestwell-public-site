@@ -22,6 +22,7 @@ const navItems = [
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Make a Payment', href: '/payment' },
+  { label: 'Apply for Financing', href: '/financing' },
 ];
 
 export default function Navbar() {
