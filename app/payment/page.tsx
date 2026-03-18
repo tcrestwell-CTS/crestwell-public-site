@@ -89,15 +89,19 @@ function SuccessScreen({ amount, method, name, bookingRef }: {
 
 function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: string }) {
   const [tab, setTab] = useState<PaymentTab>('stripe');
-  const [paymentType, setPaymentType] = useState<PaymentType>('custom');
+  const [paymentType, setPaymentType] = useState<PaymentType>(
+    (['custom','deposit','balance','package'].includes(tokenData.payment_type) ? tokenData.payment_type : 'custom') as PaymentType
+  );
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [error, setError] = useState('');
   const [customerName, setCustomerName] = useState(tokenData.client_name || '');
   const [customerEmail, setCustomerEmail] = useState(tokenData.client_email || '');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [bookingRef, setBookingRef] = useState('');
-  const [tripName, setTripName] = useState('');
-  const [customAmount, setCustomAmount] = useState('');
+  const [bookingRef, setBookingRef] = useState(tokenData.booking_ref || '');
+  const [tripName, setTripName] = useState(tokenData.trip_name || '');
+  const [customAmount, setCustomAmount] = useState(
+    tokenData.amount && tokenData.payment_type !== 'package' ? (tokenData.amount / 100).toFixed(2) : ''
+  );
   const [selectedPackage, setSelectedPackage] = useState(PACKAGES[0].id);
   const [notes, setNotes] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
@@ -368,6 +372,18 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
                 ))}
               </div>
             </div>
+
+            {/* Token pre-fill notice */}
+            {tokenData.amount && tokenData.amount > 0 && (
+              <div style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.3)', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ color: 'var(--gold)', fontSize: '0.9rem' }}>✓</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--navy)' }}>
+                  Your specialist has pre-filled this payment
+                  {tokenData.trip_name ? ` for <strong>${tokenData.trip_name}</strong>` : ''}.
+                  You may adjust if needed.
+                </span>
+              </div>
+            )}
 
             {/* Amount */}
             <div style={{ padding: '24px 32px', borderBottom: '1px solid rgba(13,27,42,0.08)' }}>
