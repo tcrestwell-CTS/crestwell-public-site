@@ -54,6 +54,8 @@ function RequestQuoteForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (honeypot) return;
+    if (emailValidState === 'invalid') { setStatus('error'); return; }
     setSubmitting(true);
     setError('');
     try {
@@ -271,8 +273,14 @@ function RequestQuoteForm() {
                       </div>
                     </div>
                     <div>
-                      <label className="form-label">Email Address *</label>
-                      <input className="form-input" type="email" required placeholder="jane@email.com" value={form.email} onChange={e => update('email', e.target.value)} />
+                      <EmailField
+                        value={form.email}
+                        onChange={v => update('email', v)}
+                        required
+                        placeholder="jane@email.com"
+                        label="Email Address"
+                        inputClassName="form-input"
+                      />
                     </div>
                     <div>
                       <label className="form-label">Phone Number</label>
@@ -363,7 +371,8 @@ function RequestQuoteForm() {
                     <button type="button" onClick={() => setStep(2)} style={{ background: 'none', border: 'none', color: 'var(--slate)', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
                       ← Back
                     </button>
-                    <button type="submit" className="btn-primary" disabled={submitting} style={{ opacity: submitting ? 0.6 : 1, minWidth: 160 }}>
+                    <HoneypotField value={honeypot} onChange={setHoneypot} />
+                <button type="submit" className="btn-primary" disabled={submitting} style={{ opacity: submitting ? 0.6 : 1, minWidth: 160 }}>
                       {submitting ? 'Submitting…' : 'Submit Request'}
                     </button>
                   </div>
