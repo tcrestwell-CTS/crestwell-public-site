@@ -1,7 +1,9 @@
 'use client';
+import { Suspense } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+import TokenGate, { type TokenData } from '@/components/TokenGate';
 
 type PaymentTab = 'stripe' | 'affirm';
 type PaymentType = 'custom' | 'deposit' | 'balance' | 'package';
@@ -22,6 +24,31 @@ const SITE_DOMAIN = 'https://crestwell-public-site.vercel.app';
 
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
+// ─── Fee offsets ──────────────────────────────────────────────────────────────
+// Option 1: Build processing fees into displayed total
+// Stripe: 2.9% + $0.30 → we use 3.2% buffer to fully cover
+// Affirm Enhanced: 7.99% + $0.30 → we use 8.3% buffer
+const STRIPE_FEE_RATE  = 0.032;   // 3.2%
+const AFFIRM_FEE_RATE  = 0.083;   // 8.3%
+const STRIPE_FIXED     = 30;      // 30 cents fixed
+const AFFIRM_FIXED     = 30;      // 30 cents fixed
+
+function calcStripeFee(baseCents: number): number {
+  return Math.round(baseCents * STRIPE_FEE_RATE) + STRIPE_FIXED;
+}
+
+function calcAffirmFee(baseCents: number): number {
+  return Math.round(baseCents * AFFIRM_FEE_RATE) + AFFIRM_FIXED;
+}
+
+function calcStripeTotal(baseCents: number): number {
+  return baseCents + calcStripeFee(baseCents);
+}
+
+function calcAffirmTotal(baseCents: number): number {
+  return baseCents + calcAffirmFee(baseCents);
 }
 
 function parseDollarAmount(val: string): number {
@@ -60,13 +87,13 @@ function SuccessScreen({ amount, method, name, bookingRef }: {
   );
 }
 
-export default function PaymentPage() {
+function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: string }) {
   const [tab, setTab] = useState<PaymentTab>('stripe');
   const [paymentType, setPaymentType] = useState<PaymentType>('custom');
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [error, setError] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [customerEmail, setCustomerEmail] = useState('');
+  const [customerName, setCustomerName] = useState(tokenData.client_name || '');
+  const [customerEmail, setCustomerEmail] = useState(tokenData.client_email || '');
   const [customerPhone, setCustomerPhone] = useState('');
   const [bookingRef, setBookingRef] = useState('');
   const [tripName, setTripName] = useState('');
@@ -147,7 +174,7 @@ export default function PaymentPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount_cents: amountCents, customer_name: customerName, customer_email: customerEmail,
+          amount_cents: calcStripeTotal(amountCents), customer_name: customerName, customer_email: customerEmail,
           customer_phone: customerPhone, booking_ref: bookingRef,
           trip_name: paymentType === 'package' ? PACKAGES.find(p => p.id === selectedPackage)?.name : tripName,
           payment_type: paymentType, notes,
@@ -160,7 +187,7 @@ export default function PaymentPage() {
       });
       if (stripeError) throw new Error(stripeError.message);
       if (paymentIntent.status === 'succeeded') {
-        setSuccessData({ amount: amountCents, method: 'stripe', name: customerName, bookingRef });
+        setSuccessData({ amount: calcStripeTotal(amountCents), method: 'stripe', name: customerName, bookingRef });
         setStatus('success');
       }
     } catch (err: any) {
@@ -224,7 +251,7 @@ export default function PaymentPage() {
         items: [{
           display_name: itemName,
           sku: orderId,
-          unit_price: amountCents,
+          unit_price: calcAffirmTotal(amountCents),
           qty: 1,
           item_image_url: 'https://crestwell-public-site.vercel.app/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
           item_url: `${SITE_DOMAIN}/payment`,
@@ -254,7 +281,7 @@ export default function PaymentPage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 checkout_token,
-                amount_cents: amountCents,
+                amount_cents: calcAffirmTotal(amountCents),
                 customer_name: customerName,
                 customer_email: customerEmail,
                 booking_ref: orderId,
@@ -433,8 +460,21 @@ export default function PaymentPage() {
                 <label style={labelStyle}>Card Details</label>
                 <div ref={cardMountRef} style={{ padding: '14px 16px', border: '1px solid rgba(13,27,42,0.4)', marginBottom: 20, minHeight: 52, background: 'white', borderRadius: 2 }} />
                 {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '12px 14px', marginBottom: 16, fontSize: '0.82rem', color: '#dc2626' }}>{error}</div>}
+                                {amountCents > 0 && (
+                  <div style={{ background: 'var(--cream)', padding: '14px 16px', marginBottom: 16, fontSize: '0.78rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, color: 'var(--slate)' }}>
+                      <span>Trip Amount</span><span>{formatCents(amountCents)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, color: 'var(--slate)' }}>
+                      <span>Card Processing Fee (3.2%)</span><span>{formatCents(calcStripeFee(amountCents))}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, color: 'var(--navy)', borderTop: '1px solid rgba(13,27,42,0.1)', paddingTop: 8 }}>
+                      <span>Total Charged</span><span>{formatCents(calcStripeTotal(amountCents))}</span>
+                    </div>
+                  </div>
+                )}
                 <button type="submit" disabled={status === 'processing' || !stripeReady || amountCents < 50} className="btn-primary" style={{ width: '100%', border: 'none', cursor: 'pointer', fontSize: '0.85rem', padding: '14px', opacity: status === 'processing' || !stripeReady || amountCents < 50 ? 0.6 : 1 }}>
-                  {status === 'processing' ? 'Processing…' : `Pay ${amountCents > 0 ? formatCents(amountCents) : 'Securely'}`}
+                  {status === 'processing' ? 'Processing…' : `Pay ${amountCents > 0 ? formatCents(calcStripeTotal(amountCents)) : 'Securely'}`}
                 </button>
                 <p style={{ fontSize: '0.72rem', color: 'var(--slate)', textAlign: 'center', marginTop: 12 }}>🔒 Your card details are encrypted and never stored on our servers.</p>
               </form>
@@ -450,13 +490,26 @@ export default function PaymentPage() {
                 {amountCents >= 5000 && (
                   <div style={{ background: 'white', border: '1px solid rgba(13,27,42,0.1)', padding: '16px', marginBottom: 20, textAlign: 'center' }}>
                     <p style={{ fontSize: '0.75rem', color: '#4b5563', marginBottom: 4 }}>Estimated monthly payment</p>
-                    <p className="font-display" style={{ fontSize: '1.5rem', color: 'var(--navy)', fontWeight: 300 }}>{formatCents(Math.ceil(amountCents / 12))}<span style={{ fontSize: '0.8rem', color: 'var(--slate)' }}>/mo</span></p>
+                    <p className="font-display" style={{ fontSize: '1.5rem', color: 'var(--navy)', fontWeight: 300 }}>{formatCents(Math.ceil(calcAffirmTotal(amountCents) / 12))}<span style={{ fontSize: '0.8rem', color: 'var(--slate)' }}>/mo</span></p>
                     <p style={{ fontSize: '0.68rem', color: 'var(--slate)', marginTop: 4 }}>over 12 months · actual terms set by Affirm</p>
                   </div>
                 )}
                 {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '12px 14px', marginBottom: 16, fontSize: '0.82rem', color: '#dc2626' }}>{error}</div>}
+                                {amountCents >= 5000 && (
+                  <div style={{ background: 'var(--cream)', padding: '14px 16px', marginBottom: 16, fontSize: '0.78rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, color: 'var(--slate)' }}>
+                      <span>Trip Amount</span><span>{formatCents(amountCents)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, color: 'var(--slate)' }}>
+                      <span>Affirm Processing Fee (8.3%)</span><span>{formatCents(calcAffirmFee(amountCents))}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, color: 'var(--navy)', borderTop: '1px solid rgba(13,27,42,0.1)', paddingTop: 8 }}>
+                      <span>Total Charged</span><span>{formatCents(calcAffirmTotal(amountCents))}</span>
+                    </div>
+                  </div>
+                )}
                 <button onClick={handleAffirmCheckout} disabled={status === 'processing' || amountCents < 5000} style={{ width: '100%', padding: '14px', background: amountCents >= 5000 && status !== 'processing' ? '#0d1b2a' : '#e5e7eb', color: 'white', border: 'none', fontSize: '0.85rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', fontWeight: 600, cursor: amountCents >= 5000 ? 'pointer' : 'not-allowed', transition: 'all 0.2s' }}>
-                  {status === 'processing' ? 'Opening Affirm…' : `Continue with Affirm${amountCents > 0 ? ` — ${formatCents(amountCents)}` : ''}`}
+                  {status === 'processing' ? 'Opening Affirm…' : `Continue with Affirm${amountCents > 0 ? ` — ${formatCents(calcAffirmTotal(amountCents))}` : ''}`}
                 </button>
                 {amountCents > 0 && amountCents < 5000 && <p style={{ fontSize: '0.72rem', color: '#dc2626', textAlign: 'center', marginTop: 8 }}>Affirm requires a minimum payment of $50</p>}
                 <p style={{ fontSize: '0.72rem', color: 'var(--slate)', textAlign: 'center', marginTop: 12 }}>You will be redirected to Affirm to complete your application. Subject to credit approval.</p>
@@ -483,4 +536,20 @@ export default function PaymentPage() {
 
 declare global {
   interface Window { Stripe: any; affirm: any; _affirm_config: any; }
+}
+
+function PaymentPageWithGate() {
+  return (
+    <TokenGate linkType="payment">
+      {(tokenData, token) => <PaymentPageInner tokenData={tokenData} token={token} />}
+    </TokenGate>
+  );
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<div style={{ background: 'var(--navy)', minHeight: '100vh' }} />}>
+      <PaymentPageWithGate />
+    </Suspense>
+  );
 }
