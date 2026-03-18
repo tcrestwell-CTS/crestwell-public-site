@@ -90,7 +90,7 @@ function SuccessScreen({ amount, method, name, bookingRef }: {
 function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: string }) {
   const [tab, setTab] = useState<PaymentTab>('stripe');
   const [paymentType, setPaymentType] = useState<PaymentType>(
-    (['custom','deposit','balance','package'].includes(tokenData.payment_type) ? tokenData.payment_type : 'custom') as PaymentType
+(tokenData.payment_type && ['custom','deposit','balance','package'].includes(tokenData.payment_type) ? tokenData.payment_type as PaymentType : 'custom')
   );
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [error, setError] = useState('');
@@ -100,7 +100,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
   const [bookingRef, setBookingRef] = useState(tokenData.booking_ref || '');
   const [tripName, setTripName] = useState(tokenData.trip_name || '');
   const [customAmount, setCustomAmount] = useState(
-    tokenData.amount && tokenData.payment_type !== 'package' ? (tokenData.amount / 100).toFixed(2) : ''
+    tokenData.amount && tokenData.payment_type !== 'package' ? tokenData.amount.toFixed(2) : ''
   );
   const [selectedPackage, setSelectedPackage] = useState(PACKAGES[0].id);
   const [notes, setNotes] = useState('');
@@ -266,7 +266,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
         },
         order_id: orderId,
         currency: 'USD',
-        total: amountCents,
+        total: calcAffirmTotal(amountCents),
         tax_amount: 0,
         shipping_amount: 0,
         discounts: {},
@@ -379,8 +379,8 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
                 <span style={{ color: 'var(--gold)', fontSize: '0.9rem' }}>✓</span>
                 <span style={{ fontSize: '0.78rem', color: 'var(--navy)' }}>
                   Your specialist has pre-filled this payment
-                  {tokenData.trip_name ? ` for <strong>${tokenData.trip_name}</strong>` : ''}.
-                  You may adjust if needed.
+                  {tokenData.trip_name ? <> for <strong>{tokenData.trip_name}</strong></> : ''}.
+                  {' '}You may adjust if needed.
                 </span>
               </div>
             )}
