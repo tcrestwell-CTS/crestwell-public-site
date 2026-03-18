@@ -39,6 +39,8 @@ export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [honeypot, setHoneypot] = useState('');
+  const [emailValidState, setEmailValidState] = useState<'idle'|'checking'|'valid'|'invalid'>('idle');
 
   const update = (field: string, value: string) => setForm(f => ({ ...f, [field]: value }));
 
