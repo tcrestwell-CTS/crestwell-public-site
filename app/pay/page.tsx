@@ -313,7 +313,11 @@ export default function PublicPayPage() {
                     <label style={labelStyle}>Select Trip <span style={{ color: '#dc2626' }}>*</span></label>
                     <select
                       value={tripId}
-                      onChange={e => setTripId(e.target.value)}
+                      onChange={e => {
+                        const t = GROUP_TRIPS.find(x => x.id === e.target.value);
+                        setTripId(e.target.value);
+                        if (t) setTripName(t.name);
+                      }}
                       style={{ ...inputStyle, cursor: 'pointer' }}
                     >
                       <option value="">Choose a trip...</option>
@@ -382,12 +386,19 @@ export default function PublicPayPage() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div>
-                    <label style={labelStyle}>Booking / Invoice Ref</label>
-                    <input type="text" value={bookingRef} onChange={e => setBookingRef(e.target.value)} placeholder="CTS-12345" style={inputStyle} />
+                    <label style={labelStyle}>Last Name <span style={{ color: '#dc2626' }}>*</span></label>
+                    <input type="text" value={bookingRef} onChange={e => setBookingRef(e.target.value)} placeholder="Smith" style={inputStyle} />
                   </div>
                   <div>
-                    <label style={labelStyle}>Trip Name</label>
-                    <input type="text" value={tripName} onChange={e => setTripName(e.target.value)} placeholder="Caribbean Cruise" style={inputStyle} />
+                    <label style={labelStyle}>Trip</label>
+                    <input
+                      type="text"
+                      value={tripName}
+                      onChange={e => { if (!useGroupTrip) setTripName(e.target.value); }}
+                      placeholder={useGroupTrip ? '' : 'Caribbean Cruise'}
+                      readOnly={useGroupTrip}
+                      style={{ ...inputStyle, background: useGroupTrip ? '#f8fafc' : 'white', color: useGroupTrip ? 'var(--navy)' : '#0d1b2a', cursor: useGroupTrip ? 'default' : 'text' }}
+                    />
                   </div>
                 </div>
 
