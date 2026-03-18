@@ -69,7 +69,6 @@ export default function Footer() {
                 { label: 'Request a Quote', href: '/request-quote' },
                 { label: 'About Us', href: '/about' },
                 { label: 'Contact', href: '/contact' },
-                { label: 'Payments', href: '/payment' },
               ].map(item => (
                 <li key={item.href}>
                   <Link
