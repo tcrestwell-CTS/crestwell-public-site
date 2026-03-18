@@ -44,6 +44,10 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Honeypot check — if filled, it's a bot
+    if (honeypot) return;
+    // Email validation check
+    if (emailValidState === 'invalid') { setStatus('error'); return; }
     setSubmitting(true);
     setError('');
     try {
@@ -192,8 +196,14 @@ export default function ContactPage() {
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                     <div>
-                      <label className="form-label">Email *</label>
-                      <input className="form-input" type="email" required placeholder="jane@email.com" value={form.email} onChange={e => update('email', e.target.value)} />
+                      <EmailField
+                        value={form.email}
+                        onChange={v => update('email', v)}
+                        required
+                        placeholder="jane@email.com"
+                        label="Email"
+                        inputClassName="form-input"
+                      />
                     </div>
                     <div>
                       <label className="form-label">Phone</label>
@@ -219,6 +229,7 @@ export default function ContactPage() {
                   </div>
                 )}
 
+                <HoneypotField value={honeypot} onChange={setHoneypot} />
                 <button type="submit" className="btn-primary" disabled={submitting} style={{ marginTop: 28, width: '100%', opacity: submitting ? 0.6 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}>
                   {submitting ? 'Sending…' : 'Send Message'}
                 </button>
