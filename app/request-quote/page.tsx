@@ -1,5 +1,6 @@
 'use client';
 import { useState, Suspense } from 'react';
+import { EmailField, HoneypotField } from '@/components/EmailField';
 import { useSearchParams } from 'next/navigation';
 
 const tripTypes = [
