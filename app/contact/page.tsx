@@ -49,7 +49,7 @@ export default function ContactPage() {
     // Honeypot check — if filled, it's a bot
     if (honeypot) return;
     // Email validation check
-    if (emailValidState === 'invalid') { setStatus('error'); return; }
+    if (emailValidState === 'invalid') { setError('Please enter a valid email address.'); return; }
     setSubmitting(true);
     setError('');
     try {
