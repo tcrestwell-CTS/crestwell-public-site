@@ -57,7 +57,7 @@ function RequestQuoteForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (honeypot) return;
-    if (emailValidState === 'invalid') { setStatus('error'); return; }
+    if (emailValidState === 'invalid') { setError('Please enter a valid email address.'); return; }
     setSubmitting(true);
     setError('');
     try {
