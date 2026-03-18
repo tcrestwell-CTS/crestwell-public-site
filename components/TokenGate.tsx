@@ -11,6 +11,7 @@ export type TokenData = {
   booking_ref: string | null;
   trip_name: string | null;
   amount: number | null;
+  payment_type: 'custom' | 'deposit' | 'balance' | 'package';
   expires_at: string;
 };
 
@@ -47,6 +48,7 @@ export default function TokenGate({ linkType, children }: Props) {
             booking_ref: data.booking_ref,
             trip_name: data.trip_name,
             amount: data.amount,
+            payment_type: data.payment_type || 'custom',
             expires_at: data.expires_at,
           });
           setStatus('valid');
