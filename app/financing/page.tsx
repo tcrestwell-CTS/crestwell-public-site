@@ -208,21 +208,22 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
   }, [step, form.autopay_method]);
 
   const handleSubmit = async () => {
-    // Auto-payment consent required
-    if (!form.consent_autopay) {
-      setError('You must authorize the auto-payment agreement to complete your application.');
-      return;
-    }
-    if (!form.autopay_esignature || form.autopay_esignature.trim().toLowerCase() !== `${form.first_name} ${form.last_name}`.toLowerCase()) {
-      setError(`Auto-payment signature must match your full name: ${form.first_name} ${form.last_name}`);
-      return;
-    }
+    // Loan application consent (Step 5)
     if (!form.consent_credit_check || !form.consent_terms) {
       setError('You must agree to both consent items to proceed.');
       return;
     }
     if (!form.esignature || form.esignature.trim().toLowerCase() !== `${form.first_name} ${form.last_name}`.toLowerCase()) {
       setError(`Your e-signature must match your full name: ${form.first_name} ${form.last_name}`);
+      return;
+    }
+    // Auto-payment authorization (Step 6)
+    if (!form.consent_autopay) {
+      setError('You must authorize the auto-payment agreement to complete your application.');
+      return;
+    }
+    if (!form.autopay_esignature || form.autopay_esignature.trim().toLowerCase() !== `${form.first_name} ${form.last_name}`.toLowerCase()) {
+      setError(`Auto-payment signature must match your full name: ${form.first_name} ${form.last_name}`);
       return;
     }
     setSubmitting(true);
@@ -756,7 +757,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
             {/* Navigation */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(13,27,42,0.08)' }}>
               <button
-                onClick={() => setStep(prev => (prev > 1 ? (prev - 1) as Step : prev))}
+                onClick={() => { setError(''); setStep(prev => (prev > 1 ? (prev - 1) as Step : prev)); }}
                 disabled={step === 1}
                 style={{ padding: '11px 24px', border: '1px solid rgba(13,27,42,0.2)', background: 'white', color: step === 1 ? '#d1d5db' : 'var(--navy)', fontSize: '0.78rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', cursor: step === 1 ? 'not-allowed' : 'pointer' }}
               >
@@ -765,9 +766,9 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
 
               <span style={{ fontSize: '0.72rem', color: 'var(--slate)' }}>Step {step} of {STEPS.length}</span>
 
-              {step < 5 ? (
+              {step < 6 ? (
                 <button
-                  onClick={() => setStep(prev => (prev < 5 ? (prev + 1) as Step : prev))}
+                  onClick={() => setStep(prev => (prev < 6 ? (prev + 1) as Step : prev))}
                   className="btn-primary"
                   style={{ border: 'none', cursor: 'pointer', padding: '11px 28px', fontSize: '0.78rem' }}
                 >
