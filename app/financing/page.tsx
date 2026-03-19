@@ -60,6 +60,11 @@ type FormData = {
   consent_credit_check: boolean;
   consent_terms: boolean;
   esignature: string;
+  // Auto-payment (Step 6)
+  autopay_method: string;
+  consent_autopay: boolean;
+  autopay_esignature: string;
+  stripe_payment_method_id: string;
 };
 
 const initialForm: FormData = {
