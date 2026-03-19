@@ -1,12 +1,13 @@
 'use client';
-import { Suspense } from 'react';
+import { Suspense, useRef, useEffect } from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
+import Script from 'next/script';
 import TokenGate, { type TokenData } from '@/components/TokenGate';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Step = 1 | 2 | 3 | 4 | 5;
+type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
 type FormData = {
   // Personal
@@ -76,6 +77,8 @@ const initialForm: FormData = {
   reference1_name: '', reference1_phone: '', reference1_relation: '',
   reference2_name: '', reference2_phone: '', reference2_relation: '',
   consent_credit_check: false, consent_terms: false, esignature: '',
+  autopay_method: 'card', consent_autopay: false,
+  autopay_esignature: '', stripe_payment_method_id: '',
 };
 
 const US_STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
@@ -86,6 +89,7 @@ const STEPS = [
   { num: 3, label: 'Loan Details' },
   { num: 4, label: 'Financial' },
   { num: 5, label: 'Review & Sign' },
+  { num: 6, label: 'Auto-Payment' },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -111,6 +115,9 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
     email: tokenData.client_email || '',
   });
   const [submitting, setSubmitting] = useState(false);
+  const [stripeReady, setStripeReady] = useState(false);
+  const stripeRef = useRef<any>(null);
+  const cardRef = useRef<any>(null);
   const [submitted, setSubmitted] = useState(false);
   const [applicationNumber, setApplicationNumber] = useState('');
   const [error, setError] = useState('');
@@ -174,7 +181,34 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
     </label>
   );
 
+  // Mount Stripe element when on step 6
+  useEffect(() => {
+    if (step !== 6) return;
+    if (!window.Stripe) return;
+    if (!stripeRef.current) stripeRef.current = window.Stripe(STRIPE_PK);
+    if (cardRef.current) return;
+    const elements = stripeRef.current.elements();
+    const style = { base: { fontFamily: 'Georgia, serif', fontSize: '15px', color: '#0d1b2a', '::placeholder': { color: '#94a3b8' } } };
+    cardRef.current = form.autopay_method === 'bank'
+      ? elements.create('bankAccount', { style, country: 'US', currency: 'usd', accountHolderType: 'individual', accountHolderName: `${form.first_name} ${form.last_name}` })
+      : elements.create('card', { style });
+    const el = document.getElementById('autopay-stripe-element');
+    if (el && el.children.length === 0) {
+      cardRef.current.mount('#autopay-stripe-element');
+      setStripeReady(true);
+    }
+  }, [step, form.autopay_method]);
+
   const handleSubmit = async () => {
+    // Auto-payment consent required
+    if (!form.consent_autopay) {
+      setError('You must authorize the auto-payment agreement to complete your application.');
+      return;
+    }
+    if (!form.autopay_esignature || form.autopay_esignature.trim().toLowerCase() !== `${form.first_name} ${form.last_name}`.toLowerCase()) {
+      setError(`Auto-payment signature must match your full name: ${form.first_name} ${form.last_name}`);
+      return;
+    }
     if (!form.consent_credit_check || !form.consent_terms) {
       setError('You must agree to both consent items to proceed.');
       return;
@@ -186,6 +220,17 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
     setSubmitting(true);
     setError('');
     try {
+      // Tokenize payment method via Stripe before submitting
+      let paymentMethodId = '';
+      if (stripeRef.current && cardRef.current) {
+        const { paymentMethod, error: stripeError } = await stripeRef.current.createPaymentMethod({
+          type: form.autopay_method === 'bank' ? 'us_bank_account' : 'card',
+          [form.autopay_method === 'bank' ? 'us_bank_account' : 'card']: cardRef.current,
+          billing_details: { name: `${form.first_name} ${form.last_name}`, email: form.email },
+        });
+        if (stripeError) throw new Error(stripeError.message);
+        paymentMethodId = paymentMethod?.id || '';
+      }
       const ip = await getIpAddress();
 
       // Submit via Edge Function — uses service role key server-side
@@ -199,6 +244,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
             ...form,
             ip_address: ip,
             user_agent: navigator.userAgent,
+            stripe_payment_method_id: paymentMethodId,
           }),
         }
       );
@@ -280,6 +326,8 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
 
   return (
     <>
+      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={() => { if (step === 6 && !stripeRef.current) { stripeRef.current = window.Stripe(STRIPE_PK); } }} />
+
       {/* Hero */}
       <section style={{ background: 'var(--navy)', paddingTop: 100, paddingBottom: 48, position: 'relative', overflow: 'hidden' }}>
         <div style={{ height: 2, background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', position: 'absolute', top: 72, left: 0, right: 0 }} />
@@ -518,7 +566,121 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
               </div>
             )}
 
-            {/* ── Step 5: Review & Sign ── */}
+
+            {/* ── Step 6: Auto-Payment Setup ── */}
+            {step === 6 && (
+              <div>
+                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>
+                  Auto-Payment Authorization
+                </h2>
+                <p style={{ fontSize: '0.85rem', color: 'var(--slate)', lineHeight: 1.7, marginBottom: 24 }}>
+                  To complete your financing application, please provide a payment method for automatic monthly installments. <strong style={{ color: 'var(--navy)' }}>This will only be activated upon approval of your loan.</strong> No charges will occur until you receive and accept your loan offer.
+                </p>
+
+                {/* Important notice */}
+                <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '16px 20px', marginBottom: 24 }}>
+                  <p style={{ fontSize: '0.82rem', color: '#92400e', lineHeight: 1.7, margin: 0 }}>
+                    <strong>⚠️ Important:</strong> Your payment method will be securely stored by Stripe and will <strong>not</strong> be charged today. Monthly installment payments will begin only after your application is reviewed and approved, and you have accepted the loan terms.
+                  </p>
+                </div>
+
+                {/* Payment method type */}
+                <div style={{ marginBottom: 20 }}>
+                  <div style={labelStyle}>Payment Method Type</div>
+                  <div style={{ display: 'flex', gap: 10 }}>
+                    {[{ id: 'card', label: '💳 Debit Card' }, { id: 'bank', label: '🏦 Bank Account (ACH)' }].map(m => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => set('autopay_method', m.id)}
+                        style={{
+                          flex: 1, padding: '12px', border: '1px solid', cursor: 'pointer',
+                          fontFamily: 'var(--font-body)', fontSize: '0.82rem', transition: 'all 0.2s',
+                          borderColor: form.autopay_method === m.id ? 'var(--navy)' : 'rgba(13,27,42,0.2)',
+                          background: form.autopay_method === m.id ? 'var(--navy)' : 'white',
+                          color: form.autopay_method === m.id ? 'white' : 'var(--slate)',
+                        }}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Stripe Elements mount point */}
+                <div style={{ marginBottom: 20 }}>
+                  <label style={labelStyle}>
+                    {form.autopay_method === 'card' ? 'Debit Card Details' : 'Bank Account Details'}
+                  </label>
+                  <div id="autopay-stripe-element" style={{ padding: '14px 16px', border: '1px solid rgba(13,27,42,0.35)', background: 'white', minHeight: 50 }} />
+                  <p style={{ fontSize: '0.7rem', color: 'var(--slate)', marginTop: 6 }}>
+                    🔒 Your payment details are encrypted by Stripe and never stored on our servers.
+                    {form.autopay_method === 'bank' && ' ACH debit authorization will be confirmed after approval.'}
+                  </p>
+                </div>
+
+                {/* ACH Authorization text */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '16px', marginBottom: 20, maxHeight: 160, overflowY: 'auto', fontSize: '0.75rem', color: '#374151', lineHeight: 1.7 }}>
+                  <strong>AUTO-PAYMENT AUTHORIZATION AGREEMENT</strong><br /><br />
+                  By signing below, I, <strong>{form.first_name} {form.last_name}</strong>, hereby authorize Crestwell Travel Services to initiate recurring electronic debit entries to the {form.autopay_method === 'bank' ? 'bank account' : 'debit card'} provided above for my approved travel financing installment payments.<br /><br />
+                  I understand that:<br />
+                  • This authorization takes effect ONLY upon approval of my loan application and my acceptance of the loan terms.<br />
+                  • No charges will be made to this payment method until my loan is approved and I have accepted the final loan agreement.<br />
+                  • Monthly installment amounts and start date will be disclosed in my approval letter.<br />
+                  • I may cancel this auto-payment authorization by providing written notice to Crestwell Travel Services at least 3 business days before the next scheduled payment.<br />
+                  • I am responsible for ensuring sufficient funds are available on each payment date.<br />
+                  • Returned or failed payments may result in additional fees per my loan agreement.<br /><br />
+                  This authorization remains in effect until my loan is paid in full or I provide written cancellation notice.
+                </div>
+
+                {/* Autopay consent checkbox */}
+                <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer', marginBottom: 20 }}>
+                  <input
+                    type="checkbox"
+                    checked={form.consent_autopay}
+                    onChange={e => set('consent_autopay', e.target.checked)}
+                    style={{ marginTop: 3, width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+                  />
+                  <div>
+                    <span style={{ fontSize: '0.875rem', color: '#0d1b2a', fontWeight: 500 }}>
+                      I authorize Crestwell Travel Services to debit my {form.autopay_method === 'bank' ? 'bank account' : 'debit card'} for approved monthly installment payments
+                    </span>
+                    <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: 3, lineHeight: 1.6 }}>
+                      This authorization is conditional upon loan approval and acceptance of final loan terms. No charges today.
+                    </p>
+                  </div>
+                </label>
+
+                {/* Auto-payment e-signature */}
+                <div style={{ border: '1px solid rgba(201,168,76,0.3)', padding: '20px', background: 'white' }}>
+                  <div style={{ fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 8 }}>
+                    Auto-Payment Authorization Signature
+                  </div>
+                  <p style={{ fontSize: '0.78rem', color: '#374151', marginBottom: 12, lineHeight: 1.6 }}>
+                    Type your full legal name (<strong>{form.first_name} {form.last_name}</strong>) to authorize the auto-payment agreement above.
+                  </p>
+                  <input
+                    type="text"
+                    value={form.autopay_esignature}
+                    onChange={e => set('autopay_esignature', e.target.value)}
+                    placeholder={`${form.first_name} ${form.last_name}`}
+                    style={{ ...inputStyle, fontFamily: 'Georgia, serif', fontSize: '1.1rem', borderColor: 'rgba(201,168,76,0.4)' }}
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
+                    <span style={{ fontSize: '0.68rem', color: 'var(--slate)' }}>🔒 Electronically signed — conditional upon loan approval</span>
+                    <span style={{ fontSize: '0.68rem', color: 'var(--slate)' }}>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                  </div>
+                </div>
+
+                {error && (
+                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '12px 16px', marginTop: 16, fontSize: '0.82rem', color: '#dc2626' }}>
+                    {error}
+                  </div>
+                )}
+              </div>
+            )}
+
+                        {/* ── Step 5: Review & Sign ── */}
             {step === 5 && (
               <div>
                 <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Review & Electronic Signature</h2>
