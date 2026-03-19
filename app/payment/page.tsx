@@ -691,8 +691,14 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
                       <p style={{ fontSize: '0.7rem', color: 'var(--slate)', marginTop: 4 }}>🔒 Stored securely by Stripe. Never stored on our servers.</p>
                     </div>
 
-                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '14px 16px', marginBottom: 14, fontSize: '0.75rem', color: '#374151', lineHeight: 1.7, maxHeight: 120, overflowY: 'auto' }}>
-                      <strong>AUTO-DRAFT AUTHORIZATION:</strong> By checking below you authorize Crestwell Travel Services and Stripe to automatically charge the card above on the scheduled dates. You may cancel by contacting us 5+ business days before the next draft. Failed payments may incur a $25 fee. This plan completes 90 days before your travel date.
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '14px 16px', marginBottom: 14, fontSize: '0.75rem', color: '#374151', lineHeight: 1.7, maxHeight: 160, overflowY: 'auto' }}>
+                      <strong>AUTO-DRAFT PAYMENT AUTHORIZATION & TERMS:</strong><br /><br />
+                      By checking below, I authorize Crestwell Travel Services and Stripe to automatically charge the card provided on each scheduled payment date.<br /><br />
+                      <strong>Grace Period:</strong> Each payment has a 5-day grace period. If a payment fails, Stripe will automatically retry within the grace period.<br /><br />
+                      <strong>Late Payment Fee:</strong> Any payment not successfully collected within the 5-day grace period will incur a <strong>$25 late payment fee</strong>, which will be added to the next scheduled draft.<br /><br />
+                      <strong>Cancellation Policy:</strong> Two (2) missed payments — payments not collected within their respective 5-day grace periods — will result in <strong>automatic cancellation</strong> of this payment plan and your booking reservation. Any amounts collected prior to cancellation are non-refundable except per Crestwell's standard cancellation policy.<br /><br />
+                      <strong>Cancellation Notice:</strong> You may cancel this auto-draft authorization by contacting us at least 5 business days before the next scheduled payment at <strong>888.508.6893</strong> or <strong>info@crestwellgetaways.com</strong>.<br /><br />
+                      This plan completes 90 days before your travel date to ensure full payment prior to departure.
                     </div>
 
                     <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer', marginBottom: 16 }}>
@@ -701,7 +707,9 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
                         <span style={{ fontSize: '0.875rem', color: '#0d1b2a', fontWeight: 600 }}>
                           I authorize {planMonths} monthly auto-draft payment{planMonths > 1 ? 's' : ''} of {formatCents(planMonthlyAmount)} as scheduled
                         </span>
-                        <p style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: 3, lineHeight: 1.5 }}>Final payment completes 90 days before my travel date. I agree to the auto-draft terms above.</p>
+                        <p style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: 3, lineHeight: 1.5 }}>
+                          I understand: (1) payments include a 5-day grace period, (2) a $25 late fee applies after the grace period, (3) 2 missed payments will result in automatic cancellation of my plan and booking, and (4) my final payment completes 90 days before travel.
+                        </p>
                       </div>
                     </label>
 
