@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import TokenGate, { type TokenData } from '@/components/TokenGate';
 
-type PaymentTab = 'stripe' | 'affirm';
+type PaymentTab = 'stripe' | 'affirm' | 'plan';
 type PaymentType = 'custom' | 'deposit' | 'balance' | 'package';
 type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
 
@@ -24,6 +24,31 @@ const SITE_DOMAIN = 'https://crestwell-public-site.vercel.app';
 
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
+// ─── Payment plan schedule calculator ────────────────────────────────────────
+
+type PlanResult = { months: number; monthlyAmount: number; schedule: { date: string; amount: number }[]; deadline: Date } | null;
+
+function calcPaymentPlan(totalCents: number, travelDateStr: string): PlanResult {
+  if (!travelDateStr || totalCents < 100) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const travel = new Date(travelDateStr);
+  const deadline = new Date(travel);
+  deadline.setDate(deadline.getDate() - 90);
+  if (deadline <= today) return null;
+  const months = Math.max(1, Math.floor((deadline.getTime() - today.getTime()) / (30.44 * 86400000)));
+  const monthlyAmount = Math.ceil(totalCents / months);
+  const schedule: { date: string; amount: number }[] = [];
+  let running = 0;
+  for (let i = 0; i < months; i++) {
+    const d = new Date(today); d.setMonth(d.getMonth() + i + 1);
+    const isLast = i === months - 1;
+    const amt = isLast ? totalCents - running : monthlyAmount;
+    running += amt;
+    schedule.push({ date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), amount: amt });
+  }
+  return { months, monthlyAmount, schedule, deadline };
 }
 
 // ─── Fee offsets ──────────────────────────────────────────────────────────────
@@ -69,7 +94,7 @@ function SuccessScreen({ amount, method, name, bookingRef }: {
       <div style={{ background: 'var(--cream)', padding: '20px', marginBottom: 32, textAlign: 'left' }}>
         {[
           { label: 'Amount Paid', value: formatCents(amount) },
-          { label: 'Payment Method', value: method === 'stripe' ? 'Credit / Debit Card' : 'Affirm — Buy Now Pay Later' },
+          { label: 'Payment Method', value: method === 'stripe' ? 'Credit / Debit Card' : method === 'plan' ? 'Payment Plan — Auto-Draft' : 'Affirm — Buy Now Pay Later' },
           ...(bookingRef ? [{ label: 'Booking Reference', value: bookingRef }] : []),
           { label: 'Confirmation', value: 'A receipt has been sent to your email' },
         ].map((item, i) => (
@@ -109,6 +134,14 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
   const [customerState, setCustomerState] = useState('');
   const [customerZip, setCustomerZip] = useState('');
   const [stripeReady, setStripeReady] = useState(false);
+  const [travelDate, setTravelDate] = useState('');
+  const [planMonths, setPlanMonths] = useState(0);
+  const [planMonthlyAmount, setPlanMonthlyAmount] = useState(0);
+  const [planSchedule, setPlanSchedule] = useState<{ date: string; amount: number }[]>([]);
+  const [consentAutopay, setConsentAutopay] = useState(false);
+  const [planCardReady, setPlanCardReady] = useState(false);
+  const planCardRef = useRef<any>(null);
+  const planCardMount = useRef<HTMLDivElement>(null);
   const [successData, setSuccessData] = useState<{ amount: number; method: string; name: string; bookingRef: string } | null>(null);
 
   const stripeRef = useRef<any>(null);
@@ -118,6 +151,31 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
   const amountCents = paymentType === 'package'
     ? PACKAGES.find(p => p.id === selectedPackage)?.amount ?? 0
     : parseDollarAmount(customAmount);
+
+  // Recalculate plan when amount or travel date changes
+  useEffect(() => {
+    if (tab !== 'plan' || !travelDate || amountCents < 100) {
+      setPlanMonths(0); setPlanMonthlyAmount(0); setPlanSchedule([]); return;
+    }
+    const plan = calcPaymentPlan(calcStripeTotal(amountCents), travelDate);
+    if (plan) { setPlanMonths(plan.months); setPlanMonthlyAmount(plan.monthlyAmount); setPlanSchedule(plan.schedule); }
+    else { setPlanMonths(0); setPlanMonthlyAmount(0); setPlanSchedule([]); }
+  }, [tab, travelDate, amountCents]);
+
+  // Mount plan card when on plan tab
+  useEffect(() => {
+    if (tab !== 'plan') {
+      if (planCardRef.current) { planCardRef.current.unmount(); planCardRef.current = null; setPlanCardReady(false); }
+      return;
+    }
+    if (!window.Stripe) return;
+    if (!stripeRef.current) stripeRef.current = window.Stripe(STRIPE_PK);
+    if (planCardRef.current) return;
+    const elements = stripeRef.current.elements();
+    planCardRef.current = elements.create('card', { style: { base: { fontFamily: 'Georgia, serif', fontSize: '16px', color: '#0d1b2a', '::placeholder': { color: '#94a3b8' } }, invalid: { color: '#dc2626' } } });
+    const tryMount = () => { if (planCardMount.current) { planCardRef.current.mount(planCardMount.current); setPlanCardReady(true); } else setTimeout(tryMount, 50); };
+    tryMount();
+  }, [tab]);
 
   const mountStripe = () => {
     if (!window.Stripe) return;
@@ -166,6 +224,45 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
       }
     }
   }, [tab]);
+
+  const handlePlanSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripeRef.current || !planCardRef.current) return;
+    if (amountCents < 50) { setError('Minimum payment is $0.50'); return; }
+    if (!customerName || !customerEmail) { setError('Name and email are required'); return; }
+    if (!travelDate) { setError('Please enter your travel date'); return; }
+    if (planSchedule.length === 0) { setError('Travel date must be more than 90 days away to set up a payment plan'); return; }
+    if (!consentAutopay) { setError('You must authorize the auto-draft payment agreement to continue'); return; }
+    setStatus('processing'); setError('');
+    try {
+      const { paymentMethod, error: pmErr } = await stripeRef.current.createPaymentMethod({
+        type: 'card', card: planCardRef.current,
+        billing_details: { name: customerName, email: customerEmail },
+      });
+      if (pmErr) throw new Error(pmErr.message);
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-payment-plan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount_cents: calcStripeTotal(amountCents),
+          travel_date: travelDate,
+          customer_name: customerName,
+          customer_email: customerEmail,
+          customer_phone: customerPhone,
+          booking_ref: bookingRef,
+          trip_name: paymentType === 'package' ? PACKAGES.find(p => p.id === selectedPackage)?.name : tripName,
+          payment_method_id: paymentMethod.id,
+          months: planMonths,
+          monthly_amount_cents: planMonthlyAmount,
+          notes,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setSuccessData({ amount: calcStripeTotal(amountCents), method: 'plan', name: customerName, bookingRef });
+      setStatus('success');
+    } catch (err: any) { setError(err.message || 'Payment plan setup failed.'); setStatus('error'); }
+  };
 
   const handleStripeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -463,7 +560,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
 
             {/* Tabs */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(13,27,42,0.08)' }}>
-              {([{ id: 'stripe' as PaymentTab, label: '💳 Credit / Debit Card' }, { id: 'affirm' as PaymentTab, label: '📅 Pay Over Time (Affirm)' }]).map(t => (
+              {([{ id: 'stripe' as PaymentTab, label: '💳 Credit / Debit Card' }, { id: 'affirm' as PaymentTab, label: '📅 Pay Over Time (Affirm)' }, { id: 'plan' as PaymentTab, label: '🗓️ Payment Plan' }]).map(t => (
                 <button key={t.id} onClick={() => { setTab(t.id); setError(''); }} style={{ flex: 1, padding: '16px 20px', background: 'none', border: 'none', borderBottom: tab === t.id ? '2px solid var(--gold)' : '2px solid transparent', color: tab === t.id ? 'var(--navy)' : 'var(--slate)', fontSize: '0.78rem', fontFamily: 'var(--font-body)', fontWeight: tab === t.id ? 600 : 400, letterSpacing: '0.05em', cursor: 'pointer', transition: 'all 0.2s' }}>
                   {t.label}
                 </button>
@@ -530,6 +627,100 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
                 {amountCents > 0 && amountCents < 5000 && <p style={{ fontSize: '0.72rem', color: '#dc2626', textAlign: 'center', marginTop: 8 }}>Affirm requires a minimum payment of $50</p>}
                 <p style={{ fontSize: '0.72rem', color: 'var(--slate)', textAlign: 'center', marginTop: 12 }}>You will be redirected to Affirm to complete your application. Subject to credit approval.</p>
               </div>
+            )}
+            {/* Plan tab */}
+            {tab === 'plan' && (
+              <form onSubmit={handlePlanSubmit} style={{ padding: '28px 32px' }}>
+                <div style={{ marginBottom: 20 }}>
+                  <label style={{ display: 'block', fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#374151', marginBottom: 6, fontFamily: 'var(--font-body)' }}>
+                    Travel Date <span style={{ color: '#dc2626' }}>*</span>
+                  </label>
+                  <input type="date" value={travelDate} onChange={e => setTravelDate(e.target.value)}
+                    min={new Date(Date.now() + 91 * 86400000).toISOString().split('T')[0]}
+                    style={{ width: '100%', padding: '11px 14px', border: '1px solid rgba(13,27,42,0.35)', fontSize: '0.875rem', fontFamily: 'var(--font-body)', color: '#0d1b2a', background: 'white', outline: 'none', boxSizing: 'border-box' }} />
+                  <p style={{ fontSize: '0.7rem', color: 'var(--slate)', marginTop: 4 }}>Final payment due 90 days before departure. Minimum 91 days away required.</p>
+                </div>
+
+                {travelDate && planSchedule.length === 0 && amountCents > 0 && (
+                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '12px 16px', marginBottom: 16, fontSize: '0.82rem', color: '#dc2626' }}>
+                    Travel date must be at least 91 days from today to set up a payment plan.
+                  </div>
+                )}
+
+                {planSchedule.length > 0 && amountCents > 0 && (
+                  <>
+                    <div style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.3)', padding: '16px 20px', marginBottom: 12 }}>
+                      <div style={{ fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 10 }}>Payment Plan Summary</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        {[
+                          { label: 'Total Amount', value: formatCents(calcStripeTotal(amountCents)) },
+                          { label: 'Monthly Payment', value: formatCents(planMonthlyAmount) },
+                          { label: 'Number of Payments', value: `${planMonths} months` },
+                          { label: 'Final Payment Due', value: planSchedule[planSchedule.length - 1]?.date || '' },
+                        ].map((item, i) => (
+                          <div key={i} style={{ padding: '8px 0', borderBottom: '1px solid rgba(13,27,42,0.06)' }}>
+                            <div style={{ fontSize: '0.62rem', color: 'var(--slate)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>{item.label}</div>
+                            <div style={{ fontSize: '0.9rem', color: 'var(--navy)', fontWeight: 600 }}>{item.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div style={{ border: '1px solid rgba(13,27,42,0.08)', overflow: 'hidden', marginBottom: 16 }}>
+                      <div style={{ padding: '10px 16px', background: 'var(--navy)', display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>Draft Date</span>
+                        <span style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>Amount</span>
+                      </div>
+                      <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+                        {planSchedule.map((p, i) => (
+                          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 16px', borderBottom: i < planSchedule.length - 1 ? '1px solid rgba(13,27,42,0.05)' : 'none', background: i % 2 === 0 ? 'white' : '#fafafa' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--navy)' }}>
+                              {p.date}
+                              {i === planSchedule.length - 1 && <span style={{ fontSize: '0.65rem', background: 'var(--gold)', color: 'var(--navy)', padding: '1px 6px', marginLeft: 8, fontWeight: 600 }}>FINAL</span>}
+                            </span>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--navy)', fontWeight: 600 }}>{formatCents(p.amount)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--slate)', marginBottom: 16 }}>⚡ First payment drafted today upon setup. Remaining payments auto-drafted on the dates above.</p>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <label style={{ display: 'block', fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#374151', marginBottom: 6, fontFamily: 'var(--font-body)' }}>Card for Auto-Draft Payments</label>
+                      <div ref={planCardMount} style={{ padding: '14px 16px', border: '1px solid rgba(13,27,42,0.35)', background: 'white', minHeight: 50 }} />
+                      <p style={{ fontSize: '0.7rem', color: 'var(--slate)', marginTop: 4 }}>🔒 Stored securely by Stripe. Never stored on our servers.</p>
+                    </div>
+
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '14px 16px', marginBottom: 14, fontSize: '0.75rem', color: '#374151', lineHeight: 1.7, maxHeight: 120, overflowY: 'auto' }}>
+                      <strong>AUTO-DRAFT AUTHORIZATION:</strong> By checking below you authorize Crestwell Travel Services and Stripe to automatically charge the card above on the scheduled dates. You may cancel by contacting us 5+ business days before the next draft. Failed payments may incur a $25 fee. This plan completes 90 days before your travel date.
+                    </div>
+
+                    <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer', marginBottom: 16 }}>
+                      <input type="checkbox" checked={consentAutopay} onChange={e => setConsentAutopay(e.target.checked)} style={{ marginTop: 3, width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }} />
+                      <div>
+                        <span style={{ fontSize: '0.875rem', color: '#0d1b2a', fontWeight: 600 }}>
+                          I authorize {planMonths} monthly auto-draft payment{planMonths > 1 ? 's' : ''} of {formatCents(planMonthlyAmount)} as scheduled
+                        </span>
+                        <p style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: 3, lineHeight: 1.5 }}>Final payment completes 90 days before my travel date. I agree to the auto-draft terms above.</p>
+                      </div>
+                    </label>
+
+                    <div style={{ background: 'var(--cream)', padding: '12px 16px', marginBottom: 16, fontSize: '0.78rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, color: 'var(--slate)' }}><span>Trip Amount</span><span>{formatCents(amountCents)}</span></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, color: 'var(--slate)' }}><span>Processing Fee (3.2%)</span><span>{formatCents(calcStripeFee(amountCents))}</span></div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, color: 'var(--navy)', borderTop: '1px solid rgba(13,27,42,0.1)', paddingTop: 8 }}><span>Total Collected</span><span>{formatCents(calcStripeTotal(amountCents))}</span></div>
+                    </div>
+
+                    {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '10px 14px', marginBottom: 14, fontSize: '0.82rem', color: '#dc2626' }}>{error}</div>}
+
+                    <button type="submit" disabled={status === 'processing' || !planCardReady || !consentAutopay} className="btn-primary"
+                      style={{ width: '100%', border: 'none', cursor: 'pointer', fontSize: '0.85rem', padding: '13px', opacity: (status === 'processing' || !planCardReady || !consentAutopay) ? 0.6 : 1 }}>
+                      {status === 'processing' ? 'Setting Up Plan...' : `Confirm Plan — ${planMonths} × ${formatCents(planMonthlyAmount)}/mo`}
+                    </button>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--slate)', textAlign: 'center', marginTop: 10 }}>First draft today. Subsequent payments auto-drafted monthly until complete.</p>
+                  </>
+                )}
+              </form>
             )}
           </div>
 
