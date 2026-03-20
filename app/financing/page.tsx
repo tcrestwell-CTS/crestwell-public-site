@@ -94,9 +94,9 @@ const US_STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','
 const STEPS = [
   { num: 1, label: 'Personal Info' },
   { num: 2, label: 'Employment' },
-  { num: 3, label: 'Loan Details' },
+  { num: 3, label: 'Financing Request' },
   { num: 4, label: 'Financial' },
-  { num: 5, label: 'Review & Sign' },
+  { num: 5, label: 'Review & Authorize' },
   { num: 6, label: 'Auto-Payment' },
 ];
 
@@ -219,7 +219,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
     }
     // Auto-payment authorization (Step 6)
     if (!form.consent_autopay) {
-      setError('You must authorize the auto-payment agreement to complete your application.');
+      setError('You must authorize the auto-payment agreement to complete your pre-qualification request.');
       return;
     }
     if (!form.autopay_esignature || form.autopay_esignature.trim().toLowerCase() !== `${form.first_name} ${form.last_name}`.toLowerCase()) {
@@ -277,17 +277,17 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
       <div style={{ background: 'var(--cream)', minHeight: '100vh', paddingTop: 72 }}>
         <div style={{ maxWidth: 600, margin: '60px auto 80px', background: 'white', boxShadow: '0 4px 40px rgba(13,27,42,0.08)', border: '1px solid rgba(201,168,76,0.15)', padding: '48px 40px', textAlign: 'center' }}>
           <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: '2rem', color: 'white' }}>✓</div>
-          <h2 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Application Submitted</h2>
+          <h2 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Pre-Qualification Submitted</h2>
           <p style={{ color: 'var(--slate)', fontSize: '0.9rem', marginBottom: 32, lineHeight: 1.7 }}>
-            Thank you, {form.first_name}. We've received your financing application and will review it within 1–2 business days.
+            Thank you, {form.first_name}. We've received your pre-qualification request and will review it within 1–2 business days.
           </p>
           <div style={{ background: 'var(--cream)', padding: '20px', marginBottom: 32, textAlign: 'left' }}>
             {[
-              { label: 'Application Number', value: applicationNumber },
-              { label: 'Applicant', value: `${form.first_name} ${form.last_name}` },
+              { label: 'Pre-Qualification #', value: applicationNumber },
+              { label: 'Consumer', value: `${form.first_name} ${form.last_name}` },
               { label: 'Amount Requested', value: `$${parseFloat(form.loan_amount_requested).toLocaleString()}` },
-              { label: 'Status', value: 'Under Review' },
-              { label: 'Next Step', value: 'Our team will contact you within 1–2 business days' },
+              { label: 'Status', value: 'Pre-Qualification Under Review' },
+              { label: 'Next Step', value: 'A specialist will contact you within 1–2 business days' },
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 4 ? '1px solid rgba(13,27,42,0.06)' : 'none', flexWrap: 'wrap', gap: 8 }}>
                 <span style={{ fontSize: '0.78rem', color: 'var(--slate)' }}>{item.label}</span>
@@ -341,13 +341,13 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
       <section style={{ background: 'var(--navy)', paddingTop: 100, paddingBottom: 48, position: 'relative', overflow: 'hidden' }}>
         <div style={{ height: 2, background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', position: 'absolute', top: 72, left: 0, right: 0 }} />
         <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '0 32px', textAlign: 'center' }}>
-          <div className="overline" style={{ marginBottom: 16 }}>In-House Financing</div>
-          <h1 className="font-display" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 300, color: 'white', marginBottom: 16 }}>Travel Financing Application</h1>
+          <div className="overline" style={{ marginBottom: 16 }}>Travel Financing Pre-Qualification</div>
+          <h1 className="font-display" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 300, color: 'white', marginBottom: 16 }}>Travel Financing Pre-Qualification</h1>
           <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.9rem', maxWidth: 520, margin: '0 auto 24px', lineHeight: 1.75 }}>
-            Apply for in-house travel financing through Crestwell Travel Services. Quick decision, flexible terms, no dealer markups.
+            Request pre-qualification for in-house travel financing through Crestwell Travel Services. Quick review, flexible terms, no dealer markups.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
-            {['🔒 Secure & Encrypted', '⚡ 1–2 Day Decision', '💰 Flexible Terms', '✈️ Travel Now, Pay Over Time'].map((b, i) => (
+            {['🔒 Secure & Encrypted', '⚡ 1–2 Day Review', '💰 Flexible Terms', '✈️ Travel Now, Pay Over Time'].map((b, i) => (
               <span key={i} style={{ fontSize: '0.68rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>{b}</span>
             ))}
           </div>
@@ -363,7 +363,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
             {/* ── Step 1: Personal Info ── */}
             {step === 1 && (
               <div>
-                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Personal Information</h2>
+                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Consumer Personal Information</h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   <div style={grid2}>
                     {field('First Name', 'first_name', 'text', true)}
@@ -465,7 +465,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
             {/* ── Step 3: Loan Details ── */}
             {step === 3 && (
               <div>
-                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Loan Details</h2>
+                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Financing Request Details</h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   <div>
                     <label style={labelStyle}>Loan Amount Requested <span style={{ color: '#dc2626' }}>*</span></label>
@@ -583,13 +583,13 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
                   Auto-Payment Authorization
                 </h2>
                 <p style={{ fontSize: '0.85rem', color: 'var(--slate)', lineHeight: 1.7, marginBottom: 24 }}>
-                  To complete your financing application, please provide a payment method for automatic monthly installments. <strong style={{ color: 'var(--navy)' }}>This will only be activated upon approval of your loan.</strong> No charges will occur until you receive and accept your loan offer.
+                  To complete your pre-qualification request, please provide a payment method for automatic monthly installments. <strong style={{ color: 'var(--navy)' }}>This will only be activated upon approval of your loan.</strong> No charges will occur until you receive and accept your loan offer.
                 </p>
 
                 {/* Important notice */}
                 <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '16px 20px', marginBottom: 24 }}>
                   <p style={{ fontSize: '0.82rem', color: '#92400e', lineHeight: 1.7, margin: 0 }}>
-                    <strong>⚠️ Important:</strong> Your payment method will be securely stored by Stripe and will <strong>not</strong> be charged today. Monthly installment payments will begin only after your application is reviewed and approved, and you have accepted the loan terms.
+                    <strong>⚠️ Important:</strong> Your payment method will be securely stored by Stripe and will <strong>not</strong> be charged today. Monthly installment payments will begin only after your pre-qualification is reviewed, a formal financing offer is extended, and you have accepted the offer in writing.
                   </p>
                 </div>
 
@@ -633,7 +633,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
                   <strong>AUTO-PAYMENT AUTHORIZATION AGREEMENT</strong><br /><br />
                   By signing below, I, <strong>{form.first_name} {form.last_name}</strong>, hereby authorize Crestwell Travel Services to initiate recurring electronic debit entries to the {form.autopay_method === 'bank' ? 'bank account' : 'debit card'} provided above for my approved travel financing installment payments.<br /><br />
                   I understand that:<br />
-                  • This authorization takes effect ONLY upon approval of my loan application and my acceptance of the loan terms.<br />
+                  • This authorization takes effect ONLY upon my acceptance of a formal written financing offer following successful pre-qualification.<br />
                   • No charges will be made to this payment method until my loan is approved and I have accepted the final loan agreement.<br />
                   • Monthly installment amounts and start date will be disclosed in my approval letter.<br />
                   • I may cancel this auto-payment authorization by providing written notice to Crestwell Travel Services at least 3 business days before the next scheduled payment.<br />
@@ -692,13 +692,13 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
                         {/* ── Step 5: Review & Sign ── */}
             {step === 5 && (
               <div>
-                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Review & Electronic Signature</h2>
+                <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Review & Authorize Pre-Qualification</h2>
 
                 {/* Summary */}
                 <div style={{ background: 'var(--cream)', padding: '20px', marginBottom: 24 }}>
-                  <div style={{ fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 12 }}>Application Summary</div>
+                  <div style={{ fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 12 }}>Pre-Qualification Summary</div>
                   {[
-                    { label: 'Applicant', value: `${form.first_name} ${form.last_name}` },
+                    { label: 'Consumer', value: `${form.first_name} ${form.last_name}` },
                     { label: 'Email', value: form.email },
                     { label: 'Phone', value: form.phone },
                     { label: 'Address', value: `${form.address_line1}, ${form.city}, ${form.state} ${form.zip_code}` },
@@ -717,13 +717,13 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
 
                 {/* Disclosures */}
                 <div style={{ background: '#fafafa', border: '1px solid #e5e7eb', padding: '16px', marginBottom: 20, fontSize: '0.78rem', color: '#374151', lineHeight: 1.7, maxHeight: 140, overflowY: 'auto' }}>
-                  <strong>Credit Authorization & Disclosure:</strong> By submitting this application, you authorize Crestwell Travel Services to obtain and review your credit report and any other information needed to evaluate this application. This is a soft inquiry and will not affect your credit score during the review process. If approved, a hard inquiry may be performed. All information provided is subject to verification. Crestwell Travel Services reserves the right to approve or deny any application at its sole discretion. Approval is not guaranteed. Terms including interest rate and monthly payment will be disclosed upon approval.
+                  <strong>Credit Report Authorization & Disclosure:</strong> By submitting this pre-qualification request, I authorize <strong>Crestwell Travel Services</strong> to access and review my consumer credit information. I understand that: (a) <strong>my credit will be accessed and reviewed</strong> for the purpose of this pre-qualification only; (b) this credit access is being conducted <strong>for the purpose of determining pre-qualification eligibility</strong> for in-house travel financing; (c) my credit information will be obtained from <strong>Equifax and/or one or more Consumer Reporting Agencies</strong> as defined under the Fair Credit Reporting Act (FCRA); (d) this review constitutes a <strong>soft inquiry and will not negatively impact my credit score</strong>; and (e) a separate hard inquiry authorization will be required if I proceed to a formal financing arrangement. <strong>This is a pre-qualification request only — not a credit application or loan agreement.</strong> Pre-qualification does not guarantee financing. Crestwell Travel Services reserves the right to deny pre-qualification at its sole discretion.
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 24 }}>
                   {checkbox('I authorize Crestwell Travel Services to review my credit information', 'consent_credit_check',
                     'I understand this may include a soft credit inquiry during review.')}
-                  {checkbox('I agree to the Terms & Conditions and Privacy Policy', 'consent_terms',
+                  {checkbox('I agree to the Terms & Conditions and Privacy Policy for this Pre-Qualification Request', 'consent_terms',
                     'I confirm all information provided is accurate and complete to the best of my knowledge.')}
                 </div>
 
@@ -781,7 +781,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
                   className="btn-primary"
                   style={{ border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, padding: '11px 28px', fontSize: '0.78rem' }}
                 >
-                  {submitting ? 'Submitting...' : 'Submit Application'}
+                  {submitting ? 'Submitting...' : 'Submit Pre-Qualification Request'}
                 </button>
               )}
             </div>
