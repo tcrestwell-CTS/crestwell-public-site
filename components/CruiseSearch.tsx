@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -984,10 +985,11 @@ function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMa
           </div>
         </div>
       </div>
-      {showItinerary && (
-        <ItineraryModal cruise={cruise} onClose={() => setShowItinerary(false)} />
-      )}
     </article>
+    {showItinerary && typeof document !== 'undefined' && createPortal(
+      <ItineraryModal cruise={cruise} onClose={() => setShowItinerary(false)} />,
+      document.body
+    )}
   );
 }
 
