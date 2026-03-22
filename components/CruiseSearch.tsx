@@ -847,6 +847,7 @@ function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMa
   });
 
   return (
+    <>
     <article
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -990,6 +991,7 @@ function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMa
       <ItineraryModal cruise={cruise} onClose={() => setShowItinerary(false)} />,
       document.body
     )}
+    </>
   );
 }
 
