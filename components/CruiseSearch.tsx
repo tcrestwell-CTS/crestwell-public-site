@@ -215,7 +215,7 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
         const list: WidgetyOperator[] = data.operators || data || [];
         if (list.length > 0) {
           const map = new Map<string, WidgetyOperator>();
-          list.forEach(o => map.set(o.id, o));
+          list.forEach(o => { map.set(o.id, o); if (o.slug) map.set(o.slug, o); });
           setOperatorMap(map);
           setAllOperators(list);
           // Show all by default (no cruise type filter selected yet)
@@ -261,15 +261,20 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
         year:        f.year,
         page:        String(pg),
       });
+      // Remove 'any' values — route ignores them but keep URL clean
+      ['destination','operator','cruise_type','duration','month','year'].forEach(k => {
+        if (params.get(k) === 'any') params.delete(k);
+      });
       const res = await fetch(`/api/widgety/cruises?${params}`);
       if (!res.ok) throw new Error(`${res.status}`);
       const data = await res.json();
 
-      const list: WidgetyCruise[] = data.cruises || (Array.isArray(data) ? data : []);
-      const total = data.total || list.length;
+      const list: WidgetyCruise[] = data.holidays || data.cruises || (Array.isArray(data) ? data : []);
+      const total = data.total  ?? list.length;
+      const pages = data.pages  ?? Math.ceil(total / 12) ?? 1;
 
       setCruises(list);
-      setTotalPages(Math.ceil(total / 9) || 1);
+      setTotalPages(pages || 1);
       setTotalCount(total);
     } catch {
       setError('Unable to load live results right now. Please try again or request a custom quote.');
