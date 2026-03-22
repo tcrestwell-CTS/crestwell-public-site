@@ -294,18 +294,29 @@ export async function POST(req: NextRequest) {
         if (day.breakfast_included) meals.push('Breakfast');
         if (day.lunch_included)     meals.push('Lunch');
         if (day.dinner_included)    meals.push('Dinner');
+        // Port images and description from Widgety's destination database
+        const portImages = (loc?.widgety_data?.images || []).slice(0, 3).map((img: any) => ({
+          href: img.href, credit: img.credit || '',
+        }));
+        const portDesc = loc?.widgety_data?.description
+          ? loc.widgety_data.description.replace(/<[^>]*>/g, '').trim()
+          : '';
+        const programme = (day.programme || '').replace(/<[^>]*>/g, '').trim();
+
         return {
-          day_number:  day.day,
-          title:       `${loc?.name || day.day_name || ''}${loc?.country ? `, ${loc.country}` : ''}`,
-          description: (day.programme || '').replace(/<[^>]*>/g, '').trim() || `Day ${day.day}`,
-          category:    day.day_type?.[0] || 'cruise',
-          location:    loc?.name || day.day_name || '',
-          country:     loc?.country || '',
-          latitude:    loc?.latitude  ? parseFloat(loc.latitude)  : null,
-          longitude:   loc?.longitude ? parseFloat(loc.longitude) : null,
-          arrival:     loc?.arrival_time   || null,
-          departure:   loc?.departure_time || null,
-          meals:       meals.length ? meals : null,
+          day_number:       day.day,
+          title:            `${loc?.name || day.day_name || ''}${loc?.country ? `, ${loc.country}` : ''}`,
+          description:      programme || portDesc || `Day ${day.day}`,
+          category:         (day.day_type?.[0] || 'cruise').toLowerCase(),
+          location:         loc?.name || day.day_name || '',
+          country:          loc?.country || '',
+          latitude:         loc?.latitude  ? parseFloat(loc.latitude)  : null,
+          longitude:        loc?.longitude ? parseFloat(loc.longitude) : null,
+          arrival:          loc?.arrival_time   || null,
+          departure:        loc?.departure_time || null,
+          meals:            meals.length ? meals : null,
+          port_images:      portImages,
+          port_description: portDesc,
         };
       });
       return NextResponse.json({
