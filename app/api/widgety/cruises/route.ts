@@ -10,13 +10,60 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BASE     = 'https://www.widgety.co.uk/api';
 const PER_PAGE = 9;
-const HEADERS  = { Accept: 'application/json' } as const; // NO api_version — critical
+const HEADERS    = { Accept: 'application/json' } as const;   // NO api_version — V3
+const V2_HEADERS = { Accept: 'application/json;api_version=2' } as const; // V2 fallback
+
+// These operators only have inventory in V2 /cruises.json, not V3 /holidays.json
+const V2_ONLY_OPERATORS = new Set([
+  'american-cruise-lines',
+  'cunard-line',
+  'princess-cruises',
+]);
+
+// Cruise type operator routing — holiday_type is NOT a valid API param (causes 400)
+// Route by operator set instead
+const RIVER_OPERATOR_SET = new Set([
+  'amawaterways', 'avalon-waterways', 'american-cruise-lines',
+  'uniworld-boutique-river-cruises', 'tauck', 'celebrity-river-cruises',
+]);
 
 function auth() {
   return {
     app_id: process.env.WIDGETY_APP_ID!,
     token:  process.env.WIDGETY_APP_TOKEN || process.env.WIDGETY_TOKEN!,
   };
+}
+
+// ─── V2 cruise search (for operators not on V3) ───────────────────────────────
+async function searchCruisesV2(params: Record<string, string>) {
+  try {
+    const res = await fetch(
+      `${BASE}/cruises.json?${new URLSearchParams({ ...auth(), ...params })}`,
+      { headers: V2_HEADERS, next: { revalidate: 300 } }
+    );
+    if (!res.ok) return null;
+    const d = await res.json();
+    // Normalise V2 cruise shape to match V3 holiday shape
+    const holidays = (d.cruises || []).map((c: any) => ({
+      holiday_ref:    c.ref,
+      name:           c.name,
+      operator:       c.operator,
+      operator_title: c.operator_title,
+      cruise_nights:  c.cruise_nights ? parseInt(c.cruise_nights) : null,
+      duration_days:  c.cruise_nights ? parseInt(c.cruise_nights) + 1 : null,
+      starts_at:      { name: c.starts_at },
+      ends_at:        { name: c.ends_at },
+      date_from:      c.starts_on,
+      date_to:        c.ends_on,
+      regions:        Array.isArray(c.regions) ? c.regions : [],
+      holiday_type:   Array.isArray(c.cruise_type) ? c.cruise_type.map((t: string) => t.toLowerCase() === 'river' ? 'river_cruise' : 'ocean_cruise') : ['ocean_cruise'],
+      rating:         c.rating,
+      description:    c.description !== 'None' ? c.description : null,
+      ship_title:     c.ship_title,
+      image_url:      null, // enriched later
+    }));
+    return { holidays, total: d.total || 0 };
+  } catch { return null; }
 }
 
 const ACTIVE_OPERATORS = [
@@ -28,11 +75,31 @@ const ACTIVE_OPERATORS = [
   'explora-journeys','ritz-carlton-yacht-collection','celebrity-river-cruises',
 ];
 
+// REGION_MAP: component value → Widgety API slug (must be lowercase)
+// All slugs verified valid against live API
 const REGION_MAP: Record<string, string> = {
-  caribbean:'Caribbean', mediterranean:'Mediterranean', alaska:'Alaska',
-  bahamas:'Bahamas', bermuda:'Bermuda', mexico:'Mexico', norway:'Norway',
-  hawaii:'Hawaii', new_england:'New England', world:'World',
-  mississippi:'Mississippi', europe:'Europe', river:'River',
+  caribbean:       'caribbean',       // 8,628 results
+  mediterranean:   'mediterranean',   // 5,740 results
+  alaska:          'alaska',          // 2,633 results
+  bahamas:         'bahamas',         // 1,022 results
+  bermuda:         'bermuda',         //    82 results
+  hawaii:          'hawaii',          //    28 results
+  europe:          'europe',          // 10,534 results
+  northern_europe: 'northern-europe', //  1,302 results
+  southern_europe: 'southern-europe', //  6,295 results
+  scandinavia:     'scandinavia',     //    59 results
+  asia:            'asia',            //   944 results
+  pacific:         'pacific',         //  1,088 results
+  south_america:   'south-america',   //  8,173 results
+  north_america:   'north-america',   //  3,495 results
+  central_america: 'central-america', //   453 results
+  americas:        'americas',        // 12,769 results
+  middle_east:     'middle-east',     //   161 results
+  indian_ocean:    'indian-ocean',    //    16 results
+  mississippi:     'mississippi',     //     1 result
+  amazon:          'amazon',          //    36 results
+  atlantic:        'atlantic',        //   163 results
+  // REMOVED — invalid slugs (cause 400 error): mexico, norway, australia, world
 };
 
 const DURATION_RANGES: Record<string, [number, number]> = {
@@ -105,7 +172,7 @@ export async function GET(req: NextRequest) {
 
   if (destination !== 'any' && REGION_MAP[destination]) params.regions    = REGION_MAP[destination];
   if (operator    !== 'any')                             params.operators  = operator;
-  if (cruiseType  !== 'any')                             params.holiday_type = cruiseType;
+  // holiday_type not supported by API — filtered client-side below
 
   let hasDateFilter = false;
   if (month !== 'any') {
