@@ -680,7 +680,7 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                     key={i}
                     onClick={() => setActiveDay(i)}
                     style={{
-                      width: '100%', textAlign: 'left', background: 'none',
+                      width: '100%', textAlign: 'left',
                       border: 'none', borderBottom: '1px solid rgba(255,255,255,0.04)',
                       borderLeft: activeDay === i ? '3px solid var(--gold)' : '3px solid transparent',
                       padding: '12px 14px',
