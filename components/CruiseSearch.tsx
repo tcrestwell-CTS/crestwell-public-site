@@ -25,11 +25,12 @@ type WidgetyCruise = {
 };
 
 type WidgetyOperator = {
-  id: string;              // slug e.g. "norwegian-cruise-line"
+  id: string;               // slug e.g. "norwegian-cruise-line"
+  slug?: string;            // same as id — set by operators route
   title: string;
-  cover_image_href: string;   // full CDN URL
-  profile_image_href: string; // full CDN URL
-  href: string;            // API URL
+  cover_image_href: string;
+  profile_image_href: string;
+  href: string;
 };
 
 type SearchFilters = {
