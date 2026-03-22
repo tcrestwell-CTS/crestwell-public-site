@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
 // ─── All 20 operators from Widgety API (live as of March 2026) ────────────────
@@ -238,8 +239,9 @@ export default function CruiseLinesPage() {
         </div>
       </section>
 
-      {selectedOp && (
-        <CruiseLineModal op={selectedOp} onClose={() => setSelectedOp(null)} />
+      {selectedOp && typeof document !== 'undefined' && createPortal(
+        <CruiseLineModal op={selectedOp} onClose={() => setSelectedOp(null)} />,
+        document.body
       )}
 
       {/* CTA */}
