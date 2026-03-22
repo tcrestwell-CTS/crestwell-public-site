@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 // ─── All 20 operators from Widgety API (live as of March 2026) ────────────────
@@ -29,10 +29,32 @@ const WIDGETY_OPERATORS = [
 
 type FilterType = 'All' | 'Ocean' | 'River';
 
+type OperatorDetail = {
+  id: string;
+  title: string;
+  description: string | null;
+  unique_text: string | null;
+  reasons_to_book: string | null;
+  video_url: string | null;
+  website_url: string | null;
+  facebook_url: string | null;
+  brochures: { name: string; href: string }[];
+  ships: { name: string; id: string; cover_image_href: string }[];
+  cover_image_href: string;
+  profile_image_href: string;
+};
+
+type SampleHoliday = {
+  holiday_ref: string;
+  name: string;
+  operator_title: string;
+};
+
 export default function CruiseLinesPage() {
   const [filter, setFilter] = useState<FilterType>('All');
   const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
   const [hovered, setHovered] = useState<string | null>(null);
+  const [selectedOp, setSelectedOp] = useState<typeof WIDGETY_OPERATORS[0] | null>(null);
 
   const filtered = filter === 'All'
     ? WIDGETY_OPERATORS
@@ -161,37 +183,52 @@ export default function CruiseLinesPage() {
                       {op.shipCount} ships · {op.cruiseType} cruises
                     </div>
                     <div style={{ flex: 1 }} />
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <Link
-                        href={searchUrl(op)}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <button
+                        onClick={() => setSelectedOp(op)}
                         style={{
-                          flex: 1, textAlign: 'center', padding: '10px',
+                          width: '100%', padding: '10px',
                           background: isHovered ? 'var(--navy)' : 'transparent',
                           color: isHovered ? 'white' : 'var(--navy)',
                           border: '1px solid var(--navy)',
                           fontSize: '0.68rem', fontWeight: 500,
                           letterSpacing: '0.1em', textTransform: 'uppercase',
-                          textDecoration: 'none', fontFamily: 'var(--font-body)',
+                          fontFamily: 'var(--font-body)', cursor: 'pointer',
                           transition: 'all 0.25s',
                         }}
                       >
-                        View Cruises
-                      </Link>
-                      <Link
-                        href={quoteUrl(op)}
-                        style={{
-                          flex: 1, textAlign: 'center', padding: '10px',
-                          background: 'var(--gold)',
-                          color: 'var(--navy)',
-                          border: '1px solid var(--gold)',
-                          fontSize: '0.68rem', fontWeight: 600,
-                          letterSpacing: '0.1em', textTransform: 'uppercase',
-                          textDecoration: 'none', fontFamily: 'var(--font-body)',
-                          transition: 'all 0.25s',
-                        }}
-                      >
-                        Get Quote
-                      </Link>
+                        Explore Line
+                      </button>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <Link
+                          href={searchUrl(op)}
+                          style={{
+                            flex: 1, textAlign: 'center', padding: '9px 6px',
+                            background: 'transparent', color: 'var(--slate)',
+                            border: '1px solid rgba(13,27,42,0.2)',
+                            fontSize: '0.65rem', fontWeight: 500,
+                            letterSpacing: '0.08em', textTransform: 'uppercase',
+                            textDecoration: 'none', fontFamily: 'var(--font-body)',
+                            transition: 'all 0.25s',
+                          }}
+                        >
+                          View Cruises
+                        </Link>
+                        <Link
+                          href={quoteUrl(op)}
+                          style={{
+                            flex: 1, textAlign: 'center', padding: '9px 6px',
+                            background: 'var(--gold)', color: 'var(--navy)',
+                            border: '1px solid var(--gold)',
+                            fontSize: '0.65rem', fontWeight: 600,
+                            letterSpacing: '0.08em', textTransform: 'uppercase',
+                            textDecoration: 'none', fontFamily: 'var(--font-body)',
+                            transition: 'all 0.25s',
+                          }}
+                        >
+                          Get Quote
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -200,6 +237,10 @@ export default function CruiseLinesPage() {
           </div>
         </div>
       </section>
+
+      {selectedOp && (
+        <CruiseLineModal op={selectedOp} onClose={() => setSelectedOp(null)} />
+      )}
 
       {/* CTA */}
       <section style={{ background: 'var(--navy)', padding: '64px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -218,5 +259,303 @@ export default function CruiseLinesPage() {
         </div>
       </section>
     </>
+  );
+}
+
+// ─── Cruise Line Detail Modal ─────────────────────────────────────────────────
+
+type CruiseLineModalOp = typeof WIDGETY_OPERATORS[0];
+
+function CruiseLineModal({ op, onClose }: { op: CruiseLineModalOp; onClose: () => void }) {
+  const [detail, setDetail]   = useState<OperatorDetail | null>(null);
+  const [holidays, setHolidays] = useState<SampleHoliday[]>([]);
+  const [ships, setShips]     = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'about' | 'ships' | 'itineraries'>('about');
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  useEffect(() => {
+    setLoading(true);
+    setDetail(null); setHolidays([]); setShips([]);
+
+    // Fetch operator detail, sample holidays and ships in parallel
+    Promise.all([
+      fetch(`/api/widgety/cruises`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'operators' }),
+      }).then(r => r.json()),
+      fetch(`/api/widgety/cruises?operator=${op.id}&page=1`, {
+        method: 'GET',
+      }).then(r => r.json()),
+      fetch(`/api/widgety/cruises`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'ships', operators: op.id }),
+      }).then(r => r.json()),
+    ]).then(([opsData, holidaysData, shipsData]) => {
+      // Find this operator in the full list
+      const found = (opsData.operators || []).find((o: any) => o.id === op.id || o.slug === op.id);
+      if (found) setDetail(found as OperatorDetail);
+      setHolidays((holidaysData.holidays || holidaysData.cruises || []).slice(0, 6));
+      setShips((shipsData.ships || []).slice(0, 8));
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, [op.id]);
+
+  const stripHtml = (html: string) => html?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '';
+
+  const TABS = [
+    { id: 'about' as const,       label: 'About' },
+    { id: 'ships' as const,       label: `Ships${ships.length ? ` (${ships.length}+)` : ''}` },
+    { id: 'itineraries' as const, label: `Itineraries${holidays.length ? ` (${holidays.length}+)` : ''}` },
+  ];
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(7,14,24,0.88)',
+        backdropFilter: 'blur(10px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 20,
+        animation: 'clFadeIn 0.2s ease',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'white',
+          width: '100%', maxWidth: 860,
+          maxHeight: '90vh',
+          display: 'flex', flexDirection: 'column',
+          overflow: 'hidden',
+          boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
+          animation: 'clSlideUp 0.25s ease',
+        }}
+      >
+        {/* Hero header with cover image */}
+        <div style={{ position: 'relative', height: 200, flexShrink: 0, overflow: 'hidden', background: 'var(--navy)' }}>
+          <img
+            src={op.coverImage}
+            alt={op.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+            onError={e => { (e.target as HTMLElement).style.display = 'none'; }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(13,27,42,0.9) 40%, rgba(13,27,42,0.3))' }} />
+          {/* Gold accent line */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--gold), transparent)' }} />
+
+          <div style={{ position: 'absolute', inset: 0, padding: '24px 28px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              {/* Logo */}
+              <div style={{ width: 52, height: 52, background: 'rgba(255,255,255,0.95)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 5, flexShrink: 0 }}>
+                <img src={op.profileImage} alt="" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} onError={e => { (e.target as HTMLElement).parentElement!.style.display = 'none'; }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 4 }}>
+                  {op.cruiseType} Cruises · {op.shipCount} Ships
+                </div>
+                <h2 className="font-display" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.75rem)', fontWeight: 300, color: 'white', margin: 0 }}>
+                  {op.title}
+                </h2>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', width: 34, height: 34, cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, alignSelf: 'flex-start' }}
+            >×</button>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: 'flex', borderBottom: '1px solid rgba(13,27,42,0.1)', background: 'white', flexShrink: 0 }}>
+          {TABS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                padding: '13px 22px', background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase',
+                fontFamily: 'var(--font-body)', transition: 'all 0.2s',
+                borderBottom: activeTab === tab.id ? '2px solid var(--gold)' : '2px solid transparent',
+                color: activeTab === tab.id ? 'var(--navy)' : 'var(--slate)',
+                fontWeight: activeTab === tab.id ? 600 : 400,
+              }}
+            >{tab.label}</button>
+          ))}
+        </div>
+
+        {/* Tab content */}
+        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+          {loading ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200, gap: 12 }}>
+              <div style={{ width: 32, height: 32, border: '2px solid rgba(13,27,42,0.15)', borderTopColor: 'var(--navy)', borderRadius: '50%', animation: 'clSpin 0.8s linear infinite' }} />
+              <span style={{ fontSize: '0.8rem', color: 'var(--slate)' }}>Loading...</span>
+            </div>
+          ) : (
+            <>
+              {/* ── About tab ── */}
+              {activeTab === 'about' && (
+                <div style={{ padding: '28px 32px' }}>
+                  {detail?.description && (
+                    <div style={{ marginBottom: 24 }}>
+                      <div style={{ fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 10 }}>About</div>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--navy)', lineHeight: 1.8 }}>
+                        {stripHtml(detail.description)}
+                      </p>
+                    </div>
+                  )}
+                  {detail?.reasons_to_book && (
+                    <div style={{ marginBottom: 24, background: 'var(--cream)', padding: '20px 24px', borderLeft: '3px solid var(--gold)' }}>
+                      <div style={{ fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 10 }}>Why Sail With Them</div>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--navy)', lineHeight: 1.8 }}>
+                        {stripHtml(detail.reasons_to_book).slice(0, 600)}{stripHtml(detail.reasons_to_book).length > 600 ? '…' : ''}
+                      </p>
+                    </div>
+                  )}
+                  {/* Links row */}
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 24 }}>
+                    {detail?.website_url && (
+                      <a href={detail.website_url} target="_blank" rel="noopener noreferrer"
+                        style={{ padding: '8px 16px', border: '1px solid rgba(13,27,42,0.2)', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+                        Official Website ↗
+                      </a>
+                    )}
+                    {detail?.brochures?.[0]?.href && (
+                      <a href={detail.brochures[0].href} target="_blank" rel="noopener noreferrer"
+                        style={{ padding: '8px 16px', border: '1px solid rgba(13,27,42,0.2)', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+                        Download Brochure ↗
+                      </a>
+                    )}
+                  </div>
+                  {/* Quick stats */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                    {[
+                      { label: 'Fleet Size', value: `${op.shipCount} ships` },
+                      { label: 'Cruise Type', value: op.cruiseType },
+                      { label: 'Available Voyages', value: holidays.length ? `${holidays.length}+ itineraries` : 'View on request' },
+                    ].map((stat, i) => (
+                      <div key={i} style={{ background: 'var(--cream)', padding: '14px 16px' }}>
+                        <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>{stat.label}</div>
+                        <div style={{ fontSize: '1rem', color: 'var(--navy)', fontFamily: 'var(--font-display)', fontWeight: 300 }}>{stat.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Ships tab ── */}
+              {activeTab === 'ships' && (
+                <div style={{ padding: '24px 32px' }}>
+                  {ships.length === 0 ? (
+                    <p style={{ color: 'var(--slate)', fontSize: '0.85rem', padding: '20px 0' }}>Ship information not available for this line.</p>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--slate)', marginBottom: 20 }}>
+                        {op.title} operates {op.shipCount} ships. Showing {ships.length} from the fleet.
+                      </p>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+                        {ships.map((ship: any, i: number) => (
+                          <div key={i} style={{ border: '1px solid rgba(13,27,42,0.1)', overflow: 'hidden', background: 'white' }}>
+                            {ship.cover_image_href && (
+                              <div style={{ height: 110, overflow: 'hidden', background: 'var(--cream)' }}>
+                                <img
+                                  src={ship.cover_image_href}
+                                  alt={ship.title}
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                  onError={e => { (e.target as HTMLElement).parentElement!.style.background = 'var(--cream)'; (e.target as HTMLElement).style.display = 'none'; }}
+                                />
+                              </div>
+                            )}
+                            <div style={{ padding: '10px 12px' }}>
+                              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--navy)', lineHeight: 1.3 }}>{ship.title}</div>
+                              {ship.ship_type && (
+                                <div style={{ fontSize: '0.62rem', color: 'var(--slate)', marginTop: 3, textTransform: 'capitalize' }}>{ship.ship_type} · {ship.size || ''}</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* ── Itineraries tab ── */}
+              {activeTab === 'itineraries' && (
+                <div style={{ padding: '24px 32px' }}>
+                  {holidays.length === 0 ? (
+                    <p style={{ color: 'var(--slate)', fontSize: '0.85rem', padding: '20px 0' }}>
+                      No itineraries available. <Link href={`/cruises?operator=${op.id}`} style={{ color: 'var(--navy)' }}>Search all cruises →</Link>
+                    </p>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--slate)', marginBottom: 20 }}>
+                        Sample itineraries from {op.title}. <Link href={`/cruises?operator=${op.id}`} style={{ color: 'var(--navy)', fontWeight: 500 }}>View all {op.title} cruises →</Link>
+                      </p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {holidays.map((h: any, i: number) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', border: '1px solid rgba(13,27,42,0.08)', background: i % 2 === 0 ? 'white' : 'var(--cream)', gap: 12 }}>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--navy)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {h.name}
+                              </div>
+                              {h.date_from && (
+                                <div style={{ fontSize: '0.68rem', color: 'var(--slate)', marginTop: 3 }}>
+                                  {new Date(h.date_from).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                  {h.cruise_nights && ` · ${h.cruise_nights} nights`}
+                                </div>
+                              )}
+                            </div>
+                            <Link
+                              href={`/cruises?operator=${op.id}`}
+                              onClick={onClose}
+                              style={{ padding: '7px 14px', background: 'transparent', border: '1px solid var(--navy)', color: 'var(--navy)', fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap', flexShrink: 0 }}
+                            >
+                              Details
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{ borderTop: '1px solid rgba(13,27,42,0.1)', padding: '14px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', flexShrink: 0, gap: 12, flexWrap: 'wrap' }}>
+          <Link
+            href={`/cruises?operator=${op.id}`}
+            onClick={onClose}
+            style={{ padding: '10px 20px', border: '1px solid var(--navy)', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}
+          >
+            Search All {op.title} Cruises
+          </Link>
+          <Link
+            href={`/request-quote?line=${encodeURIComponent(op.title)}&trip_type=${op.cruiseType === 'River' ? 'River+Cruise' : 'Cruise+Vacation'}`}
+            onClick={onClose}
+            style={{ padding: '10px 24px', background: 'var(--gold)', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}
+          >
+            Get a Quote
+          </Link>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes clFadeIn  { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes clSlideUp { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+        @keyframes clSpin    { to { transform: rotate(360deg) } }
+      `}</style>
+    </div>
   );
 }
