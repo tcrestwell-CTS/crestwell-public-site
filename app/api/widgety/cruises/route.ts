@@ -122,26 +122,26 @@ export async function GET(req: NextRequest) {
   let holidays: any[] = []; let total = 0;
 
   const r1 = await searchHolidays(params);
-  if (r1?.holidays.length) { holidays = r1.holidays.map(h => enrich(h, imgMap)); total = r1.total; }
+  if (r1?.holidays.length) { holidays = r1.holidays.map((h: any) => enrich(h, imgMap)); total = r1.total; }
 
   if (!holidays.length && hasDateFilter) {
     const { date_from, date_to, ...nd } = params;
     const r2 = await searchHolidays(nd);
-    if (r2?.holidays.length) { holidays = r2.holidays.map(h => enrich(h, imgMap)); total = r2.total; }
+    if (r2?.holidays.length) { holidays = r2.holidays.map((h: any) => enrich(h, imgMap)); total = r2.total; }
   }
 
   if (!holidays.length && operator === 'any') {
     const results = await Promise.all(
-      shuffle(ACTIVE_OPERATORS).slice(0, 5).map(op => searchHolidays({ ...params, operators: op }))
+      shuffle(ACTIVE_OPERATORS).slice(0, 5).map((op: any) => searchHolidays({ ...params, operators: op }))
     );
-    const merged = results.flatMap(r => r?.holidays || []);
-    holidays = shuffle(merged).slice(0, PER_PAGE).map(h => enrich(h, imgMap));
+    const merged = results.flatMap((r: any) => r?.holidays || []);
+    holidays = shuffle(merged).slice(0, PER_PAGE).map((h: any) => enrich(h, imgMap));
     total = results.reduce((s, r) => s + (r?.total || 0), 0);
   }
 
   if (duration !== 'any') {
     const [min, max] = DURATION_RANGES[duration] || [0, 999];
-    holidays = holidays.filter(h => { const n = h.cruise_nights ?? h.duration_days ?? 0; return n >= min && n <= max; });
+    holidays = holidays.filter((h: any) => { const n = h.cruise_nights ?? h.duration_days ?? 0; return n >= min && n <= max; });
   }
   if (operator === 'any') holidays = shuffle(holidays).slice(0, PER_PAGE);
 
