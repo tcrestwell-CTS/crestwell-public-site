@@ -72,7 +72,7 @@ async function searchHolidays(params: Record<string, string>) {
   try {
     const res = await fetch(
       `${BASE}/holidays.json?${new URLSearchParams({ ...auth(), market: 'us', ...params })}`,
-      { headers: HEADERS, next: { revalidate: 300 } }
+      { headers: HEADERS, next: { revalidate: 60 } }
     );
     if (!res.ok) return null;
     const d = await res.json();
@@ -145,7 +145,7 @@ export async function GET(req: NextRequest) {
   }
   if (operator === 'any') holidays = shuffle(holidays).slice(0, PER_PAGE);
 
-  return NextResponse.json({ holidays, total, page, per_page: PER_PAGE });
+  return NextResponse.json({ holidays, cruises: holidays, total, page, per_page: PER_PAGE });
 }
 
 // ─── POST — action-based (agent dashboard + detail pages) ────────────────────
