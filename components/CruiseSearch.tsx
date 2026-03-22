@@ -7,21 +7,61 @@ import Link from 'next/link';
 
 type WidgetyCruise = {
   ref: string;
+  holiday_ref: string;          // V3 ref
   name: string;
   cruise_nights: number;
+  duration_days?: number;
   cruise_type: string[];
+  holiday_type?: string[];
   starts_on: string;
   ends_on: string;
-  starts_at: string;
-  ends_at: string;
+  date_from?: string;
+  date_to?: string;
+  starts_at: any;               // {name, country} or string
+  ends_at: any;
   regions: string[];
-  operator: string;        // URL e.g. "https://www.widgety.co.uk/api/operators/norwegian-cruise-line.json"
+  operator: string;
   operator_title: string;
   ship: string;
   ship_title: string;
   rating: string | null;
   description: string;
   vendor_id: string;
+  image_url?: string | null;
+  operating_seasons?: any[];    // contains dates[] with date_ref
+};
+
+type ItineraryDay = {
+  day_number: number;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  country: string;
+  latitude: number | null;
+  longitude: number | null;
+  arrival: string | null;
+  departure: string | null;
+  meals: string[] | null;
+  port_images?: { href: string; credit: string }[];
+  port_description?: string;
+};
+
+type ItineraryData = {
+  items: ItineraryDay[];
+  holiday_name: string;
+  ship_title: string;
+  operator_title: string;
+  date_from: string;
+  date_to: string;
+  starts_at: any;
+  ends_at: any;
+  regions: string[];
+  countries: string[];
+  description: string | null;
+  duration_days: number;
+  cruise_nights: number;
+  available_dates?: { date_ref: string; date_from: string; date_to: string; ship_title: string; availability: string }[];
 };
 
 type WidgetyOperator = {
@@ -111,17 +151,21 @@ function getImageForCruise(cruise: WidgetyCruise, operatorMap: Map<string, Widge
 // ─── Static filter data ───────────────────────────────────────────────────────
 
 const DESTINATIONS = [
-  { value: 'any', label: 'Any Destination' },
-  { value: 'caribbean', label: 'Caribbean' },
+  { value: 'any',           label: 'Any Destination' },
+  { value: 'caribbean',     label: 'Caribbean' },
   { value: 'mediterranean', label: 'Mediterranean' },
-  { value: 'alaska', label: 'Alaska' },
-  { value: 'bahamas', label: 'The Bahamas' },
-  { value: 'bermuda', label: 'Bermuda' },
-  { value: 'mexico', label: 'Mexico' },
-  { value: 'norway', label: 'Norway & Fjords' },
-  { value: 'hawaii', label: 'Hawaii' },
-  { value: 'new_england', label: 'New England' },
-  { value: 'world', label: 'World Voyage' },
+  { value: 'alaska',        label: 'Alaska' },
+  { value: 'bahamas',       label: 'The Bahamas' },
+  { value: 'bermuda',       label: 'Bermuda' },
+  { value: 'hawaii',        label: 'Hawaii' },
+  { value: 'europe',        label: 'Europe' },
+  { value: 'northern_europe', label: 'Northern Europe & Fjords' },
+  { value: 'mediterranean', label: 'Mediterranean' },
+  { value: 'asia',          label: 'Asia' },
+  { value: 'south_america', label: 'South America' },
+  { value: 'americas',      label: 'Americas' },
+  { value: 'pacific',       label: 'Pacific' },
+  { value: 'mississippi',   label: 'Mississippi River' },
 ];
 
 const DURATIONS = [
@@ -453,9 +497,337 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
 
 // ─── Cruise Card ──────────────────────────────────────────────────────────────
 
+
+// ─── Itinerary Modal ──────────────────────────────────────────────────────────
+
+function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: () => void }) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [data, setData] = useState<ItineraryData | null>(null);
+  const [selectedDateRef, setSelectedDateRef] = useState<string>('');
+  const [activeDay, setActiveDay] = useState<number>(0);
+
+  // Extract available dates from operating_seasons
+  const availableDates = (cruise.operating_seasons || []).flatMap((s: any) =>
+    (s.dates || []).map((d: any) => ({
+      date_ref: d.date_ref, date_from: d.date_from, date_to: d.date_to,
+      ship_title: d.ship_title, availability: d.availability_string,
+    }))
+  ).filter((d: any) => d.date_ref);
+
+  // Pick first available date_ref on mount
+  useEffect(() => {
+    const ref = availableDates[0]?.date_ref;
+    if (ref) setSelectedDateRef(ref);
+  }, []);
+
+  // Fetch itinerary when date_ref changes
+  useEffect(() => {
+    if (!selectedDateRef) { setLoading(false); return; }
+    setLoading(true); setError(''); setActiveDay(0);
+    fetch('/api/widgety/cruises', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'itinerary', date_ref: selectedDateRef }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.error) throw new Error(d.error);
+        // Enrich items with port images from raw data
+        setData({ ...d, available_dates: availableDates });
+        setLoading(false);
+      })
+      .catch(e => { setError(e.message); setLoading(false); });
+  }, [selectedDateRef]);
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  const formatDateTime = (iso: string) => {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); }
+    catch { return iso.slice(0, 10); }
+  };
+
+  const nights = cruise.cruise_nights || data?.cruise_nights || 0;
+  const region = (cruise.regions || [])[0] || '';
+
+  const activeItem = data?.items?.[activeDay];
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(7,14,24,0.92)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+        animation: 'fadeIn 0.2s ease',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'var(--navy)',
+          border: '1px solid rgba(201,168,76,0.25)',
+          width: '100%', maxWidth: 900,
+          maxHeight: '90vh',
+          display: 'flex', flexDirection: 'column',
+          overflow: 'hidden',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
+          animation: 'slideUp 0.25s ease',
+        }}
+      >
+        {/* Header */}
+        <div style={{ background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(201,168,76,0.15)', padding: '20px 28px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 6 }}>
+                {cruise.operator_title} · {nights} Night{nights !== 1 ? 's' : ''} · {region}
+              </div>
+              <h2 className="font-display" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', fontWeight: 300, color: 'white', lineHeight: 1.2, margin: 0 }}>
+                {cruise.name}
+              </h2>
+              {cruise.ship_title && (
+                <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>
+                  Aboard {cruise.ship_title}
+                </p>
+              )}
+            </div>
+            <button
+              onClick={onClose}
+              style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.5)', width: 36, height: 36, cursor: 'pointer', fontSize: '1.1rem', flexShrink: 0, marginLeft: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              ×
+            </button>
+          </div>
+
+          {/* Date selector */}
+          {availableDates.length > 0 && (
+            <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', flexShrink: 0 }}>Sailing Date:</span>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {availableDates.slice(0, 8).map((d: any) => (
+                  <button
+                    key={d.date_ref}
+                    onClick={() => setSelectedDateRef(d.date_ref)}
+                    style={{
+                      padding: '5px 12px', fontSize: '0.7rem', cursor: 'pointer',
+                      border: '1px solid',
+                      borderColor: selectedDateRef === d.date_ref ? 'var(--gold)' : 'rgba(255,255,255,0.15)',
+                      background: selectedDateRef === d.date_ref ? 'rgba(201,168,76,0.15)' : 'transparent',
+                      color: selectedDateRef === d.date_ref ? 'var(--gold)' : 'rgba(255,255,255,0.45)',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    {formatDateTime(d.date_from)}
+                  </button>
+                ))}
+                {availableDates.length > 8 && (
+                  <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.3)', padding: '5px 8px' }}>+{availableDates.length - 8} more</span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Body */}
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', minHeight: 0 }}>
+          {loading ? (
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12 }}>
+              <div style={{ width: 40, height: 40, border: '2px solid rgba(201,168,76,0.3)', borderTopColor: 'var(--gold)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.3)' }}>Loading itinerary…</p>
+            </div>
+          ) : error ? (
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginBottom: 8 }}>Itinerary unavailable</p>
+                <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.72rem' }}>{error}</p>
+              </div>
+            </div>
+          ) : !data?.items?.length ? (
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>No itinerary data available for this sailing.</p>
+            </div>
+          ) : (
+            <>
+              {/* Day list sidebar */}
+              <div style={{ width: 220, flexShrink: 0, borderRight: '1px solid rgba(255,255,255,0.07)', overflowY: 'auto', background: 'rgba(0,0,0,0.2)' }}>
+                {/* Trip summary */}
+                {data.date_from && (
+                  <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 4 }}>Departure</div>
+                    <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.7)' }}>{formatDateTime(data.date_from)}</div>
+                    {data.date_to && <>
+                      <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>Return</div>
+                      <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.7)' }}>{formatDateTime(data.date_to)}</div>
+                    </>}
+                    {data.countries?.length > 0 && (
+                      <>
+                        <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>Countries</div>
+                        <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>{data.countries.join(', ')}</div>
+                      </>
+                    )}
+                  </div>
+                )}
+                {data.items.map((item, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveDay(i)}
+                    style={{
+                      width: '100%', textAlign: 'left', background: 'none',
+                      border: 'none', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                      borderLeft: activeDay === i ? '3px solid var(--gold)' : '3px solid transparent',
+                      padding: '12px 14px',
+                      cursor: 'pointer',
+                      background: activeDay === i ? 'rgba(201,168,76,0.07)' : 'transparent',
+                      transition: 'all 0.15s',
+                    } as any}
+                  >
+                    <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: activeDay === i ? 'var(--gold)' : 'rgba(255,255,255,0.25)', marginBottom: 3 }}>
+                      Day {item.day_number}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: activeDay === i ? 'white' : 'rgba(255,255,255,0.55)', lineHeight: 1.3, fontWeight: activeDay === i ? 500 : 400 }}>
+                      {item.location || 'At Sea'}
+                    </div>
+                    {item.country && (
+                      <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>{item.country}</div>
+                    )}
+                    {(item.arrival || item.departure) && (
+                      <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.2)', marginTop: 3 }}>
+                        {item.arrival && `Arr ${item.arrival}`}{item.arrival && item.departure && ' · '}{item.departure && `Dep ${item.departure}`}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              {/* Day detail panel */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '28px 32px', minWidth: 0 }}>
+                {activeItem && (
+                  <>
+                    <div style={{ marginBottom: 20 }}>
+                      <div style={{ fontSize: '0.62rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 6 }}>
+                        Day {activeItem.day_number} of {data.items.length}
+                        {activeItem.category && ` · ${activeItem.category.replace('_',' ')}`}
+                      </div>
+                      <h3 className="font-display" style={{ fontSize: '1.5rem', fontWeight: 300, color: 'white', marginBottom: 4 }}>
+                        {activeItem.location || 'At Sea'}
+                      </h3>
+                      {activeItem.country && (
+                        <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.35)', marginBottom: 8 }}>{activeItem.country}</p>
+                      )}
+                      {/* Times */}
+                      {(activeItem.arrival || activeItem.departure) && (
+                        <div style={{ display: 'flex', gap: 20, marginBottom: 16 }}>
+                          {activeItem.arrival && (
+                            <div>
+                              <div style={{ fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>Arrival</div>
+                              <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', fontFamily: 'var(--font-display)' }}>{activeItem.arrival}</div>
+                            </div>
+                          )}
+                          {activeItem.departure && (
+                            <div>
+                              <div style={{ fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>Departure</div>
+                              <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', fontFamily: 'var(--font-display)' }}>{activeItem.departure}</div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {/* Meals */}
+                      {activeItem.meals?.length && (
+                        <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
+                          {activeItem.meals.map((m, i) => (
+                            <span key={i} style={{ fontSize: '0.62rem', padding: '3px 10px', border: '1px solid rgba(201,168,76,0.25)', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em' }}>{m}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Port description */}
+                    {activeItem.description && activeItem.description !== `Day ${activeItem.day_number}` && (
+                      <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 20 }}>
+                        {activeItem.description}
+                      </p>
+                    )}
+
+                    {/* Port photos */}
+                    {activeItem.port_images && activeItem.port_images.length > 0 && (
+                      <div style={{ marginBottom: 20 }}>
+                        <div style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 10 }}>Port Photos</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+                          {activeItem.port_images.map((img: any, i: number) => (
+                            <div key={i} style={{ position: 'relative', paddingBottom: '66%', overflow: 'hidden', background: 'rgba(255,255,255,0.05)' }}>
+                              <img
+                                src={img.href}
+                                alt={activeItem.location}
+                                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={e => { (e.target as HTMLElement).parentElement!.style.display = 'none'; }}
+                              />
+                              {img.credit && (
+                                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '3px 6px', background: 'rgba(0,0,0,0.5)', fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {img.credit}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Navigation */}
+                    <div style={{ display: 'flex', gap: 8, marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                      {activeDay > 0 && (
+                        <button onClick={() => setActiveDay(activeDay - 1)} style={{ padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '0.08em' }}>
+                          ← Prev
+                        </button>
+                      )}
+                      {activeDay < data.items.length - 1 && (
+                        <button onClick={() => setActiveDay(activeDay + 1)} style={{ padding: '8px 16px', background: 'rgba(201,168,76,0.1)', border: '1px solid var(--gold)', color: 'var(--gold)', fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '0.08em' }}>
+                          Next →
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '14px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0, background: 'rgba(0,0,0,0.2)', flexWrap: 'wrap', gap: 10 }}>
+          <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.25)' }}>
+            Itinerary subject to change. Contact Crestwell for latest availability.
+          </p>
+          <Link
+            href={`/request-quote?cruise_name=${encodeURIComponent(cruise.name || '')}&line=${encodeURIComponent(cruise.operator_title || '')}`}
+            onClick={onClose}
+            style={{ padding: '9px 20px', background: 'var(--gold)', color: 'var(--navy)', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}
+          >
+            Get Quote
+          </Link>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
+        @keyframes spin { to { transform: rotate(360deg) } }
+      `}</style>
+    </div>
+  );
+}
+
 function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMap: Map<string, WidgetyOperator> }) {
   const [hovered, setHovered] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [showItinerary, setShowItinerary] = useState(false);
 
   const imageUrl = imgError ? DEFAULT_CRUISE_IMAGE : getImageForCruise(cruise, operatorMap);
   const region = (cruise.regions || [])[0] || '';
@@ -571,29 +943,50 @@ function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMa
         <div style={{ flex: 1 }} />
 
         {/* CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)', gap: 10, flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ fontSize: '0.58rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>Pricing</div>
-            <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-display)', color: 'rgba(255,255,255,0.4)' }}>
-              Request a quote
-            </div>
+        <div style={{ paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+            <button
+              onClick={() => setShowItinerary(true)}
+              style={{
+                flex: 1, padding: '9px 12px', fontSize: '0.65rem', fontWeight: 500,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                fontFamily: 'var(--font-body)', cursor: 'pointer',
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.2)',
+                color: 'rgba(255,255,255,0.55)',
+                transition: 'all 0.25s',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.4)'; (e.target as HTMLElement).style.color = 'white'; }}
+              onMouseLeave={e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.55)'; }}
+            >
+              📋 View Itinerary
+            </button>
+            <Link
+              href={`/request-quote?${quoteParams}`}
+              style={{
+                flex: 1, textAlign: 'center',
+                background: hovered ? 'var(--gold)' : 'transparent',
+                color: hovered ? 'var(--navy)' : 'var(--gold)',
+                border: '1px solid var(--gold)',
+                padding: '9px 12px', fontSize: '0.65rem', fontWeight: 500,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                textDecoration: 'none', fontFamily: 'var(--font-body)',
+                transition: 'all 0.25s', whiteSpace: 'nowrap',
+                display: 'block',
+              }}
+            >
+              Get Quote
+            </Link>
           </div>
-          <Link
-            href={`/request-quote?${quoteParams}`}
-            style={{
-              background: hovered ? 'var(--gold)' : 'transparent',
-              color: hovered ? 'var(--navy)' : 'var(--gold)',
-              border: '1px solid var(--gold)',
-              padding: '9px 18px', fontSize: '0.68rem', fontWeight: 500,
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-              textDecoration: 'none', fontFamily: 'var(--font-body)',
-              transition: 'all 0.25s', whiteSpace: 'nowrap',
-            }}
-          >
-            Get Quote
-          </Link>
+          <div style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
+            Pricing available on request
+          </div>
         </div>
       </div>
+      {showItinerary && (
+        <ItineraryModal cruise={cruise} onClose={() => setShowItinerary(false)} />
+      )}
     </article>
   );
 }
