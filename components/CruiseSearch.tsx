@@ -454,7 +454,7 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
           {!loading && !error && cruises.length > 0 && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
               {cruises.map(c => (
-                <CruiseCard key={c.ref} cruise={c} operatorMap={operatorMap} />
+                <CruiseCard key={c.holiday_ref || c.ref} cruise={c} operatorMap={operatorMap} />
               ))}
             </div>
           )}
@@ -508,23 +508,45 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
   const [selectedDateRef, setSelectedDateRef] = useState<string>('');
   const [activeDay, setActiveDay] = useState<number>(0);
 
-  // Extract available dates from operating_seasons
-  const availableDates = (cruise.operating_seasons || []).flatMap((s: any) =>
-    (s.dates || []).map((d: any) => ({
-      date_ref: d.date_ref, date_from: d.date_from, date_to: d.date_to,
-      ship_title: d.ship_title, availability: d.availability_string,
-    }))
-  ).filter((d: any) => d.date_ref);
+  // Dates fetched dynamically — search results only return holiday_ref/name/operator
+  const [availableDates, setAvailableDates] = useState<any[]>([]);
 
-  // Pick first available date_ref on mount
+  // Step 1: Fetch holiday detail to get operating_seasons + date_refs
+  // (search results only return holiday_ref, name, operator — no dates)
   useEffect(() => {
-    const ref = availableDates[0]?.date_ref;
-    if (ref) setSelectedDateRef(ref);
-  }, []);
+    const ref = cruise.holiday_ref || (cruise as any).ref;
+    if (!ref) { setLoading(false); return; }
+    setLoading(true); setError('');
+    fetch('/api/widgety/cruises', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'holiday', holiday_ref: ref, market: 'us' }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.error) throw new Error(d.error);
+        // Extract all dates from operating_seasons
+        const dates = (d.operating_seasons || []).flatMap((s: any) =>
+          (s.dates || []).map((dt: any) => ({
+            date_ref: dt.date_ref, date_from: dt.date_from, date_to: dt.date_to,
+            ship_title: dt.ship_title, availability: dt.availability_string,
+            season: s.operating_season,
+          }))
+        ).filter((dt: any) => dt.date_ref);
+        // Pick first date and fetch itinerary
+        if (dates.length > 0) {
+          setAvailableDates(dates);
+          setSelectedDateRef(dates[0].date_ref);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(e => { setError(e.message); setLoading(false); });
+  }, [cruise.holiday_ref]);
 
-  // Fetch itinerary when date_ref changes
+  // Step 2: Fetch itinerary when date_ref is selected
   useEffect(() => {
-    if (!selectedDateRef) { setLoading(false); return; }
+    if (!selectedDateRef) return;
     setLoading(true); setError(''); setActiveDay(0);
     fetch('/api/widgety/cruises', {
       method: 'POST',
@@ -534,8 +556,7 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
       .then(r => r.json())
       .then(d => {
         if (d.error) throw new Error(d.error);
-        // Enrich items with port images from raw data
-        setData({ ...d, available_dates: availableDates });
+        setData(d);
         setLoading(false);
       })
       .catch(e => { setError(e.message); setLoading(false); });
