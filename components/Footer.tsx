@@ -159,6 +159,7 @@ export default function Footer() {
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>
             © {new Date().getFullYear()} Crestwell Travel Services. All rights reserved.
+            {' · '}Fla. Seller of Travel Ref. No. ST46414
           </p>
           <div style={{ display: 'flex', gap: 24 }}>
             {[
@@ -180,3 +181,4 @@ export default function Footer() {
     </footer>
   );
 }
+
