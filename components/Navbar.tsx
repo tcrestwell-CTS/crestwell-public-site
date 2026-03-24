@@ -17,6 +17,7 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Cruises', href: '/cruises' },
   { label: 'Cruise Lines', href: '/cruise-lines' },
+    { label: 'Luxury Collection', href: '/luxury-cruises' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Travel Tips', href: '/blog' },
   { label: 'About Us', href: '/about' },
