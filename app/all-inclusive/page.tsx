@@ -26,7 +26,7 @@ const resorts = [
     tag: 'Adults Only',
     description: 'Sophisticated adults-only escapes with unlimited luxury, gourmet dining, and world-class spas. Perfect for romantic getaways and honeymoons.',
     destinations: ['Mexico', 'Jamaica', 'Dominican Republic', 'Costa Rica', 'Panama'],
-    image: 'https://assets.hyatt.com/content/dam/hyatt/hyattdam/images/2021/10/20/1606/SEMRC-P0001-Aerial-Pools.jpg/SEMRC-P0001-Aerial-Pools.16x9.jpg',
+    image: 'https://images.unsplash.com/photo-1512813498716-3e640fed3f5f?w=800&q=80',
   },
   {
     name: 'Excellence Resorts',
@@ -141,7 +141,15 @@ export default function AllInclusivePage() {
                   </div>
                   <div style={{ marginTop: 'auto' }}>
                     <Link
-                      href={`/request-quote?trip_type=All-Inclusive+Resort&destination=${encodeURIComponent(resort.name)}`}
+                      href={(() => {
+                        const qp = new URLSearchParams({
+                          trip_type: 'All-Inclusive Resort',
+                          resort: resort.name,
+                          resort_tag: resort.tag,
+                          destination: resort.destinations.slice(0,3).join(', '),
+                        });
+                        return `/request-quote?${qp.toString()}`;
+                      })()}
                       style={{
                         display: 'inline-block',
                         padding: '10px 24px',
