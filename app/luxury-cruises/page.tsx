@@ -14,15 +14,34 @@ const BRANDS = [
     cover: 'https://assets.widgety.co.uk/2024/06/25/15/53/27/243d22ee-734c-4b7a-88f5-11a27fc47c67/Ritz Carlton Yacht Collective Evrima - Exterior 3.PNG',
     logo: 'https://assets.widgety.co.uk/2018/05/30/12/08/55/ca9720f2-af35-4cf7-aa54-617676a73a7b/Ritz Carlton Yacht Collection Logo.jpg',
     website: 'https://www.ritzcarltonyachtcollection.com/',
+    imageLibrary: 'https://www.ritzcarltonyachtcollection.com/image-library',
+    // Ship gallery — Evrima, Ilma, Luminara
+    gallery: [
+      {
+        url: 'https://assets.widgety.co.uk/2024/06/25/15/53/27/243d22ee-734c-4b7a-88f5-11a27fc47c67/Ritz Carlton Yacht Collective Evrima - Exterior 3.PNG',
+        caption: 'Evrima — 149 Suites · 298 Guests',
+        ship: 'Evrima',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1200&q=85',
+        caption: 'Ilma — 224 Suites · 448 Guests · Forbes Five-Star',
+        ship: 'Ilma',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1537139027-6dbf2d2e1b31?w=1200&q=85',
+        caption: 'Luminara — 226 Suites · Asia-Pacific & Mediterranean',
+        ship: 'Luminara',
+      },
+    ],
     ships: 3,
     guestCapacity: '149–456',
-    description: 'The Ritz-Carlton name has long defined the pinnacle of hospitality on land. At sea, it is no different. Three intimate superyachts — Evrima, Ilma, and Luminara — carry fewer than 300 guests each through the world\'s most coveted ports, from the Amalfi Coast to the Caribbean, each voyage shaped entirely around the art of exceptional service.',
+    description: 'The Ritz-Carlton name has long defined the pinnacle of hospitality on land. At sea, it is no different. Three intimate superyachts — Evrima, Ilma, and Luminara — carry fewer than 300 guests each through the world\'s most coveted ports, from the Amalfi Coast to the Caribbean, each voyage shaped entirely around the art of exceptional service. Ilma was awarded the first-ever Forbes Five-Star rating for a cruise ship in 2026.',
     highlights: [
-      'Fewer than 300 guests per voyage',
+      'Forbes Five-Star rated fleet (Ilma, 2026)',
+      'Evrima · Ilma · Luminara — three superyachts',
       'Butler service for every suite',
-      'World-class culinary programming',
-      'Destination immersion curated by local experts',
-      'All-inclusive luxury',
+      'Private terrace in every accommodation',
+      'All-inclusive: dining, spirits, excursions',
     ],
     accentColor: '#8B7355',
     iframeUrl: null,
@@ -33,22 +52,56 @@ const BRANDS = [
     name: 'Silversea',
     tagline: 'The Jewel in the Crown of Luxury Cruising',
     category: 'All-Inclusive Luxury & Expedition',
+    // Cover: official Widgety image
     cover: 'https://assets.widgety.co.uk/2023/08/29/12/37/23/38fe3ebf-290b-4087-8654-9ce0f23ed44f/Silversea Cruises Silver Dawn Exterior.jpg',
     logo: 'https://assets.widgety.co.uk/2023/10/18/07/03/33/99f229ef-c3bf-4203-ae40-a26228cd0ac5/Silversea Logo 2023.png',
     website: 'https://www.silversea.com/',
+    imageLibrary: 'https://www.silverseacontentcenter.com/dam/searchresults',
+    // Ship gallery — images sourced from Silversea's own Sanity CMS CDN
+    gallery: [
+      {
+        url: 'https://cdn.sanity.io/images/rd0y3pad/production/5946a7b3eb1ac569f3603639c0962c97c1cd9230-4032x3024.jpg',
+        caption: 'Silver Nova — Nova Class · Mediterranean & World Voyages',
+        ship: 'Silver Nova',
+      },
+      {
+        url: 'https://cdn.sanity.io/images/rd0y3pad/production/89b54e229d9f3cba790d9bff6640ff7b691b52ff-10984x8240.jpg',
+        caption: 'Silver Moon — All-Suite · Mediterranean & Caribbean',
+        ship: 'Silver Moon',
+      },
+      {
+        url: 'https://cdn.sanity.io/images/rd0y3pad/production/f52c84c593994d05d38e1813082392f86434f67a-2500x1875.jpg',
+        caption: 'Silver Dawn — All-Suite · Otium Spa at Sea',
+        ship: 'Silver Dawn',
+      },
+      {
+        url: 'https://cdn.sanity.io/images/rd0y3pad/production/e1d3cfaae1dd49338da020e9717a919378cedfce-5436x3621.jpg',
+        caption: 'Silver Muse — Flagship · S.A.L.T. Culinary Program',
+        ship: 'Silver Muse',
+      },
+      {
+        url: 'https://cdn.sanity.io/images/rd0y3pad/production/23100646256d6f1a72f6cef15b0de95d76ba9a6f-6647x4433.jpg',
+        caption: 'Silver Origin — Galápagos Specialist · Expedition',
+        ship: 'Silver Origin',
+      },
+      {
+        url: 'https://cdn.sanity.io/images/rd0y3pad/production/3429871fc3f45cc59f40be12faebf62ca56db6b4-4939x3550.jpg',
+        caption: 'Silver Ray — Nova Class · World Expeditions',
+        ship: 'Silver Ray',
+      },
+    ],
     iframeUrl: 'https://www.silversea.com/',
     ships: 12,
     guestCapacity: '144–728',
     description: 'Silversea is the world\'s foremost ultra-luxury and expedition cruise line, operating a fleet of intimate ships across all seven continents — from the Mediterranean\'s golden coasts to the ice-sculpted wilderness of Antarctica. Every voyage is all-inclusive: butler service, premium spirits, gourmet dining, and curated shore excursions are woven into the experience from the moment you board.',
     highlights: [
       'All-inclusive: butler, spirits, dining, excursions',
-      'Expedition and polar itineraries',
-      'Operated in 900+ destinations on all 7 continents',
+      'Expedition and polar itineraries to all 7 continents',
+      'S.A.L.T. culinary program — local flavors at sea',
       'Silver Origin: Galápagos Islands specialist',
       'Silversea Ventures — private jet journeys',
     ],
     accentColor: '#C4A882',
-    iframeUrl2: 'https://www.silversea.com/',
   },
   {
     id: 'explora',
@@ -163,6 +216,75 @@ function BrandSitePopup({ brand, onClose }: { brand: typeof BRANDS[0]; onClose: 
   );
 }
 
+
+// ─── Ritz-Carlton Ship Gallery ────────────────────────────────────────────────
+
+function RitzGallery({ brand, hovered }: { brand: any; hovered: boolean }) {
+  const [activeShip, setActiveShip] = useState(0);
+  const gallery = brand.gallery || [];
+
+  return (
+    <div style={{ flexShrink: 0 }}>
+      {/* Main image */}
+      <div style={{ height: 280, position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `url(${gallery[activeShip]?.url || brand.cover})`,
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          transition: 'all 0.5s ease',
+          transform: hovered ? 'scale(1.04)' : 'scale(1)',
+        }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(5,10,20,0.05) 0%, rgba(5,10,20,0.75) 100%)' }} />
+        <div style={{ position: 'absolute', top: 20, left: 20, padding: '5px 14px', background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.4)', backdropFilter: 'blur(8px)' }}>
+          <span style={{ fontSize: '0.6rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 500 }}>{brand.category}</span>
+        </div>
+        {brand.logo && (
+          <div style={{ position: 'absolute', bottom: 20, left: 20, height: 40, background: 'rgba(255,255,255,0.9)', padding: '5px 10px', display: 'flex', alignItems: 'center' }}>
+            <img src={brand.logo} alt={brand.name.replace('\n', ' ')} style={{ height: '100%', maxWidth: 120, objectFit: 'contain' }} />
+          </div>
+        )}
+        <div style={{ position: 'absolute', bottom: 20, right: 20, background: 'rgba(5,10,20,0.75)', padding: '5px 12px', backdropFilter: 'blur(6px)' }}>
+          <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.65)', letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}>
+            {gallery[activeShip]?.caption || `${brand.ships} Ships`}
+          </span>
+        </div>
+      </div>
+      {/* Ship selector — scrollable for 6+ ships */}
+      <div style={{ background: 'rgba(5,10,20,0.95)', borderTop: '1px solid rgba(201,168,76,0.15)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as any}>
+        <div style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
+          {gallery.map((ship: any, i: number) => (
+            <button key={i} onClick={(e) => { e.stopPropagation(); setActiveShip(i); }}
+              style={{
+                flex: gallery.length <= 3 ? 1 : 'none',
+                width: gallery.length > 3 ? 100 : undefined,
+                padding: '10px 8px', background: 'none', border: 'none',
+                borderBottom: activeShip === i ? '2px solid var(--gold)' : '2px solid transparent',
+                cursor: 'pointer', transition: 'all 0.2s',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                flexShrink: 0,
+              }}>
+              <div style={{
+                width: '100%', height: 40,
+                backgroundImage: `url(${ship.url})`,
+                backgroundSize: 'cover', backgroundPosition: 'center',
+                opacity: activeShip === i ? 1 : 0.38,
+                transition: 'opacity 0.2s',
+                border: activeShip === i ? '1px solid rgba(201,168,76,0.5)' : '1px solid transparent',
+              }} />
+              <span style={{
+                fontSize: '0.58rem', letterSpacing: '0.08em', textTransform: 'uppercase',
+                fontFamily: 'var(--font-body)', whiteSpace: 'nowrap',
+                color: activeShip === i ? 'var(--gold)' : 'rgba(255,255,255,0.3)',
+                transition: 'color 0.2s',
+              }}>{ship.ship}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Brand Card ───────────────────────────────────────────────────────────────
 
 function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
@@ -193,7 +315,10 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
           overflow: 'hidden',
         }}
       >
-        {/* Cover image */}
+        {/* Cover image — gallery for Ritz-Carlton, single for others */}
+        {(brand as any).gallery ? (
+          <RitzGallery brand={brand as any} hovered={hovered} />
+        ) : (
         <div style={{ height: 280, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
           <div style={{
             position: 'absolute', inset: 0,
@@ -202,12 +327,10 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
             transition: 'transform 0.6s ease',
             transform: hovered ? 'scale(1.04)' : 'scale(1)',
           }} />
-          {/* Gradient overlay */}
           <div style={{
             position: 'absolute', inset: 0,
             background: 'linear-gradient(to bottom, rgba(5,10,20,0.1) 0%, rgba(5,10,20,0.7) 100%)',
           }} />
-          {/* Category badge */}
           <div style={{
             position: 'absolute', top: 20, left: 20,
             padding: '5px 14px',
@@ -219,7 +342,6 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
               {brand.category}
             </span>
           </div>
-          {/* Logo */}
           {brand.logo && (
             <div style={{
               position: 'absolute', bottom: 20, left: 20,
@@ -229,7 +351,6 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
               <img src={brand.logo} alt={brand.name.replace('\n', ' ')} style={{ height: '100%', maxWidth: 120, objectFit: 'contain' }} />
             </div>
           )}
-          {/* Ship count */}
           <div style={{
             position: 'absolute', bottom: 20, right: 20,
             background: 'rgba(5,10,20,0.7)', padding: '6px 14px',
@@ -240,6 +361,7 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
             </span>
           </div>
         </div>
+        )}
 
         {/* Content */}
         <div style={{ padding: '32px 32px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -290,48 +412,87 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
           {/* CTAs */}
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
             {hasIframe && (
-              <button
-                onClick={() => setPopup(true)}
-                style={{
-                  flex: 1, padding: '11px 16px',
-                  background: 'transparent',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  color: 'rgba(255,255,255,0.6)',
-                  fontSize: '0.68rem', fontWeight: 500,
-                  letterSpacing: '0.1em', textTransform: 'uppercase',
-                  fontFamily: 'var(--font-body)', cursor: 'pointer',
-                  transition: 'all 0.2s', whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget).style.borderColor = 'rgba(255,255,255,0.4)';
-                  (e.currentTarget).style.color = 'white';
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget).style.borderColor = 'rgba(255,255,255,0.2)';
-                  (e.currentTarget).style.color = 'rgba(255,255,255,0.6)';
-                }}
-              >
-                Explore Line ↗
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+                <button
+                  onClick={() => setPopup(true)}
+                  style={{
+                    width: '100%', padding: '11px 16px',
+                    background: 'transparent',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: '0.68rem', fontWeight: 500,
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    fontFamily: 'var(--font-body)', cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget).style.borderColor = 'rgba(255,255,255,0.4)';
+                    (e.currentTarget).style.color = 'white';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget).style.borderColor = 'rgba(255,255,255,0.2)';
+                    (e.currentTarget).style.color = 'rgba(255,255,255,0.6)';
+                  }}
+                >
+                  Explore Line ↗
+                </button>
+                {(brand as any).imageLibrary && (
+                  <a
+                    href={(brand as any).imageLibrary}
+                    target="_blank" rel="noopener noreferrer"
+                    style={{
+                      padding: '7px 16px', textAlign: 'center',
+                      background: 'transparent',
+                      border: '1px solid rgba(201,168,76,0.2)',
+                      color: 'rgba(201,168,76,0.55)',
+                      fontSize: '0.6rem', fontWeight: 500,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      fontFamily: 'var(--font-body)', textDecoration: 'none',
+                      display: 'block',
+                    }}
+                  >
+                    📷 Media Library ↗
+                  </a>
+                )}
+              </div>
             )}
             {!hasIframe && (
-              <a
-                href={brand.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  flex: 1, padding: '11px 16px', textAlign: 'center',
-                  background: 'transparent',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  color: 'rgba(255,255,255,0.6)',
-                  fontSize: '0.68rem', fontWeight: 500,
-                  letterSpacing: '0.1em', textTransform: 'uppercase',
-                  fontFamily: 'var(--font-body)', textDecoration: 'none',
-                  transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'block',
-                }}
-              >
-                Official Site ↗
-              </a>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+                <a
+                  href={brand.website}
+                  target="_blank" rel="noopener noreferrer"
+                  style={{
+                    padding: '11px 16px', textAlign: 'center',
+                    background: 'transparent',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: '0.68rem', fontWeight: 500,
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    fontFamily: 'var(--font-body)', textDecoration: 'none',
+                    transition: 'all 0.2s', display: 'block',
+                  }}
+                >
+                  Official Site ↗
+                </a>
+                {(brand as any).imageLibrary && (
+                  <a
+                    href={(brand as any).imageLibrary}
+                    target="_blank" rel="noopener noreferrer"
+                    style={{
+                      padding: '7px 16px', textAlign: 'center',
+                      background: 'transparent',
+                      border: '1px solid rgba(201,168,76,0.2)',
+                      color: 'rgba(201,168,76,0.55)',
+                      fontSize: '0.6rem', fontWeight: 500,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      fontFamily: 'var(--font-body)', textDecoration: 'none',
+                      display: 'block',
+                    }}
+                  >
+                    📷 Media Library ↗
+                  </a>
+                )}
+              </div>
             )}
             <Link
               href={`/request-quote?${quoteParams.toString()}`}
