@@ -7,6 +7,7 @@ const SITE_URL = 'https://crestwellgetaways.com';
 const STATIC_PAGES = [
   { path: '',              priority: 1.0,  changeFreq: 'weekly'  },
   { path: '/cruises',      priority: 0.9,  changeFreq: 'daily'   },
+  { path: '/luxury-cruises', priority: 0.9,  changeFreq: 'weekly'  },
   { path: '/cruise-lines', priority: 0.9,  changeFreq: 'weekly'  },
   { path: '/all-inclusive',priority: 0.8,  changeFreq: 'weekly'  },
   { path: '/destinations', priority: 0.8,  changeFreq: 'weekly'  },
