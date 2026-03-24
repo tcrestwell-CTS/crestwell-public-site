@@ -613,26 +613,26 @@ export default function FAQPage() {
               rel="noopener noreferrer"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 12,
-                padding: '14px 28px',
-                background: '#1877F2',
-                color: 'white',
+                padding: '14px 32px',
+                background: 'var(--gold)',
+                color: 'var(--navy)',
                 textDecoration: 'none',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
                 transition: 'all 0.25s',
-                boxShadow: '0 4px 20px rgba(24,119,242,0.35)',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.background = '#166FE5';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 28px rgba(24,119,242,0.5)';
+                (e.currentTarget as HTMLElement).style.background = 'var(--gold-light, #d4b46a)';
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(201,168,76,0.4)';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.background = '#1877F2';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(24,119,242,0.35)';
+                (e.currentTarget as HTMLElement).style.background = 'var(--gold)';
                 (e.currentTarget as HTMLElement).style.transform = 'none';
+                (e.currentTarget as HTMLElement).style.boxShadow = 'none';
               }}
             >
               {/* Facebook icon */}
