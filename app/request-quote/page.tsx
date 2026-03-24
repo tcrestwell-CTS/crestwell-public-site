@@ -36,16 +36,64 @@ const initialForm = {
   budget: '',
   flexibility: 'flexible',
   message: '',
+  // Pre-filled from source page — not shown as editable fields, appended to submission
+  _cruise_name: '',
+  _cruise_line: '',
+  _cruise_ship: '',
+  _cruise_duration: '',
+  _cruise_id: '',
+  _sailing_date: '',
+  _resort_name: '',
+  _resort_tag: '',
 };
 
 function RequestQuoteForm() {
   const searchParams = useSearchParams();
-  const [form, setForm] = useState(() => ({
-    ...initialForm,
-    trip_type: searchParams.get('trip_type') || 'Cruise Vacation',
-    destination: searchParams.get('destination') || '',
-    travelers_adults: parseInt(searchParams.get('travelers') || '2'),
-  }));
+  const [form, setForm] = useState(() => {
+    // Build a pre-filled message from cruise/resort context if provided
+    const cruiseName   = searchParams.get('cruise_name') || '';
+    const cruiseLine   = searchParams.get('line') || '';
+    const cruiseShip   = searchParams.get('ship') || '';
+    const cruiseDur    = searchParams.get('duration') || '';
+    const sailingDate  = searchParams.get('date_from') || searchParams.get('sailing_date') || '';
+    const resortName   = searchParams.get('resort') || searchParams.get('destination') || '';
+    const tripType     = searchParams.get('trip_type') || 'Cruise Vacation';
+
+    // Auto-compose message from available context
+    const parts: string[] = [];
+    if (cruiseName)  parts.push(`Cruise: ${cruiseName}`);
+    if (cruiseLine)  parts.push(`Line: ${cruiseLine}`);
+    if (cruiseShip)  parts.push(`Ship: ${cruiseShip}`);
+    if (cruiseDur)   parts.push(`Duration: ${cruiseDur}`);
+    if (sailingDate) {
+      try {
+        const formatted = new Date(sailingDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        parts.push(`Sailing Date: ${formatted}`);
+      } catch { parts.push(`Sailing Date: ${sailingDate}`); }
+    }
+    if (tripType.toLowerCase().includes('all-inclusive') && resortName && !cruiseName) {
+      parts.push(`Resort Brand: ${resortName}`);
+    }
+
+    const autoMessage = parts.length > 0 ? parts.join('\n') : '';
+
+    return {
+      ...initialForm,
+      trip_type:       tripType,
+      destination:     searchParams.get('destination') || '',
+      departure_date:  sailingDate.slice(0, 10) || '',
+      travelers_adults: parseInt(searchParams.get('travelers') || '2'),
+      message:         autoMessage,
+      _cruise_name:    cruiseName,
+      _cruise_line:    cruiseLine,
+      _cruise_ship:    cruiseShip,
+      _cruise_duration: cruiseDur,
+      _cruise_id:      searchParams.get('cruise_id') || '',
+      _sailing_date:   sailingDate,
+      _resort_name:    resortName,
+      _resort_tag:     searchParams.get('resort_tag') || '',
+    };
+  });
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -123,21 +171,32 @@ function RequestQuoteForm() {
       <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
-          {(searchParams.get('trip_name') || searchParams.get('destination') || searchParams.get('trip_type')) && (
-            <div style={{ background: 'var(--navy)', padding: '16px 24px', marginBottom: 32, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', flexShrink: 0 }}>
-                Your Trip
-              </span>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', flex: 1 }}>
-                {[
-                  searchParams.get('trip_name'),
-                  searchParams.get('destination'),
-                  searchParams.get('trip_type'),
-                ].filter(Boolean).map((tag, i) => (
-                  <span key={i} style={{ padding: '4px 12px', background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)', color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem' }}>
-                    {tag}
-                  </span>
-                ))}
+          {(form._cruise_name || form._resort_name || searchParams.get('trip_type')) && (
+            <div style={{ background: 'var(--navy)', padding: '20px 24px', marginBottom: 32, borderLeft: '3px solid var(--gold)' }}>
+              <div style={{ fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 12 }}>
+                {form._cruise_name ? 'Selected Cruise' : 'Selected Resort'}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {form._cruise_name && (
+                  <div style={{ fontSize: '0.95rem', fontWeight: 500, color: 'white', fontFamily: 'var(--font-display)' }}>{form._cruise_name}</div>
+                )}
+                {form._resort_name && !form._cruise_name && (
+                  <div style={{ fontSize: '0.95rem', fontWeight: 500, color: 'white', fontFamily: 'var(--font-display)' }}>{form._resort_name}</div>
+                )}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+                  {[
+                    form._cruise_line   && `✈ ${form._cruise_line}`,
+                    form._cruise_ship   && `🚢 ${form._cruise_ship}`,
+                    form._cruise_duration && `⏱ ${form._cruise_duration}`,
+                    form._sailing_date  && (() => { try { return `📅 ${new Date(form._sailing_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`; } catch { return `📅 ${form._sailing_date}`; } })(),
+                    form.destination    && !form._cruise_name && `📍 ${form.destination}`,
+                    searchParams.get('resort_tag') && `🏷 ${searchParams.get('resort_tag')}`,
+                  ].filter(Boolean).map((tag, i) => (
+                    <span key={i} style={{ padding: '4px 12px', background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.25)', color: 'rgba(255,255,255,0.75)', fontSize: '0.72rem' }}>
+                      {tag as string}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -323,6 +382,11 @@ function RequestQuoteForm() {
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
                         {[
                           { label: 'Trip Type', value: form.trip_type || 'Not specified' },
+                          ...(form._cruise_name ? [{ label: 'Cruise', value: form._cruise_name }] : []),
+                          ...(form._cruise_line ? [{ label: 'Cruise Line', value: form._cruise_line }] : []),
+                          ...(form._cruise_ship ? [{ label: 'Ship', value: form._cruise_ship }] : []),
+                          ...(form._cruise_duration ? [{ label: 'Duration', value: form._cruise_duration }] : []),
+                          ...(form._resort_name && !form._cruise_name ? [{ label: 'Resort', value: form._resort_name }] : []),
                           { label: 'Destination', value: form.destination || 'Open' },
                           { label: 'Departure', value: form.departure_date || 'Flexible' },
                           { label: 'Travelers', value: `${form.travelers_adults} adult${form.travelers_adults !== 1 ? 's' : ''}${form.travelers_children > 0 ? `, ${form.travelers_children} child${form.travelers_children !== 1 ? 'ren' : ''}` : ''}` },
