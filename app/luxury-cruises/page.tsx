@@ -14,8 +14,8 @@ const BRANDS = [
     tagline: 'The Yachting Lifestyle, Perfected',
     category: 'Ultra-Luxury Yacht',
     // Widgety official cover image — Evrima exterior
-    image: 'https://assets.widgety.co.uk/2024/06/25/15/53/27/243d22ee-734c-4b7a-88f5-11a27fc47c67/Ritz Carlton Yacht Collective Evrima - Exterior 3.PNG',
-    logo: 'https://assets.widgety.co.uk/2018/05/30/12/08/55/ca9720f2-af35-4cf7-aa54-617676a73a7b/Ritz Carlton Yacht Collection Logo.jpg',
+    image: 'https://assets.widgety.co.uk/2024/06/25/15/53/27/243d22ee-734c-4b7a-88f5-11a27fc47c67/Ritz%20Carlton%20Yacht%20Collective%20Evrima%20-%20Exterior%203.PNG',
+    logo: 'https://assets.widgety.co.uk/2018/05/30/12/08/55/ca9720f2-af35-4cf7-aa54-617676a73a7b/Ritz%20Carlton%20Yacht%20Collection%20Logo.jpg',
     website: 'https://www.ritzcarltonyachtcollection.com/',
     ships: 3,
     shipNames: 'Evrima · Ilma · Luminara',
@@ -38,7 +38,7 @@ const BRANDS = [
     category: 'All-Inclusive Luxury & Expedition',
     // Silversea Sanity CDN — Silver Nova exterior (official press image)
     image: 'https://cdn.sanity.io/images/rd0y3pad/production/5946a7b3eb1ac569f3603639c0962c97c1cd9230-4032x3024.jpg',
-    logo: 'https://assets.widgety.co.uk/2023/10/18/07/03/33/99f229ef-c3bf-4203-ae40-a26228cd0ac5/Silversea Logo 2023.png',
+    logo: 'https://assets.widgety.co.uk/2023/10/18/07/03/33/99f229ef-c3bf-4203-ae40-a26228cd0ac5/Silversea%20Logo%202023.png',
     website: 'https://www.silversea.com/',
     ships: 12,
     shipNames: 'Silver Nova · Silver Moon · Silver Dawn · Silver Muse · Silver Ray + 7 more',
@@ -60,8 +60,8 @@ const BRANDS = [
     tagline: 'Where Ocean Meets Extraordinary',
     category: 'Contemporary Ocean Luxury',
     // Widgety official cover — EXPLORA I exterior
-    image: 'https://assets.widgety.co.uk/2024/05/10/05/06/56/057a53e3-7d12-4369-b247-f3bc3c88e7e3/Explora Journeys, EXPLORA I, Exterior 3.jpg',
-    logo: 'https://assets.widgety.co.uk/2024/11/28/08/22/18/c9d61e62-30f0-4f37-8c10-e0379a100a92/Explora Journeys Logo Gold.png',
+    image: 'https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys,%20EXPLORA%20I,%20Exterior%202.jpg',
+    logo: 'https://assets.widgety.co.uk/2024/11/28/08/22/18/c9d61e62-30f0-4f37-8c10-e0379a100a92/Explora%20Journeys%20Logo%20Gold.png',
     website: 'https://explorajourneys.com/int/en.html',
     ships: 5,
     shipNames: 'EXPLORA I · EXPLORA II · EXPLORA III · EXPLORA IV · EXPLORA V',
@@ -83,7 +83,7 @@ const BRANDS = [
     tagline: 'The World\'s Most Inclusive Luxury Experience',
     category: 'The Most Inclusive Luxury',
     // Unsplash luxury cruise exterior — best available for Regent
-    image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1600&q=90',
+    image: 'https://images.unsplash.com/photo-1580541631950-7282082b53ce?w=1600&q=90',
     logo: null,
     website: 'https://www.rssc.com/',
     ships: 6,
@@ -316,7 +316,7 @@ export default function LuxuryCruisesPage() {
         {/* Hero background — Ritz-Carlton Evrima with Ken Burns */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(https://assets.widgety.co.uk/2024/06/25/15/53/27/243d22ee-734c-4b7a-88f5-11a27fc47c67/Ritz Carlton Yacht Collective Evrima - Exterior 3.PNG)',
+          backgroundImage: 'url(https://assets.widgety.co.uk/2024/06/25/15/53/27/243d22ee-734c-4b7a-88f5-11a27fc47c67/Ritz%20Carlton%20Yacht%20Collective%20Evrima%20-%20Exterior%203.PNG)',
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
           opacity: 0.22,
