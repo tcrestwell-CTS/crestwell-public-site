@@ -377,7 +377,7 @@ export default function HomePage() {
 
             {/* Instagram */}
             <a
-              href="https://www.instagram.com/crestwelltravel"
+              href="https://www.instagram.com/crestwelltravels"
               target="_blank" rel="noopener noreferrer"
               aria-label="Instagram"
               style={{
