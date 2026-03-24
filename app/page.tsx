@@ -441,7 +441,7 @@ export default function HomePage() {
 
             {/* TikTok */}
             <a
-              href="https://www.tiktok.com/@crestwelltravel"
+              href="https://www.tiktok.com/@crestwelltravels"
               target="_blank" rel="noopener noreferrer"
               aria-label="TikTok"
               style={{
