@@ -20,7 +20,8 @@ const navItems = [
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Travel Tips', href: '/blog' },
   { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'FAQ', href: '/faq' },
+    { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {
