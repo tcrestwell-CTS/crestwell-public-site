@@ -1047,13 +1047,28 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
           <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.25)' }}>
             {isMobile ? 'Subject to change.' : 'Itinerary subject to change. Contact Crestwell for latest availability.'}
           </p>
-          <Link
-            href={`/request-quote?cruise_name=${encodeURIComponent(cruise.name || '')}&line=${encodeURIComponent(cruise.operator_title || '')}`}
-            onClick={onClose}
-            style={{ padding: '9px 20px', background: 'var(--gold)', color: 'var(--navy)', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}
-          >
-            Get Quote
-          </Link>
+          {(() => {
+            const selectedDate = availableDates.find((d: any) => d.date_ref === selectedDateRef);
+            const qp = new URLSearchParams({ trip_type: 'Cruise Vacation' });
+            if (cruise.name)           qp.set('cruise_name', cruise.name);
+            if (cruise.operator_title) qp.set('line', cruise.operator_title);
+            if (data?.ship_title || selectedDate?.ship_title) qp.set('ship', data?.ship_title || selectedDate?.ship_title || '');
+            if (cruise.cruise_nights)  qp.set('duration', `${cruise.cruise_nights} nights`);
+            if (selectedDate?.date_from) qp.set('date_from', selectedDate.date_from);
+            else if (data?.date_from)    qp.set('date_from', data.date_from);
+            if (region)                qp.set('destination', region);
+            if (cruise.holiday_ref)    qp.set('cruise_id', cruise.holiday_ref);
+            Array.from(qp.keys()).forEach(k => { if (!qp.get(k)) qp.delete(k); });
+            return (
+              <Link
+                href={`/request-quote?${qp.toString()}`}
+                onClick={onClose}
+                style={{ padding: '9px 20px', background: 'var(--gold)', color: 'var(--navy)', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}
+              >
+                Get Quote
+              </Link>
+            );
+          })()}
         </div>
       </div>
 
@@ -1084,12 +1099,17 @@ function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMa
   const operatorData = operatorSlug ? operatorMap.get(operatorSlug) : undefined;
 
   const quoteParams = new URLSearchParams({
+    trip_type:   'Cruise Vacation',
+    cruise_name: cruise.name || '',
+    line:        cruise.operator_title || '',
+    ship:        cruise.ship_title || '',
+    duration:    nights ? `${nights} nights` : '',
     destination: region,
-    line:         cruise.operator_title || '',
-    duration:     `${nights} nights`,
-    cruise_id:    cruise.holiday_ref || (cruise as any).ref || '',
-    cruise_name:  cruise.name || '',
+    cruise_id:   cruise.holiday_ref || (cruise as any).ref || '',
+    ...(cruise.date_from ? { date_from: cruise.date_from } : {}),
   });
+  // Remove empty params
+  Array.from(quoteParams.keys()).forEach(k => { if (!quoteParams.get(k)) quoteParams.delete(k); });
 
   const startsAt = typeof cruise.starts_at === 'object'
     ? cruise.starts_at?.name || ''
