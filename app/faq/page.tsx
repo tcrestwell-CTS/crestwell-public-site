@@ -8,7 +8,7 @@ const CATEGORIES = [
   {
     id: 'working-with-us',
     label: 'Working With Crestwell',
-    icon: '🤝',
+    icon: '',
     questions: [
       {
         q: 'What does Crestwell Travel Services do?',
@@ -35,7 +35,7 @@ const CATEGORIES = [
   {
     id: 'cruises',
     label: 'Cruises',
-    icon: '🚢',
+    icon: '',
     questions: [
       {
         q: 'Which cruise lines do you work with?',
@@ -70,7 +70,7 @@ const CATEGORIES = [
   {
     id: 'all-inclusive',
     label: 'All-Inclusive Resorts',
-    icon: '🏝️',
+    icon: '',
     questions: [
       {
         q: 'What resort brands do you specialize in?',
@@ -97,7 +97,7 @@ const CATEGORIES = [
   {
     id: 'group-travel',
     label: 'Group Travel',
-    icon: '👥',
+    icon: '',
     questions: [
       {
         q: 'How many people do you need for a group booking?',
@@ -120,7 +120,7 @@ const CATEGORIES = [
   {
     id: 'booking-payments',
     label: 'Booking & Payments',
-    icon: '💳',
+    icon: '',
     questions: [
       {
         q: 'How do deposits and final payments work?',
@@ -147,7 +147,7 @@ const CATEGORIES = [
   {
     id: 'destinations',
     label: 'Destinations & Planning',
-    icon: '🗺️',
+    icon: '',
     questions: [
       {
         q: 'What are the most popular cruise destinations you book?',
@@ -174,7 +174,7 @@ const CATEGORIES = [
   {
     id: 'during-travel',
     label: 'During Your Trip',
-    icon: '✈️',
+    icon: '',
     questions: [
       {
         q: 'What support do you provide while we are traveling?',
@@ -199,7 +199,7 @@ const CATEGORIES = [
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type FAQ = { q: string; a: string };
-type Category = { id: string; label: string; icon: string; questions: FAQ[] };
+type Category = { id: string; label: string; icon?: string; questions: FAQ[] };
 
 // ─── FAQ Item ─────────────────────────────────────────────────────────────────
 
@@ -224,15 +224,14 @@ function FAQItem({ faq, index }: { faq: FAQ; index: number }) {
         aria-expanded={open}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1, minWidth: 0 }}>
-          {/* Number */}
+          {/* Elegant vertical rule marker */}
           <span style={{
-            fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.12em',
-            color: open ? 'var(--gold)' : 'rgba(13,27,42,0.25)',
-            flexShrink: 0, paddingTop: 3, transition: 'color 0.2s',
-            fontFamily: 'var(--font-body)',
-          }}>
-            {String(index + 1).padStart(2, '0')}
-          </span>
+            width: 2, minHeight: 18, flexShrink: 0, marginTop: 4,
+            background: open ? 'var(--gold)' : 'rgba(13,27,42,0.15)',
+            transition: 'background 0.2s',
+            display: 'inline-block',
+            borderRadius: 1,
+          }} />
           <span style={{
             fontSize: 'clamp(0.9rem, 2vw, 1rem)',
             fontWeight: 500, color: open ? 'var(--navy)' : 'var(--navy)',
@@ -285,7 +284,6 @@ function CategorySection({ cat }: { cat: Category }) {
         marginBottom: 8, paddingBottom: 16,
         borderBottom: '2px solid var(--navy)',
       }}>
-        <span style={{ fontSize: '1.5rem' }}>{cat.icon}</span>
         <h2 className="font-display" style={{
           fontSize: 'clamp(1.3rem, 3vw, 1.75rem)',
           fontWeight: 300, color: 'var(--navy)', margin: 0,
@@ -456,7 +454,6 @@ export default function FAQPage() {
                     display: 'flex', alignItems: 'center', gap: 8,
                   }}
                 >
-                  <span style={{ fontSize: '1rem' }}>{cat.icon}</span>
                   <span style={{ flex: 1 }}>{cat.label}</span>
                   <span style={{ fontSize: '0.7rem', color: 'rgba(13,27,42,0.3)' }}>({cat.questions.length})</span>
                 </button>
@@ -537,7 +534,7 @@ export default function FAQPage() {
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}
                 >
-                  <span>{cat.icon}</span> {cat.label}
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -603,6 +600,50 @@ export default function FAQPage() {
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/request-quote" className="btn-primary" style={{ textDecoration: 'none' }}>Request a Free Quote</Link>
             <Link href="/cruises" className="btn-navy" style={{ textDecoration: 'none', borderColor: 'rgba(255,255,255,0.25)', color: 'rgba(255,255,255,0.75)' }}>Browse Cruises</Link>
+          </div>
+
+          {/* Facebook Community */}
+          <div style={{ marginTop: 48, paddingTop: 40, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+            <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 16, fontFamily: 'var(--font-body)' }}>
+              Join Our Community
+            </p>
+            <a
+              href="https://www.facebook.com/groups/766541509669553/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 12,
+                padding: '14px 28px',
+                background: '#1877F2',
+                color: 'white',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                transition: 'all 0.25s',
+                boxShadow: '0 4px 20px rgba(24,119,242,0.35)',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = '#166FE5';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 28px rgba(24,119,242,0.5)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = '#1877F2';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(24,119,242,0.35)';
+                (e.currentTarget as HTMLElement).style.transform = 'none';
+              }}
+            >
+              {/* Facebook icon */}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              Join Our Facebook Travel Community
+            </a>
+            <p style={{ marginTop: 12, fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
+              Tips, deals, trip inspiration &amp; fellow travelers from across the Southeast
+            </p>
           </div>
         </div>
       </section>
