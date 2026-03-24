@@ -1067,6 +1067,175 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
   );
 }
 
+// ─── Cruise Card ──────────────────────────────────────────────────────────────
+
+function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMap: Map<string, WidgetyOperator> }) {
+  const [hovered, setHovered] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const [showItinerary, setShowItinerary] = useState(false);
+
+  const imageUrl = imgError ? DEFAULT_CRUISE_IMAGE : getImageForCruise(cruise, operatorMap);
+  const region = (cruise.regions || [])[0] || '';
+  const cruiseType = Array.isArray(cruise.cruise_type) ? cruise.cruise_type[0] || '' :
+                     Array.isArray(cruise.holiday_type) ? cruise.holiday_type[0] || '' : '';
+  const nights = cruise.cruise_nights || cruise.duration_days || 0;
+
+  const operatorSlug = (cruise.operator || '').split('/operators/')[1]?.replace('.json', '');
+  const operatorData = operatorSlug ? operatorMap.get(operatorSlug) : undefined;
+
+  const quoteParams = new URLSearchParams({
+    destination: region,
+    line:         cruise.operator_title || '',
+    duration:     `${nights} nights`,
+    cruise_id:    cruise.holiday_ref || (cruise as any).ref || '',
+    cruise_name:  cruise.name || '',
+  });
+
+  const startsAt = typeof cruise.starts_at === 'object'
+    ? cruise.starts_at?.name || ''
+    : cruise.starts_at || '';
+
+  return (
+    <>
+    <article
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.04)',
+        border: hovered ? '1px solid rgba(201,168,76,0.4)' : '1px solid rgba(255,255,255,0.1)',
+        transition: 'all 0.3s ease',
+        transform: hovered ? 'translateY(-3px)' : 'none',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Image */}
+      <div style={{ height: 190, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+        <div
+          style={{
+            width: '100%', height: '100%',
+            backgroundImage: `url(${imageUrl})`,
+            backgroundSize: 'cover', backgroundPosition: 'center',
+            transition: 'transform 0.5s ease',
+            transform: hovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        />
+        <img src={imageUrl} alt="" onError={() => setImgError(true)} style={{ display: 'none' }} />
+
+        {/* Operator logo */}
+        {operatorData?.profile_image_href ? (
+          <div style={{ position: 'absolute', top: 10, left: 10, width: 36, height: 36, background: 'rgba(255,255,255,0.92)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 3 }}>
+            <img src={operatorData.profile_image_href} alt={cruise.operator_title} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+          </div>
+        ) : (
+          <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(13,27,42,0.88)', padding: '4px 10px', backdropFilter: 'blur(6px)' }}>
+            <span style={{ fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--gold)' }}>
+              {cruise.operator_title || 'Cruise'}
+            </span>
+          </div>
+        )}
+
+        {/* Nights badge */}
+        <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'var(--gold)', padding: '4px 10px' }}>
+          <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--navy)', letterSpacing: '0.06em' }}>
+            {nights}N
+          </span>
+        </div>
+
+        {/* Cruise type badge */}
+        {cruiseType && (
+          <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(13,27,42,0.75)', padding: '4px 8px', backdropFilter: 'blur(4px)' }}>
+            <span style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>
+              {cruiseType.replace('_', ' ')}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Body */}
+      <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <h3 className="font-display" style={{ fontSize: '1.1rem', fontWeight: 400, color: 'white', lineHeight: 1.35, marginBottom: 4 }}>
+          {cruise.name || `${nights}-Night ${region || 'Cruise'}`}
+        </h3>
+        {cruise.ship_title && (
+          <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.05em', marginBottom: 14 }}>
+            {cruise.ship_title}
+          </p>
+        )}
+
+        {/* Meta */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 14 }}>
+          {(cruise.date_from || cruise.starts_on) && (
+            <Meta icon="📅" text={formatDate((cruise.date_from || cruise.starts_on || ''))} />
+          )}
+          {startsAt && <Meta icon="⚓" text={startsAt} />}
+          {region    && <Meta icon="🗺"  text={region} />}
+          {cruise.rating && <Meta icon="⭐" text={cruise.rating} />}
+        </div>
+
+        {/* Region chips */}
+        {(cruise.regions || []).length > 1 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 16 }}>
+            {(cruise.regions || []).slice(0, 4).map((r, i) => (
+              <span key={i} style={{ fontSize: '0.66rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}>{r}</span>
+            ))}
+          </div>
+        )}
+
+        <div style={{ flex: 1 }} />
+
+        {/* CTAs */}
+        <div style={{ paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+            <button
+              onClick={() => setShowItinerary(true)}
+              style={{
+                flex: 1, padding: '9px 12px', fontSize: '0.65rem', fontWeight: 500,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                fontFamily: 'var(--font-body)', cursor: 'pointer',
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.2)',
+                color: 'rgba(255,255,255,0.55)',
+                transition: 'all 0.25s', whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.4)'; (e.target as HTMLElement).style.color = 'white'; }}
+              onMouseLeave={e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.55)'; }}
+            >
+              📋 View Itinerary
+            </button>
+            <Link
+              href={`/request-quote?${quoteParams}`}
+              style={{
+                flex: 1, textAlign: 'center',
+                background: hovered ? 'var(--gold)' : 'transparent',
+                color: hovered ? 'var(--navy)' : 'var(--gold)',
+                border: '1px solid var(--gold)',
+                padding: '9px 12px', fontSize: '0.65rem', fontWeight: 500,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                textDecoration: 'none', fontFamily: 'var(--font-body)',
+                transition: 'all 0.25s', whiteSpace: 'nowrap',
+                display: 'block',
+              }}
+            >
+              Get Quote
+            </Link>
+          </div>
+          <div style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
+            Pricing available on request
+          </div>
+        </div>
+      </div>
+    </article>
+    {showItinerary && typeof document !== 'undefined' && createPortal(
+      <ItineraryModal cruise={cruise} onClose={() => setShowItinerary(false)} />,
+      document.body
+    )}
+    </>
+  );
+}
+
+
 // ─── Small components ─────────────────────────────────────────────────────────
 
 function Meta({ icon, text }: { icon: string; text: string }) {
