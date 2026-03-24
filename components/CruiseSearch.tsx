@@ -1,6 +1,19 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
+
+// ─── Window size hook ─────────────────────────────────────────────────────────
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < breakpoint : false
+  );
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -331,6 +344,20 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
     }
   }, []);
 
+  // Scroll to results after they load (skip on initial page load)
+  const isFirstLoad = React.useRef(true);
+  useEffect(() => {
+    if (isFirstLoad.current) { isFirstLoad.current = false; return; }
+    if (initialLoad) return;
+    const el = document.getElementById('cruise-results');
+    if (el && cruises.length > 0) {
+      // Small delay lets React finish painting the cards
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }, [cruises]);
+
   // Run initial search on mount — skip when searchOnly (homepage just redirects)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -358,13 +385,11 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
     setPage(1);
     setApplied({ ...filters });
     fetchCruises(filters, 1);
-    document.getElementById('cruise-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handlePageChange = (pg: number) => {
     setPage(pg);
     fetchCruises(applied, pg);
-    document.getElementById('cruise-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const update = (key: keyof SearchFilters) => (v: string) => setFilters(f => ({ ...f, [key]: v }));
@@ -525,15 +550,8 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
       .then(r => r.json())
       .then(d => {
         if (d.error) throw new Error(d.error);
-        // Extract all dates from operating_seasons
-        const dates = (d.operating_seasons || []).flatMap((s: any) =>
-          (s.dates || []).map((dt: any) => ({
-            date_ref: dt.date_ref, date_from: dt.date_from, date_to: dt.date_to,
-            ship_title: dt.ship_title, availability: dt.availability_string,
-            season: s.operating_season,
-          }))
-        ).filter((dt: any) => dt.date_ref);
-        // Pick first date and fetch itinerary
+        // Use all_dates from route — includes sibling sailings (same route, all departure dates)
+        const dates = (d.all_dates || []).filter((dt: any) => dt.date_ref);
         if (dates.length > 0) {
           setAvailableDates(dates);
           setSelectedDateRef(dates[0].date_ref);
@@ -580,6 +598,8 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
 
   const activeItem = data?.items?.[activeDay];
 
+  const isMobile = useIsMobile();
+
   return (
     <div
       onClick={onClose}
@@ -587,8 +607,10 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
         position: 'fixed', inset: 0, zIndex: 1000,
         background: 'rgba(7,14,24,0.92)',
         backdropFilter: 'blur(8px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '20px',
+        display: 'flex',
+        alignItems: isMobile ? 'flex-end' : 'center',
+        justifyContent: 'center',
+        padding: isMobile ? 0 : '20px',
         animation: 'fadeIn 0.2s ease',
       }}
     >
@@ -596,23 +618,39 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
         onClick={e => e.stopPropagation()}
         style={{
           background: 'var(--navy)',
-          border: '1px solid rgba(201,168,76,0.25)',
-          width: '100%', maxWidth: 900,
-          maxHeight: '90vh',
+          border: isMobile ? 'none' : '1px solid rgba(201,168,76,0.25)',
+          borderTop: isMobile ? '2px solid var(--gold)' : undefined,
+          borderRadius: isMobile ? '16px 16px 0 0' : 0,
+          width: '100%',
+          maxWidth: isMobile ? '100%' : 900,
+          maxHeight: isMobile ? '92vh' : '90vh',
+          height: isMobile ? '92vh' : undefined,
           display: 'flex', flexDirection: 'column',
           overflow: 'hidden',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
-          animation: 'slideUp 0.25s ease',
+          boxShadow: '0 -8px 40px rgba(0,0,0,0.5)',
+          animation: isMobile ? 'slideUpMobile 0.3s ease' : 'slideUp 0.25s ease',
         }}
       >
-        {/* Header */}
-        <div style={{ background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(201,168,76,0.15)', padding: '20px 28px', flexShrink: 0 }}>
+        {/* ── Header ── */}
+        <div style={{
+          background: 'rgba(0,0,0,0.3)',
+          borderBottom: '1px solid rgba(201,168,76,0.15)',
+          padding: isMobile ? '16px 18px 14px' : '20px 28px',
+          flexShrink: 0,
+        }}>
+          {/* Mobile drag handle */}
+          {isMobile && (
+            <div style={{ width: 36, height: 4, background: 'rgba(255,255,255,0.2)', borderRadius: 2, margin: '0 auto 12px' }} />
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 6 }}>
                 {cruise.operator_title} · {nights} Night{nights !== 1 ? 's' : ''} · {region}
               </div>
-              <h2 className="font-display" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', fontWeight: 300, color: 'white', lineHeight: 1.2, margin: 0 }}>
+              <h2 className="font-display" style={{
+                fontSize: isMobile ? '1.05rem' : 'clamp(1rem, 2.5vw, 1.4rem)',
+                fontWeight: 300, color: 'white', lineHeight: 1.2, margin: 0,
+              }}>
                 {cruise.name}
               </h2>
               {cruise.ship_title && (
@@ -623,43 +661,103 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
             </div>
             <button
               onClick={onClose}
-              style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.5)', width: 36, height: 36, cursor: 'pointer', fontSize: '1.1rem', flexShrink: 0, marginLeft: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              ×
-            </button>
+              style={{
+                background: 'none', border: '1px solid rgba(255,255,255,0.15)',
+                color: 'rgba(255,255,255,0.5)', width: 34, height: 34,
+                cursor: 'pointer', fontSize: '1.1rem', flexShrink: 0,
+                marginLeft: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >×</button>
           </div>
 
           {/* Date selector */}
           {availableDates.length > 0 && (
-            <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', flexShrink: 0 }}>Sailing Date:</span>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {availableDates.slice(0, 8).map((d: any) => (
-                  <button
-                    key={d.date_ref}
-                    onClick={() => setSelectedDateRef(d.date_ref)}
-                    style={{
-                      padding: '5px 12px', fontSize: '0.7rem', cursor: 'pointer',
-                      border: '1px solid',
-                      borderColor: selectedDateRef === d.date_ref ? 'var(--gold)' : 'rgba(255,255,255,0.15)',
-                      background: selectedDateRef === d.date_ref ? 'rgba(201,168,76,0.15)' : 'transparent',
-                      color: selectedDateRef === d.date_ref ? 'var(--gold)' : 'rgba(255,255,255,0.45)',
-                      transition: 'all 0.2s',
-                    }}
-                  >
-                    {formatDateTime(d.date_from)}
-                  </button>
-                ))}
-                {availableDates.length > 8 && (
-                  <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.3)', padding: '5px 8px' }}>+{availableDates.length - 8} more</span>
-                )}
+            <div style={{ marginTop: isMobile ? 12 : 16 }}>
+              <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 8 }}>
+                {availableDates.length} Sailing{availableDates.length !== 1 ? 's' : ''} Available
               </div>
+              {isMobile ? (
+                /* Mobile: horizontal scroll strip */
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: 4 } as any}>
+                  <div style={{ display: 'flex', gap: 8, width: 'max-content', paddingRight: 4 }}>
+                    {availableDates.map((d: any) => {
+                      const isSelected = selectedDateRef === d.date_ref;
+                      return (
+                        <button
+                          key={d.date_ref}
+                          onClick={() => setSelectedDateRef(d.date_ref)}
+                          style={{
+                            padding: '8px 14px', fontSize: '0.72rem', cursor: 'pointer',
+                            border: '1px solid',
+                            borderColor: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.15)',
+                            background: isSelected ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.04)',
+                            color: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.5)',
+                            borderRadius: 4,
+                            display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2,
+                            flexShrink: 0,
+                            transition: 'all 0.15s',
+                          }}
+                        >
+                          <span style={{ fontWeight: isSelected ? 600 : 400, whiteSpace: 'nowrap' }}>{formatDateTime(d.date_from)}</span>
+                          {d.ship_title && (
+                            <span style={{ fontSize: '0.58rem', color: isSelected ? 'rgba(201,168,76,0.7)' : 'rgba(255,255,255,0.25)', whiteSpace: 'nowrap' }}>
+                              {d.ship_title}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                /* Desktop: grouped by year */
+                (() => {
+                  const byYear: Record<string, typeof availableDates> = {};
+                  availableDates.forEach((d: any) => {
+                    const yr = d.date_from ? new Date(d.date_from).getFullYear().toString() : 'TBA';
+                    if (!byYear[yr]) byYear[yr] = [];
+                    byYear[yr].push(d);
+                  });
+                  return Object.entries(byYear).sort().map(([yr, dates]) => (
+                    <div key={yr} style={{ marginBottom: 12 }}>
+                      <div style={{ fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 6 }}>{yr}</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {(dates as any[]).map((d: any) => {
+                          const isSelected = selectedDateRef === d.date_ref;
+                          return (
+                            <button
+                              key={d.date_ref}
+                              onClick={() => setSelectedDateRef(d.date_ref)}
+                              style={{
+                                padding: '6px 14px', fontSize: '0.7rem', cursor: 'pointer',
+                                border: '1px solid',
+                                borderColor: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.12)',
+                                background: isSelected ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.03)',
+                                color: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.5)',
+                                transition: 'all 0.15s',
+                                display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2,
+                              }}
+                            >
+                              <span style={{ fontWeight: isSelected ? 600 : 400 }}>{formatDateTime(d.date_from)}</span>
+                              {d.ship_title && (
+                                <span style={{ fontSize: '0.58rem', color: isSelected ? 'rgba(201,168,76,0.7)' : 'rgba(255,255,255,0.25)', fontWeight: 400 }}>
+                                  {d.ship_title}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ));
+                })()
+              )}
             </div>
           )}
         </div>
 
-        {/* Body */}
-        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', minHeight: 0 }}>
+        {/* ── Body ── */}
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: 0 }}>
           {loading ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12 }}>
               <div style={{ width: 40, height: 40, border: '2px solid rgba(201,168,76,0.3)', borderTopColor: 'var(--gold)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
@@ -676,7 +774,125 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
               <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>No itinerary data available for this sailing.</p>
             </div>
+          ) : isMobile ? (
+
+            /* ═══════════════════════════════════════════════════════
+               MOBILE LAYOUT — stacked: day tabs strip → detail pane
+               ═══════════════════════════════════════════════════════ */
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+
+              {/* Day tabs — horizontal scroll */}
+              <div style={{ flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.2)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as any}>
+                <div style={{ display: 'flex', width: 'max-content' }}>
+                  {data.items.map((item, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveDay(i)}
+                      style={{
+                        padding: '10px 16px', background: 'none',
+                        border: 'none',
+                        borderBottom: activeDay === i ? '2px solid var(--gold)' : '2px solid transparent',
+                        cursor: 'pointer', flexShrink: 0,
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <div style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: activeDay === i ? 'var(--gold)' : 'rgba(255,255,255,0.3)', marginBottom: 2 }}>
+                        Day {item.day_number}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: activeDay === i ? 'white' : 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', fontWeight: activeDay === i ? 600 : 400 }}>
+                        {item.location || 'At Sea'}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Day detail — scrollable */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '20px 18px' }}>
+                {activeItem && (
+                  <>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 6 }}>
+                        Day {activeItem.day_number} of {data.items.length}
+                        {activeItem.category && ` · ${activeItem.category.replace('_', ' ')}`}
+                      </div>
+                      <h3 className="font-display" style={{ fontSize: '1.3rem', fontWeight: 300, color: 'white', marginBottom: 2 }}>
+                        {activeItem.location || 'At Sea'}
+                      </h3>
+                      {activeItem.country && (
+                        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>{activeItem.country}</p>
+                      )}
+                      {/* Times row */}
+                      {(activeItem.arrival || activeItem.departure) && (
+                        <div style={{ display: 'flex', gap: 24, marginBottom: 12 }}>
+                          {activeItem.arrival && (
+                            <div>
+                              <div style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>Arrival</div>
+                              <div style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.8)', fontFamily: 'var(--font-display)' }}>{activeItem.arrival}</div>
+                            </div>
+                          )}
+                          {activeItem.departure && (
+                            <div>
+                              <div style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 2 }}>Departure</div>
+                              <div style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.8)', fontFamily: 'var(--font-display)' }}>{activeItem.departure}</div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {/* Meals */}
+                      {activeItem.meals?.length && (
+                        <div style={{ display: 'flex', gap: 6, marginBottom: 12, flexWrap: 'wrap' }}>
+                          {activeItem.meals.map((m, i) => (
+                            <span key={i} style={{ fontSize: '0.62rem', padding: '3px 10px', border: '1px solid rgba(201,168,76,0.25)', color: 'rgba(255,255,255,0.4)' }}>{m}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {activeItem.description && activeItem.description !== `Day ${activeItem.day_number}` && (
+                      <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 16 }}>
+                        {activeItem.description}
+                      </p>
+                    )}
+                    {/* Port photos — 2-col on mobile */}
+                    {activeItem.port_images && activeItem.port_images.length > 0 && (
+                      <div style={{ marginBottom: 16 }}>
+                        <div style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 8 }}>Port Photos</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
+                          {activeItem.port_images.map((img: any, i: number) => (
+                            <div key={i} style={{ position: 'relative', paddingBottom: '66%', overflow: 'hidden', background: 'rgba(255,255,255,0.05)', borderRadius: 4 }}>
+                              <img
+                                src={img.href} alt={activeItem.location}
+                                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={e => { (e.target as HTMLElement).parentElement!.style.display = 'none'; }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {/* Prev / Next */}
+                    <div style={{ display: 'flex', gap: 8, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                      {activeDay > 0 && (
+                        <button onClick={() => setActiveDay(activeDay - 1)} style={{ flex: 1, padding: '10px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', cursor: 'pointer' }}>
+                          ← Prev
+                        </button>
+                      )}
+                      {activeDay < data.items.length - 1 && (
+                        <button onClick={() => setActiveDay(activeDay + 1)} style={{ flex: 1, padding: '10px', background: 'rgba(201,168,76,0.1)', border: '1px solid var(--gold)', color: 'var(--gold)', fontSize: '0.75rem', cursor: 'pointer' }}>
+                          Next →
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
           ) : (
+
+            /* ═══════════════════════════════════════════════════════
+               DESKTOP LAYOUT — sidebar + detail panel side by side
+               ═══════════════════════════════════════════════════════ */
             <>
               {/* Day list sidebar */}
               <div style={{ width: 220, flexShrink: 0, borderRight: '1px solid rgba(255,255,255,0.07)', overflowY: 'auto', background: 'rgba(0,0,0,0.2)' }}>
@@ -689,12 +905,26 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                       <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>Return</div>
                       <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.7)' }}>{formatDateTime(data.date_to)}</div>
                     </>}
+                    {data.ship_title && (
+                      <>
+                        <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>Ship</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--gold)' }}>{data.ship_title}</div>
+                      </>
+                    )}
+                    {data.starts_at?.name && (
+                      <>
+                        <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>Embarkation</div>
+                        <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.55)' }}>{data.starts_at.name}</div>
+                      </>
+                    )}
                     {data.countries?.length > 0 && (
                       <>
                         <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>Countries</div>
                         <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>{data.countries.join(', ')}</div>
                       </>
                     )}
+                    <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: 8, marginBottom: 4 }}>All Sailings</div>
+                    <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>{availableDates.length} departure{availableDates.length !== 1 ? 's' : ''} found</div>
                   </div>
                 )}
                 {data.items.map((item, i) => (
@@ -705,8 +935,7 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                       width: '100%', textAlign: 'left',
                       border: 'none', borderBottom: '1px solid rgba(255,255,255,0.04)',
                       borderLeft: activeDay === i ? '3px solid var(--gold)' : '3px solid transparent',
-                      padding: '12px 14px',
-                      cursor: 'pointer',
+                      padding: '12px 14px', cursor: 'pointer',
                       background: activeDay === i ? 'rgba(201,168,76,0.07)' : 'transparent',
                       transition: 'all 0.15s',
                     } as any}
@@ -744,7 +973,6 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                       {activeItem.country && (
                         <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.35)', marginBottom: 8 }}>{activeItem.country}</p>
                       )}
-                      {/* Times */}
                       {(activeItem.arrival || activeItem.departure) && (
                         <div style={{ display: 'flex', gap: 20, marginBottom: 16 }}>
                           {activeItem.arrival && (
@@ -761,7 +989,6 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                           )}
                         </div>
                       )}
-                      {/* Meals */}
                       {activeItem.meals?.length && (
                         <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
                           {activeItem.meals.map((m, i) => (
@@ -770,15 +997,11 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                         </div>
                       )}
                     </div>
-
-                    {/* Port description */}
                     {activeItem.description && activeItem.description !== `Day ${activeItem.day_number}` && (
                       <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 20 }}>
                         {activeItem.description}
                       </p>
                     )}
-
-                    {/* Port photos */}
                     {activeItem.port_images && activeItem.port_images.length > 0 && (
                       <div style={{ marginBottom: 20 }}>
                         <div style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: 10 }}>Port Photos</div>
@@ -786,8 +1009,7 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                           {activeItem.port_images.map((img: any, i: number) => (
                             <div key={i} style={{ position: 'relative', paddingBottom: '66%', overflow: 'hidden', background: 'rgba(255,255,255,0.05)' }}>
                               <img
-                                src={img.href}
-                                alt={activeItem.location}
+                                src={img.href} alt={activeItem.location}
                                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                                 onError={e => { (e.target as HTMLElement).parentElement!.style.display = 'none'; }}
                               />
@@ -801,8 +1023,6 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
                         </div>
                       </div>
                     )}
-
-                    {/* Navigation */}
                     <div style={{ display: 'flex', gap: 8, marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
                       {activeDay > 0 && (
                         <button onClick={() => setActiveDay(activeDay - 1)} style={{ padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '0.08em' }}>
@@ -822,10 +1042,10 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
           )}
         </div>
 
-        {/* Footer */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '14px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0, background: 'rgba(0,0,0,0.2)', flexWrap: 'wrap', gap: 10 }}>
-          <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.25)' }}>
-            Itinerary subject to change. Contact Crestwell for latest availability.
+        {/* ── Footer ── */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '12px 18px' : '14px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0, background: 'rgba(0,0,0,0.2)', flexWrap: 'wrap', gap: 10 }}>
+          <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.25)' }}>
+            {isMobile ? 'Subject to change.' : 'Itinerary subject to change. Contact Crestwell for latest availability.'}
           </p>
           <Link
             href={`/request-quote?cruise_name=${encodeURIComponent(cruise.name || '')}&line=${encodeURIComponent(cruise.operator_title || '')}`}
@@ -838,181 +1058,12 @@ function ItineraryModal({ cruise, onClose }: { cruise: WidgetyCruise; onClose: (
       </div>
 
       <style>{`
-        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
-        @keyframes spin { to { transform: rotate(360deg) } }
+        @keyframes fadeIn    { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp   { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
+        @keyframes slideUpMobile { from { transform: translateY(100%) } to { transform: translateY(0) } }
+        @keyframes spin      { to { transform: rotate(360deg) } }
       `}</style>
     </div>
-  );
-}
-
-function CruiseCard({ cruise, operatorMap }: { cruise: WidgetyCruise; operatorMap: Map<string, WidgetyOperator> }) {
-  const [hovered, setHovered] = useState(false);
-  const [imgError, setImgError] = useState(false);
-  const [showItinerary, setShowItinerary] = useState(false);
-
-  const imageUrl = imgError ? DEFAULT_CRUISE_IMAGE : getImageForCruise(cruise, operatorMap);
-  const region = (cruise.regions || [])[0] || '';
-  const cruiseType = (cruise.cruise_type || [])[0] || '';
-
-  // Extract operator slug for profile image (small logo overlay)
-  const operatorSlug = cruise.operator?.split('/operators/')[1]?.replace('.json', '');
-  const operatorData = operatorSlug ? operatorMap.get(operatorSlug) : undefined;
-
-  const quoteParams = new URLSearchParams({
-    destination: region,
-    line: cruise.operator_title || '',
-    duration: `${cruise.cruise_nights} nights`,
-    cruise_id: cruise.ref || '',
-    cruise_name: cruise.name || '',
-  });
-
-  return (
-    <>
-    <article
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: hovered ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.04)',
-        border: hovered ? '1px solid rgba(201,168,76,0.4)' : '1px solid rgba(255,255,255,0.1)',
-        transition: 'all 0.3s ease',
-        transform: hovered ? 'translateY(-3px)' : 'none',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      {/* Image */}
-      <div style={{ height: 190, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
-        <div
-          style={{
-            width: '100%', height: '100%',
-            backgroundImage: `url(${imageUrl})`,
-            backgroundSize: 'cover', backgroundPosition: 'center',
-            transition: 'transform 0.5s ease',
-            transform: hovered ? 'scale(1.05)' : 'scale(1)',
-          }}
-        />
-        {/* Invisible img tag to catch load errors for background-image */}
-        <img
-          src={imageUrl}
-          alt=""
-          onError={() => setImgError(true)}
-          style={{ display: 'none' }}
-        />
-
-        {/* Operator logo (profile_image_href) — small square top-left */}
-        {operatorData?.profile_image_href ? (
-          <div style={{ position: 'absolute', top: 10, left: 10, width: 36, height: 36, background: 'rgba(255,255,255,0.92)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 3 }}>
-            <img
-              src={operatorData.profile_image_href}
-              alt={cruise.operator_title}
-              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-            />
-          </div>
-        ) : (
-          <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(13,27,42,0.88)', padding: '4px 10px', backdropFilter: 'blur(6px)' }}>
-            <span style={{ fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--gold)' }}>
-              {cruise.operator_title || 'Cruise'}
-            </span>
-          </div>
-        )}
-
-        {/* Nights badge */}
-        <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'var(--gold)', padding: '4px 10px' }}>
-          <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--navy)', letterSpacing: '0.06em' }}>
-            {cruise.cruise_nights}N
-          </span>
-        </div>
-
-        {/* Ocean / River badge */}
-        {cruiseType && (
-          <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(13,27,42,0.75)', padding: '4px 8px', backdropFilter: 'blur(4px)' }}>
-            <span style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>
-              {cruiseType}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Body */}
-      <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <h3 className="font-display" style={{ fontSize: '1.1rem', fontWeight: 400, color: 'white', lineHeight: 1.35, marginBottom: 4 }}>
-          {cruise.name || `${cruise.cruise_nights}-Night ${region || 'Cruise'}`}
-        </h3>
-        {cruise.ship_title && (
-          <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.05em', marginBottom: 14 }}>
-            {cruise.ship_title}
-          </p>
-        )}
-
-        {/* Meta */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 14 }}>
-          {cruise.starts_on && <Meta icon="📅" text={formatDate(cruise.starts_on)} />}
-          {cruise.starts_at && <Meta icon="⚓" text={cruise.starts_at} />}
-          {region           && <Meta icon="🗺" text={region} />}
-          {cruise.rating    && <Meta icon="⭐" text={cruise.rating} />}
-        </div>
-
-        {/* Extra region chips when multiple */}
-        {cruise.regions?.length > 1 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 16 }}>
-            {cruise.regions.slice(0, 4).map((r, i) => (
-              <span key={i} style={{ fontSize: '0.66rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}>{r}</span>
-            ))}
-          </div>
-        )}
-
-        <div style={{ flex: 1 }} />
-
-        {/* CTA */}
-        <div style={{ paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-            <button
-              onClick={() => setShowItinerary(true)}
-              style={{
-                flex: 1, padding: '9px 12px', fontSize: '0.65rem', fontWeight: 500,
-                letterSpacing: '0.1em', textTransform: 'uppercase',
-                fontFamily: 'var(--font-body)', cursor: 'pointer',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: 'rgba(255,255,255,0.55)',
-                transition: 'all 0.25s',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.4)'; (e.target as HTMLElement).style.color = 'white'; }}
-              onMouseLeave={e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.55)'; }}
-            >
-              📋 View Itinerary
-            </button>
-            <Link
-              href={`/request-quote?${quoteParams}`}
-              style={{
-                flex: 1, textAlign: 'center',
-                background: hovered ? 'var(--gold)' : 'transparent',
-                color: hovered ? 'var(--navy)' : 'var(--gold)',
-                border: '1px solid var(--gold)',
-                padding: '9px 12px', fontSize: '0.65rem', fontWeight: 500,
-                letterSpacing: '0.1em', textTransform: 'uppercase',
-                textDecoration: 'none', fontFamily: 'var(--font-body)',
-                transition: 'all 0.25s', whiteSpace: 'nowrap',
-                display: 'block',
-              }}
-            >
-              Get Quote
-            </Link>
-          </div>
-          <div style={{ fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
-            Pricing available on request
-          </div>
-        </div>
-      </div>
-    </article>
-    {showItinerary && typeof document !== 'undefined' && createPortal(
-      <ItineraryModal cruise={cruise} onClose={() => setShowItinerary(false)} />,
-      document.body
-    )}
-    </>
   );
 }
 
