@@ -195,12 +195,12 @@ export default function TripDetailPage() {
     <div style={{ background: 'white', minHeight: '100vh' }}>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', height: '70vh', minHeight: 480, overflow: 'hidden' }}>
+      <section style={{ position: 'relative', height: 'clamp(360px, 65vh, 600px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.25) 0%, rgba(13,27,42,0.82) 100%)' }} />
 
         {/* Breadcrumb */}
-        <div style={{ position: 'absolute', top: 100, left: 32, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ position: 'absolute', top: 'clamp(80px, 10vw, 100px)', left: 'clamp(16px, 5vw, 32px)', display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <Link href="/destinations" style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem', textDecoration: 'none' }}>Destinations</Link>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>›</span>
           <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem' }}>{trip.destination}</span>
@@ -209,7 +209,7 @@ export default function TripDetailPage() {
         </div>
 
         {/* Content */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '48px 32px' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 'clamp(24px, 4vw, 48px) clamp(16px, 5vw, 32px)' }}>
           <div style={{ maxWidth: 1280, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
               {trip.trip_type && (
@@ -250,14 +250,13 @@ export default function TripDetailPage() {
       {/* ── STATS BAR ── */}
       {stats.length > 0 && (
         <div style={{ background: 'var(--navy)', borderBottom: '1px solid rgba(201,168,76,0.2)' }}>
-          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', display: 'flex', flexWrap: 'wrap' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 clamp(16px, 4vw, 32px)', display: 'flex', flexWrap: 'wrap' }}>
             {stats.map((stat, i) => (
               <div key={i} style={{
                 padding: '20px 0', display: 'flex', alignItems: 'center', gap: 12,
                 borderRight: i < stats.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
-                paddingRight: i < stats.length - 1 ? 32 : 0,
-                paddingLeft: i > 0 ? 32 : 0,
-                flex: '1 1 160px',
+                padding: 'clamp(14px, 2vw, 20px) clamp(12px, 2vw, 32px)',
+                flex: '1 1 140px',
               }}>
                 <span style={{ fontSize: '1.2rem' }}>{stat.icon}</span>
                 <div>
@@ -271,7 +270,7 @@ export default function TripDetailPage() {
       )}
 
       {/* ── MAIN CONTENT + SIDEBAR ── */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 32px', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 320px', gap: 56, alignItems: 'start' }}>
+      <div className="trip-detail-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(32px, 5vw, 56px) clamp(16px, 5vw, 32px)', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 320px', gap: 'clamp(28px, 4vw, 56px)', alignItems: 'start' }}>
 
         {/* LEFT */}
         <div>
@@ -292,7 +291,7 @@ export default function TripDetailPage() {
             <section style={{ marginBottom: 52 }}>
               <div className="overline" style={{ marginBottom: 12 }}>Highlights</div>
               <h2 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Trip Highlights</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))', gap: 10 }}>
                 {trip.highlights.map((h, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 16px', background: 'var(--cream)', borderLeft: '3px solid var(--gold)' }}>
                     <div style={{ width: 6, height: 6, background: 'var(--gold)', borderRadius: '50%', marginTop: 6, flexShrink: 0 }} />
@@ -345,7 +344,7 @@ export default function TripDetailPage() {
             <section style={{ marginBottom: 52 }}>
               <div className="overline" style={{ marginBottom: 12 }}>What's Covered</div>
               <h2 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Included & Excluded</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 'clamp(16px, 3vw, 32px)' as any }}>
                 {trip.included?.length > 0 && (
                   <div>
                     <div style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--navy)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -447,7 +446,7 @@ export default function TripDetailPage() {
       </div>
 
       {/* ── BOTTOM CTA ── */}
-      <section style={{ background: 'var(--navy)', padding: '64px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'var(--navy)', padding: 'clamp(48px, 6vw, 64px) clamp(16px, 5vw, 32px)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.1 }} />
         <div style={{ position: 'relative', maxWidth: 560, margin: '0 auto' }}>
           <div className="overline" style={{ marginBottom: 16 }}>Ready to Go?</div>
@@ -464,12 +463,12 @@ export default function TripDetailPage() {
       </section>
 
       <style>{`
-        @media (max-width: 900px) {
-          div[style*="grid-template-columns: minmax(0,1fr) 320px"] {
+        @media (max-width: 860px) {
+          .trip-detail-grid {
             grid-template-columns: 1fr !important;
           }
-          div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
+          .trip-detail-grid aside > div {
+            position: static !important;
           }
         }
       `}</style>
