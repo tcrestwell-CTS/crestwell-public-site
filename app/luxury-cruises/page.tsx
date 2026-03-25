@@ -526,7 +526,7 @@ export default function LuxuryCruisesPage() {
             to ensure every detail is right before you board.
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/request-quote?trip_type=Luxury+Cruise" className="btn-primary" style={{ textDecoration: 'none' }}>
+            <Link href="/plan?trip_type=Luxury+Cruise" className="btn-primary" style={{ textDecoration: 'none' }}>
               Plan a Luxury Voyage
             </Link>
             <Link href="/contact" className="btn-navy" style={{ textDecoration: 'none' }}>
