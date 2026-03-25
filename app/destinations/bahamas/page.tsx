@@ -126,17 +126,17 @@ export default function BahamasDestinationPage() {
   return (
     <>
       {/* Hero */}
-      <section style={{ position: 'relative', height: '90vh', minHeight: 560, overflow: 'hidden' }}>
+      <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 50%' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.15) 0%, rgba(13,27,42,0.75) 100%)' }} />
         <div style={{ position: 'absolute', top: 72, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', opacity: 0.5 }} />
-        <div style={{ position: 'absolute', top: 92, left: 32, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ position: 'absolute', top: 'clamp(80px, 10vw, 92px)', left: 'clamp(16px, 5vw, 32px)', display: 'flex', gap: 8, alignItems: 'center' }}>
           <Link href="/destinations" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', textDecoration: 'none', letterSpacing: '0.08em' }}>Destinations</Link>
           <span style={{ color: 'rgba(255,255,255,0.25)' }}>›</span>
           <span style={{ color: 'var(--gold)', fontSize: '0.72rem', letterSpacing: '0.08em' }}>Bahamas</span>
         </div>
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 32px 64px', maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'flex-end' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 clamp(16px, 5vw, 32px) clamp(32px, 5vw, 64px)', maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, alignItems: 'flex-start' }}>
             <div>
               <div className="overline" style={{ color: 'var(--gold)', marginBottom: 16 }}>Destination Guide</div>
               <h1 className="font-display" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, color: 'white', lineHeight: 1, marginBottom: 16, letterSpacing: '-0.02em' }}>The Bahamas</h1>
@@ -161,8 +161,8 @@ export default function BahamasDestinationPage() {
       </section>
 
       {/* Intro */}
-      <section style={{ background: 'white', padding: '72px 32px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+      <section style={{ background: 'white', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 'clamp(32px, 5vw, 80px)', alignItems: 'center' }}>
           <div>
             <div className="overline" style={{ marginBottom: 16 }}>Why the Bahamas</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.75rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2, marginBottom: 24 }}>The Perfect Short Cruise from the Southeast</h2>
@@ -172,7 +172,7 @@ export default function BahamasDestinationPage() {
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.95rem', marginBottom: 32 }}>
               Beyond the resort beaches, the Out Islands reveal a different Bahamas — quiet, wild, and spectacularly beautiful. The Exumas, Eleuthera, and Abaco are among the most beautiful island landscapes in the Atlantic.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: 16 }}>
               {[{ num: '700+', label: 'Islands & Cays' }, { num: '2,500', label: 'Square Miles of Turquoise Water' }, { num: '3hrs', label: 'From Miami by Ship' }, { num: '#1', label: 'Most Visited Caribbean Nation' }].map((s, i) => (
                 <div key={i} style={{ padding: '20px', background: 'var(--cream)', borderLeft: '3px solid var(--gold)' }}>
                   <div className="font-display" style={{ fontSize: '2rem', color: 'var(--navy)', fontWeight: 300, lineHeight: 1 }}>{s.num}</div>
@@ -194,11 +194,11 @@ export default function BahamasDestinationPage() {
 
       {/* Gallery */}
       <section style={{ background: 'var(--navy)', padding: '64px 0' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', marginBottom: 36 }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 clamp(16px, 5vw, 32px)', marginBottom: 36 }}>
           <div className="overline" style={{ marginBottom: 12 }}>Gallery</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 300, color: 'white' }}>The Bahamas in Every Shade of Blue</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4, padding: '0 4px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 180px), 1fr))', gap: 4, padding: '0 4px' }}>
           {GALLERY.map((img, i) => (
             <div key={i} onClick={() => setGalleryOpen(i)} style={{ cursor: 'pointer', overflow: 'hidden', position: 'relative', gridColumn: img.aspect === 'wide' ? 'span 2' : 'span 1', height: img.aspect === 'tall' ? 400 : 280 }}>
               <img src={img.url} alt={img.caption} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
@@ -217,7 +217,7 @@ export default function BahamasDestinationPage() {
       </section>
 
       {/* Island Guide */}
-      <section style={{ background: 'white', padding: '72px 32px' }}>
+      <section style={{ background: 'white', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="overline" style={{ marginBottom: 12 }}>Island by Island</div>
@@ -228,7 +228,7 @@ export default function BahamasDestinationPage() {
               <button key={i} onClick={() => setActiveIsland(i)} style={{ padding: '10px 16px', border: '1px solid', whiteSpace: 'nowrap', borderColor: activeIsland === i ? 'var(--navy)' : 'rgba(13,27,42,0.15)', background: activeIsland === i ? 'var(--navy)' : 'white', color: activeIsland === i ? 'white' : 'var(--slate)', fontSize: '0.75rem', letterSpacing: '0.06em', fontFamily: 'var(--font-body)', cursor: 'pointer', transition: 'all 0.2s' }}>{p.name.split('&')[0].split('(')[0].trim()}</button>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>
             <div style={{ position: 'relative', height: 440, overflow: 'hidden' }}>
               <img src={island.image} alt={island.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(13,27,42,0.8))', padding: '32px 24px 20px' }}>
@@ -254,7 +254,7 @@ export default function BahamasDestinationPage() {
       </section>
 
       {/* Seasonal Guide */}
-      <section style={{ background: 'var(--cream)', padding: '72px 32px' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="overline" style={{ marginBottom: 12 }}>When to Go</div>
@@ -269,7 +269,7 @@ export default function BahamasDestinationPage() {
               </button>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(24px, 4vw, 48px)' }}>
             <div>
               <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontSize: '2.5rem' }}>{season.icon}</div>
@@ -312,7 +312,7 @@ export default function BahamasDestinationPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ position: 'relative', overflow: 'hidden', padding: '80px 32px', background: 'var(--navy)', textAlign: 'center' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(48px, 7vw, 80px) clamp(16px, 5vw, 32px)', background: 'var(--navy)', textAlign: 'center' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.1 }} />
         <div style={{ position: 'relative', maxWidth: 600, margin: '0 auto' }}>
           <div className="overline" style={{ marginBottom: 16 }}>Ready for the Bahamas?</div>
