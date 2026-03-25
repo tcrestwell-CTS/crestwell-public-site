@@ -201,6 +201,20 @@ function RequestQuoteForm() {
             </div>
           )}
 
+
+          {/* Financing nudge */}
+          <div style={{ background: 'var(--navy)', padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: '1.1rem' }}>💳</span>
+              <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)' }}>
+                Monthly payment plans available · <span style={{ color: 'var(--gold)' }}>0% APR options</span> for qualifying trips
+              </span>
+            </div>
+            <Link href="/payment" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap', borderBottom: '1px solid rgba(201,168,76,0.4)', paddingBottom: 1 }}>
+              See What You Can Afford →
+            </Link>
+          </div>
+
           {/* Progress Steps */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 56 }}>
             {[1, 2, 3].map((s) => (
