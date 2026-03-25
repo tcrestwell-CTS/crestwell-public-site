@@ -445,6 +445,27 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
           </div>
         </div>
 
+
+        {/* Financing nudge — between search bar and results */}
+        {!searchOnly && (
+          <div style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(201,168,76,0.15)', flexWrap: 'wrap', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: '1rem' }}>✅</span>
+              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.55)' }}>
+                Pre-qualify for travel financing — no hard credit pull
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <Link href="/payment" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
+                Check Budget Options →
+              </Link>
+              <Link href="/payment" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
+                Get Pre-Qualified →
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Results — hidden in searchOnly mode */}
         <div id="cruise-results" style={{ display: searchOnly ? 'none' : 'block' }}>
           {!initialLoad && !error && (
