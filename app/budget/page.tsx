@@ -132,14 +132,14 @@ export default function BudgetCalculatorPage() {
       </section>
 
       {/* ── Calculator ── */}
-      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)', overflowX: 'clip' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 300px', gap: 'clamp(24px, 4vw, 40px)', alignItems: 'start' }} className="calc-grid">
 
           {/* ── Left — inputs ── */}
           <div>
 
             {/* Step 1 — Trip */}
-            <div style={{ background: 'white', marginBottom: 16, overflow: 'hidden' }}>
+            <div style={{ background: 'white', marginBottom: 16 }}>
               <button
                 onClick={() => setStep(step === 1 ? 2 : 1)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 16, padding: '20px 24px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: step === 1 ? '2px solid var(--gold)' : '1px solid transparent' }}
@@ -253,7 +253,7 @@ export default function BudgetCalculatorPage() {
             </div>
 
             {/* Step 2 — Deposit & Plan */}
-            <div style={{ background: 'white', marginBottom: 16, overflow: 'hidden', opacity: totalTrip === 0 ? 0.4 : 1, transition: 'opacity 0.2s' }}>
+            <div style={{ background: 'white', marginBottom: 16, opacity: totalTrip === 0 ? 0.4 : 1, transition: 'opacity 0.2s' }}>
               <button
                 onClick={() => totalTrip > 0 && setStep(step === 2 ? 1 : 2)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 16, padding: '20px 24px', background: 'none', border: 'none', cursor: totalTrip > 0 ? 'pointer' : 'default', textAlign: 'left', borderBottom: step === 2 ? '2px solid var(--gold)' : '1px solid transparent' }}
@@ -411,8 +411,8 @@ export default function BudgetCalculatorPage() {
           </div>
 
           {/* ── Right — live summary card ── */}
-          <aside>
-            <div style={{ background: 'white', border: '1px solid rgba(13,27,42,0.1)', position: 'sticky', top: 100, overflow: 'hidden' }}>
+          <aside style={{ alignSelf: 'start' }}>
+            <div style={{ background: 'white', border: '1px solid rgba(13,27,42,0.1)', position: 'sticky', top: 88 }}>
               {/* Header */}
               <div style={{ background: 'var(--navy)', padding: '20px 22px' }}>
                 <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 6, fontFamily: 'var(--font-body)' }}>
@@ -555,10 +555,20 @@ export default function BudgetCalculatorPage() {
         @media (max-width: 700px) {
           .calc-grid {
             grid-template-columns: 1fr !important;
+            gap: 24px !important;
           }
-          .calc-grid aside > div {
+          .calc-grid aside {
+            order: -1;
+          }
+          .calc-grid aside > div,
+          .calc-grid aside > div > div {
             position: static !important;
           }
+        }
+        /* Prevent the range input track from causing layout jump */
+        input[type=range] {
+          display: block;
+          cursor: pointer;
         }
       `}</style>
     </>
