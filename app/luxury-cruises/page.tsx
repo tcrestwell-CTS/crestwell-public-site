@@ -242,30 +242,7 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
           display: 'flex', gap: 10, paddingTop: 20,
           borderTop: '1px solid rgba(255,255,255,0.07)',
         }}>
-          <a
-            href={brand.website}
-            target="_blank" rel="noopener noreferrer"
-            style={{
-              flex: 1, textAlign: 'center', padding: '11px 12px',
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.18)',
-              color: 'rgba(255,255,255,0.55)',
-              fontSize: '0.67rem', fontWeight: 500,
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-              textDecoration: 'none', fontFamily: 'var(--font-body)',
-              transition: 'all 0.2s', display: 'block',
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.4)';
-              (e.currentTarget as HTMLElement).style.color = 'white';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.18)';
-              (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.55)';
-            }}
-          >
-            Official Site ↗
-          </a>
+
           <Link
             href={`/request-quote?${quoteParams.toString()}`}
             style={{
