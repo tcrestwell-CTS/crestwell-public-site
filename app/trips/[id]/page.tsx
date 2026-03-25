@@ -253,9 +253,9 @@ export default function TripDetailPage() {
           <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 clamp(16px, 4vw, 32px)', display: 'flex', flexWrap: 'wrap' }}>
             {stats.map((stat, i) => (
               <div key={i} style={{
-                padding: '20px 0', display: 'flex', alignItems: 'center', gap: 12,
-                borderRight: i < stats.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
                 padding: 'clamp(14px, 2vw, 20px) clamp(12px, 2vw, 32px)',
+                display: 'flex', alignItems: 'center', gap: 12,
+                borderRight: i < stats.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
                 flex: '1 1 140px',
               }}>
                 <span style={{ fontSize: '1.2rem' }}>{stat.icon}</span>
