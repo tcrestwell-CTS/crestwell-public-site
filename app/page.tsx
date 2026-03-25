@@ -300,6 +300,60 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* ── FINANCING STRIP ── */}
+      <section style={{ background: 'var(--navy)', borderTop: '1px solid rgba(201,168,76,0.2)', borderBottom: '1px solid rgba(201,168,76,0.2)', padding: 'clamp(32px, 5vw, 48px) clamp(18px, 5vw, 32px)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <div style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 10, fontFamily: 'var(--font-body)' }}>
+              Flexible Payment Options
+            </div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 300, color: 'white', margin: 0 }}>
+              Your Dream Trip Is More Affordable Than You Think
+            </h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: 12 }}>
+            {[
+              { label: 'Check Your Travel Budget Options', icon: '💳', desc: 'See available payment plans in seconds' },
+              { label: 'Get Pre-Qualified for Travel Financing', icon: '✅', desc: 'No hard credit pull · Fast approval' },
+              { label: 'See What You Can Afford in 60 Seconds', icon: '⏱', desc: 'Monthly payment calculator for your trip' },
+            ].map((item, i) => (
+              <Link
+                key={i}
+                href="/payment"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '18px 22px',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(201,168,76,0.25)',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(201,168,76,0.1)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.5)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.25)';
+                }}
+              >
+                <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>{item.icon}</span>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'white', letterSpacing: '0.02em', marginBottom: 3, fontFamily: 'var(--font-body)' }}>
+                    {item.label}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
+                    {item.desc}
+                  </div>
+                </div>
+                <span style={{ marginLeft: 'auto', color: 'var(--gold)', fontSize: '0.9rem', flexShrink: 0 }}>→</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── NEWSLETTER ── */}
       <NewsletterSection />
 
@@ -377,7 +431,7 @@ export default function HomePage() {
 
             {/* Instagram */}
             <a
-              href="https://www.instagram.com/crestwelltravels"
+              href="https://www.instagram.com/crestwelltravel"
               target="_blank" rel="noopener noreferrer"
               aria-label="Instagram"
               style={{
@@ -441,7 +495,7 @@ export default function HomePage() {
 
             {/* TikTok */}
             <a
-              href="https://www.tiktok.com/@crestwelltravels"
+              href="https://www.tiktok.com/@crestwelltravel"
               target="_blank" rel="noopener noreferrer"
               aria-label="TikTok"
               style={{
