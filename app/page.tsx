@@ -314,13 +314,13 @@ export default function HomePage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: 12 }}>
             {[
-              { label: 'Check Your Travel Budget Options', icon: '💳', desc: 'See available payment plans in seconds' },
-              { label: 'Get Pre-Qualified for Travel Financing', icon: '✅', desc: 'No hard credit pull · Fast approval' },
-              { label: 'See What You Can Afford in 60 Seconds', icon: '⏱', desc: 'Monthly payment calculator for your trip' },
+              { label: 'Check Your Travel Budget Options', icon: '💳', desc: 'See available payment plans in seconds', href: '/budget' },
+              { label: 'Get Pre-Qualified for Travel Financing', icon: '✅', desc: 'No hard credit pull · Fast approval', href: '/request-quote?trip_type=Financing+Inquiry' },
+              { label: 'See What You Can Afford in 60 Seconds', icon: '⏱', desc: 'Monthly payment calculator for your trip', href: '/budget' },
             ].map((item, i) => (
               <Link
                 key={i}
-                href="/payment"
+                href={(item as any).href || '/budget'}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 14,
                   padding: '18px 22px',
