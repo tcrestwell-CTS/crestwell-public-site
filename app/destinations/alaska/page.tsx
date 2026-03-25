@@ -148,7 +148,7 @@ export default function AlaskaDestinationPage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', height: '90vh', minHeight: 560, overflow: 'hidden' }}>
+      <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: 'url(https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1800&q=85)',
@@ -160,15 +160,15 @@ export default function AlaskaDestinationPage() {
         <div style={{ position: 'absolute', top: 72, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', opacity: 0.5 }} />
 
         {/* Breadcrumb */}
-        <div style={{ position: 'absolute', top: 92, left: 32, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ position: 'absolute', top: 'clamp(80px, 10vw, 92px)', left: 'clamp(16px, 5vw, 32px)', display: 'flex', gap: 8, alignItems: 'center' }}>
           <Link href="/destinations" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', textDecoration: 'none', letterSpacing: '0.08em' }}>Destinations</Link>
           <span style={{ color: 'rgba(255,255,255,0.25)' }}>›</span>
           <span style={{ color: 'var(--gold)', fontSize: '0.72rem', letterSpacing: '0.08em' }}>Alaska</span>
         </div>
 
         {/* Hero content */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 32px 64px', maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'flex-end' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 clamp(16px, 5vw, 32px) clamp(32px, 5vw, 64px)', maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, alignItems: 'flex-start' }}>
             <div>
               <div className="overline" style={{ color: 'var(--gold)', marginBottom: 16 }}>Destination Guide</div>
               <h1 className="font-display" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, color: 'white', lineHeight: 1, marginBottom: 16, letterSpacing: '-0.02em' }}>
@@ -210,8 +210,8 @@ export default function AlaskaDestinationPage() {
       </section>
 
       {/* ── INTRO ── */}
-      <section style={{ background: 'white', padding: '72px 32px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+      <section style={{ background: 'white', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 'clamp(32px, 5vw, 80px)', alignItems: 'center' }}>
           <div>
             <div className="overline" style={{ marginBottom: 16 }}>Why Alaska</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.75rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2, marginBottom: 24 }}>
@@ -223,7 +223,7 @@ export default function AlaskaDestinationPage() {
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.95rem', marginBottom: 32 }}>
               The Inside Passage — the protected waterway running from Washington State through British Columbia and into Southeast Alaska — is one of the most scenic ocean routes in the world. Cruise ships glide between densely forested islands, past waterfalls tumbling directly into the sea, with the snow-capped Coast Mountains as a constant backdrop.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: 16 }}>
               {[
                 { num: '16', label: 'Tidewater Glaciers in Glacier Bay' },
                 { num: '3M+', label: 'Acres of Tongass National Forest' },
@@ -260,7 +260,7 @@ export default function AlaskaDestinationPage() {
 
       {/* ── PHOTO GALLERY ── */}
       <section style={{ background: 'var(--navy)', padding: '64px 0' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', marginBottom: 36 }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 clamp(16px, 5vw, 32px)', marginBottom: 36 }}>
           <div className="overline" style={{ marginBottom: 12 }}>Gallery</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 300, color: 'white' }}>Alaska Through the Lens</h2>
         </div>
@@ -298,7 +298,7 @@ export default function AlaskaDestinationPage() {
       </section>
 
       {/* ── SEASONAL GUIDE ── */}
-      <section style={{ background: 'var(--cream)', padding: '72px 32px' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="overline" style={{ marginBottom: 12 }}>Plan Your Visit</div>
@@ -330,7 +330,7 @@ export default function AlaskaDestinationPage() {
           </div>
 
           {/* Season content */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(24px, 4vw, 48px)' }}>
             <div>
               <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontSize: '2.5rem' }}>{season.icon}</div>
@@ -391,7 +391,7 @@ export default function AlaskaDestinationPage() {
       </section>
 
       {/* ── PORT GUIDE ── */}
-      <section style={{ background: 'white', padding: '72px 32px' }}>
+      <section style={{ background: 'white', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="overline" style={{ marginBottom: 12 }}>Shore Excursions</div>
@@ -424,7 +424,7 @@ export default function AlaskaDestinationPage() {
           </div>
 
           {/* Port content */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>
             <div style={{ position: 'relative', height: 440, overflow: 'hidden' }}>
               <img src={port.image} alt={port.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(13,27,42,0.8))', padding: '32px 24px 20px' }}>
@@ -452,7 +452,7 @@ export default function AlaskaDestinationPage() {
       </section>
 
       {/* ── WILDLIFE GUIDE ── */}
-      <section style={{ background: 'var(--navy)', padding: '72px 32px' }}>
+      <section style={{ background: 'var(--navy)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
             <div>
@@ -484,7 +484,7 @@ export default function AlaskaDestinationPage() {
       </section>
 
       {/* ── PRACTICAL INFO ── */}
-      <section style={{ background: 'var(--cream)', padding: '72px 32px' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="overline" style={{ marginBottom: 12 }}>Practical Information</div>
@@ -517,7 +517,7 @@ export default function AlaskaDestinationPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ position: 'relative', overflow: 'hidden', padding: '80px 32px', background: 'var(--navy)', textAlign: 'center' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(48px, 7vw, 80px) clamp(16px, 5vw, 32px)', background: 'var(--navy)', textAlign: 'center' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1546587348-d12660c30c50?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.12 }} />
         <div style={{ position: 'relative', maxWidth: 600, margin: '0 auto' }}>
           <div className="overline" style={{ marginBottom: 16 }}>Ready for Alaska?</div>
