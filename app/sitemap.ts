@@ -15,6 +15,7 @@ const STATIC_PAGES = [
   { path: '/about',        priority: 0.7,  changeFreq: 'monthly' },
   { path: '/contact',      priority: 0.7,  changeFreq: 'monthly' },
   { path: '/faq',           priority: 0.7,  changeFreq: 'monthly' },
+  { path: '/plan',          priority: 0.9,  changeFreq: 'monthly' },
   { path: '/request-quote',priority: 0.8,  changeFreq: 'monthly' },
   { path: '/budget',        priority: 0.8,  changeFreq: 'monthly' },
   { path: '/payment',      priority: 0.6,  changeFreq: 'monthly' },
