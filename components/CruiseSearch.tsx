@@ -456,10 +456,10 @@ export default function CruiseSearch({ redirectTo, initialFilters, searchOnly }:
               </span>
             </div>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <Link href="/payment" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
+              <Link href="/budget" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
                 Check Budget Options →
               </Link>
-              <Link href="/payment" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
+              <Link href="/budget" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
                 Get Pre-Qualified →
               </Link>
             </div>
