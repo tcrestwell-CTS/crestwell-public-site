@@ -211,7 +211,7 @@ function RequestQuoteForm() {
                 Monthly payment plans available · <span style={{ color: 'var(--gold)' }}>0% APR options</span> for qualifying trips
               </span>
             </div>
-            <Link href="/payment" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap', borderBottom: '1px solid rgba(201,168,76,0.4)', paddingBottom: 1 }}>
+            <Link href="/budget" style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap', borderBottom: '1px solid rgba(201,168,76,0.4)', paddingBottom: 1 }}>
               See What You Can Afford →
             </Link>
           </div>
