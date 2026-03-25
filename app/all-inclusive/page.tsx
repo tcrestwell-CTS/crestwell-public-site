@@ -186,7 +186,7 @@ export default function AllInclusivePage() {
             As ASTA and CLIA certified agents, we have direct relationships with resort brands — meaning better room categories, perks, and pricing than booking direct. We match you with the right resort for your travel style, handle all the details, and are available before, during, and after your trip.
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/request-quote?trip_type=All-Inclusive+Resort" className="btn-primary" style={{ textDecoration: 'none' }}>Start Planning</Link>
+            <Link href="/plan?trip_type=All-Inclusive+Resort" className="btn-primary" style={{ textDecoration: 'none' }}>Start Planning</Link>
             <Link href="/contact" className="btn-outline" style={{ textDecoration: 'none' }}>Talk to an Agent</Link>
           </div>
         </div>
