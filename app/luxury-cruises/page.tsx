@@ -127,7 +127,7 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
       }}
     >
       {/* Ship image with Ken Burns */}
-      <div style={{ height: 280, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ height: 'clamp(200px, 30vw, 280px)', position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${brand.image})`,
@@ -187,7 +187,7 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
       </div>
 
       {/* Content */}
-      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <div style={{ padding: 'clamp(20px, 4vw, 32px)', display: 'flex', flexDirection: 'column', flex: 1 }}>
         {/* Name */}
         <h2 className="font-display" style={{
           fontSize: 'clamp(1.35rem, 2.5vw, 1.75rem)',
@@ -286,9 +286,9 @@ export default function LuxuryCruisesPage() {
       {/* ── Hero ── */}
       <section style={{
         background: '#05080f',
-        paddingTop: 160, paddingBottom: 100,
+        paddingTop: 'clamp(100px, 15vw, 160px)', paddingBottom: 'clamp(60px, 8vw, 100px)',
         position: 'relative', overflow: 'hidden',
-        minHeight: '65vh', display: 'flex', alignItems: 'center',
+        minHeight: '60vh', display: 'flex', alignItems: 'center',
       }}>
         {/* Hero background — Ritz-Carlton Evrima with Ken Burns */}
         <div style={{
@@ -315,7 +315,7 @@ export default function LuxuryCruisesPage() {
           background: 'linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent)',
         }} />
 
-        <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '0 32px', width: '100%' }}>
+        <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '0 clamp(18px, 5vw, 32px)', width: '100%' }}>
           {/* Overline with rules */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
             <div style={{ width: 24, height: 1, background: 'var(--gold)', opacity: 0.7 }} />
@@ -351,7 +351,7 @@ export default function LuxuryCruisesPage() {
           </p>
 
           {/* Stats */}
-          <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 'clamp(20px, 6vw, 48px)', flexWrap: 'wrap' }}>
             {[
               { num: '4',   label: 'Prestige Lines' },
               { num: '26+', label: 'Ships in Fleet' },
@@ -382,11 +382,11 @@ export default function LuxuryCruisesPage() {
       </section>
 
       {/* ── Why Luxury ── */}
-      <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 80px) 0' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
             gap: 2,
           }}>
             {[
@@ -413,7 +413,7 @@ export default function LuxuryCruisesPage() {
             ].map((item, i) => (
               <div key={i} style={{
                 background: item.dark ? 'var(--navy)' : 'white',
-                padding: '44px 36px',
+                padding: 'clamp(28px, 4vw, 44px) clamp(20px, 4vw, 36px)',
               }}>
                 <div style={{
                   width: 32, height: 2, background: 'var(--gold)',
@@ -439,15 +439,15 @@ export default function LuxuryCruisesPage() {
       </section>
 
       {/* ── Brand Grid ── */}
-      <section style={{ background: '#05080f', padding: '72px 32px 96px' }}>
+      <section style={{ background: '#05080f', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 4vw, 32px) clamp(48px, 8vw, 96px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
 
           {/* Header + filter */}
           <div style={{
-            marginBottom: 48,
+            marginBottom: 'clamp(28px, 4vw, 48px)',
             display: 'flex', alignItems: 'flex-end',
             justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: 20,
+            flexWrap: 'wrap', gap: 16,
           }}>
             <div>
               <div style={{
@@ -492,7 +492,7 @@ export default function LuxuryCruisesPage() {
             display: 'grid',
             gridTemplateColumns: displayed.length === 1
               ? 'minmax(0, 760px)'
-              : 'repeat(auto-fill, minmax(480px, 1fr))',
+              : 'repeat(auto-fill, minmax(min(100%, 480px), 1fr))',
             gap: 28,
             justifyContent: displayed.length === 1 ? 'center' : undefined,
           }}>
@@ -504,7 +504,7 @@ export default function LuxuryCruisesPage() {
       </section>
 
       {/* ── Crestwell Advantage ── */}
-      <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 80px) 0' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center' }}>
           <div className="overline" style={{ marginBottom: 16, justifyContent: 'center' }}>
             Why Book Through Crestwell
