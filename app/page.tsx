@@ -398,7 +398,7 @@ export default function HomePage() {
           }}>
             {/* Facebook */}
             <a
-              href="https://www.facebook.com/profile.php?id=61572819131364"
+              href="https://www.facebook.com/share/g/1dX2yga19b/"
               target="_blank" rel="noopener noreferrer"
               aria-label="Facebook"
               style={{
