@@ -35,17 +35,17 @@ export default function MediterraneanDestinationPage() {
 
   return (
     <>
-      <section style={{ position: 'relative', height: '90vh', minHeight: 560, overflow: 'hidden' }}>
+      <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 40%' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.15) 0%, rgba(13,27,42,0.75) 100%)' }} />
         <div style={{ position: 'absolute', top: 72, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', opacity: 0.5 }} />
-        <div style={{ position: 'absolute', top: 92, left: 32, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ position: 'absolute', top: 'clamp(80px, 10vw, 92px)', left: 'clamp(16px, 5vw, 32px)', display: 'flex', gap: 8, alignItems: 'center' }}>
           <Link href="/destinations" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', textDecoration: 'none', letterSpacing: '0.08em' }}>Destinations</Link>
           <span style={{ color: 'rgba(255,255,255,0.25)' }}>›</span>
           <span style={{ color: 'var(--gold)', fontSize: '0.72rem', letterSpacing: '0.08em' }}>Mediterranean</span>
         </div>
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 32px 64px', maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'flex-end' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 clamp(16px, 5vw, 32px) clamp(32px, 5vw, 64px)', maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, alignItems: 'flex-start' }}>
             <div>
               <div className="overline" style={{ color: 'var(--gold)', marginBottom: 16 }}>Destination Guide</div>
               <h1 className="font-display" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, color: 'white', lineHeight: 1, marginBottom: 16, letterSpacing: '-0.02em' }}>Mediterranean</h1>
@@ -67,14 +67,14 @@ export default function MediterraneanDestinationPage() {
         </div>
       </section>
 
-      <section style={{ background: 'white', padding: '72px 32px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+      <section style={{ background: 'white', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 'clamp(32px, 5vw, 80px)', alignItems: 'center' }}>
           <div>
             <div className="overline" style={{ marginBottom: 16 }}>Why the Mediterranean</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.75rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2, marginBottom: 24 }}>Three Thousand Years of Civilization, One Incredible Voyage</h2>
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.95rem', marginBottom: 20 }}>The Mediterranean Sea has been the center of Western civilization for three millennia. A single 10-night cruise can visit the ruins of Rome, the temples of Athens, the mosques of Istanbul, and the Baroque architecture of Malta — covering more human history than most people see in a lifetime. And then there\'s the food.</p>
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.95rem', marginBottom: 32 }}>The Eastern Mediterranean covers Greece, Turkey, and the Adriatic. The Western Med spans Italy, France, Spain, and Gibraltar. Most 7-night sailings focus on one region; 10–14 night voyages can connect them. We recommend at least 10 nights to do the region justice.</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: 16 }}>
               {[{ num: '21', label: 'Countries on the Med Coast' }, { num: '46,000', label: 'Miles of Coastline' }, { num: '3,000+', label: 'Years of Recorded History' }, { num: '5', label: 'UNESCO Sites per Average Cruise' }].map((s, i) => (
                 <div key={i} style={{ padding: '20px', background: 'var(--cream)', borderLeft: '3px solid var(--gold)' }}>
                   <div className="font-display" style={{ fontSize: '2rem', color: 'var(--navy)', fontWeight: 300, lineHeight: 1 }}>{s.num}</div>
@@ -95,23 +95,23 @@ export default function MediterraneanDestinationPage() {
       </section>
 
       <section style={{ background: 'var(--navy)', padding: '64px 0' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', marginBottom: 36 }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 clamp(16px, 5vw, 32px)', marginBottom: 36 }}>
           <div className="overline" style={{ marginBottom: 12 }}>Gallery</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 300, color: 'white' }}>The Mediterranean in Every Light</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4, padding: '0 4px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 180px), 1fr))', gap: 4, padding: '0 4px' }}>
           {GALLERY.map((img, i) => (<div key={i} onClick={() => setGalleryOpen(i)} style={{ cursor: 'pointer', overflow: 'hidden', position: 'relative', gridColumn: img.aspect === 'wide' ? 'span 2' : 'span 1', height: img.aspect === 'tall' ? 400 : 280 }}><img src={img.url} alt={img.caption} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} /><div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(13,27,42,0.7))', padding: '24px 16px 12px' }}><span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.8)', letterSpacing: '0.06em' }}>{img.caption}</span></div></div>))}
         </div>
         {galleryOpen !== null && (<div onClick={() => setGalleryOpen(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32, cursor: 'pointer' }}><img src={GALLERY[galleryOpen].url.replace('w=800', 'w=1400').replace('w=1200', 'w=1800')} alt={GALLERY[galleryOpen].caption} style={{ maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain' }} /><div style={{ position: 'absolute', bottom: 24, left: 0, right: 0, textAlign: 'center', color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>{GALLERY[galleryOpen].caption} · Click to close</div></div>)}
       </section>
 
-      <section style={{ background: 'white', padding: '72px 32px' }}>
+      <section style={{ background: 'white', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}><div className="overline" style={{ marginBottom: 12 }}>Shore Excursions</div><h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 300, color: 'var(--navy)' }}>Top Mediterranean Ports of Call</h2></div>
           <div style={{ display: 'flex', gap: 8, marginBottom: 40, overflowX: 'auto', paddingBottom: 4 }}>
             {PORTS.map((p, i) => (<button key={i} onClick={() => setActivePort(i)} style={{ padding: '10px 16px', border: '1px solid', whiteSpace: 'nowrap', borderColor: activePort === i ? 'var(--navy)' : 'rgba(13,27,42,0.15)', background: activePort === i ? 'var(--navy)' : 'white', color: activePort === i ? 'white' : 'var(--slate)', fontSize: '0.75rem', letterSpacing: '0.06em', fontFamily: 'var(--font-body)', cursor: 'pointer', transition: 'all 0.2s' }}>{p.name.split(',')[0]}</button>))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>
             <div style={{ position: 'relative', height: 440, overflow: 'hidden' }}>
               <img src={port.image} alt={port.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(13,27,42,0.8))', padding: '32px 24px 20px' }}>
@@ -129,13 +129,13 @@ export default function MediterraneanDestinationPage() {
         </div>
       </section>
 
-      <section style={{ background: 'var(--cream)', padding: '72px 32px' }}>
+      <section style={{ background: 'var(--cream)', padding: 'clamp(40px, 6vw, 72px) clamp(16px, 5vw, 32px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}><div className="overline" style={{ marginBottom: 12 }}>When to Go</div><h2 className="font-display" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 300, color: 'var(--navy)' }}>Mediterranean by Season</h2></div>
           <div style={{ display: 'flex', gap: 0, marginBottom: 40, borderBottom: '1px solid rgba(13,27,42,0.1)', overflowX: 'auto' }}>
             {SEASONS.map((s, i) => (<button key={i} onClick={() => setActiveSeason(i)} style={{ flex: 1, minWidth: 100, padding: '16px 20px', background: 'none', border: 'none', borderBottom: activeSeason === i ? `3px solid ${s.color}` : '3px solid transparent', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'center' }}><div style={{ fontSize: '1.5rem', marginBottom: 4 }}>{s.icon}</div><div style={{ fontSize: '0.78rem', fontWeight: activeSeason === i ? 600 : 400, color: activeSeason === i ? 'var(--navy)' : 'var(--slate)', letterSpacing: '0.06em', fontFamily: 'var(--font-body)' }}>{s.name}</div><div style={{ fontSize: '0.65rem', color: 'var(--slate)' }}>{s.months}</div></button>))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(24px, 4vw, 48px)' }}>
             <div>
               <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontSize: '2.5rem' }}>{season.icon}</div>
@@ -158,7 +158,7 @@ export default function MediterraneanDestinationPage() {
         </div>
       </section>
 
-      <section style={{ position: 'relative', overflow: 'hidden', padding: '80px 32px', background: 'var(--navy)', textAlign: 'center' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(48px, 7vw, 80px) clamp(16px, 5vw, 32px)', background: 'var(--navy)', textAlign: 'center' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.1 }} />
         <div style={{ position: 'relative', maxWidth: 600, margin: '0 auto' }}>
           <div className="overline" style={{ marginBottom: 16 }}>Ready for the Mediterranean?</div>
