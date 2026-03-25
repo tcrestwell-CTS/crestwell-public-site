@@ -33,9 +33,9 @@ export function TripCard({ trip }: { trip: FeaturedTrip }) {
       </div>
 
       {/* Content */}
-      <div style={{ padding: 28 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-          <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)' }}>{trip.trip_name}</h3>
+      <div style={{ padding: 'clamp(18px, 3vw, 28px)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10, flexWrap: 'wrap', gap: 4 }}>
+          <h3 className="font-display" style={{ fontSize: 'clamp(1.1rem, 3vw, 1.4rem)', fontWeight: 400, color: 'var(--navy)' }}>{trip.trip_name}</h3>
           {trip.duration && (
             <span style={{ fontSize: '0.7rem', color: 'var(--slate)', letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap', paddingLeft: 8 }}>{trip.duration}</span>
           )}
