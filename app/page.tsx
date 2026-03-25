@@ -274,7 +274,7 @@ export default function HomePage() {
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: 40 }}>
             From weekend getaways to extended voyages — our team finds the right cruise at the best price, every time. Let us do the searching for you.
           </p>
-          <Link href="/request-quote" className="btn-primary" style={{ textDecoration: 'none' }}>Start Planning Today</Link>
+          <Link href="/plan" className="btn-primary" style={{ textDecoration: 'none' }}>Start Planning Today</Link>
         </div>
       </section>
 
@@ -398,7 +398,7 @@ export default function HomePage() {
           }}>
             {/* Facebook */}
             <a
-              href="https://www.facebook.com/share/g/1dX2yga19b/"
+              href="https://www.facebook.com/profile.php?id=61572819131364"
               target="_blank" rel="noopener noreferrer"
               aria-label="Facebook"
               style={{
