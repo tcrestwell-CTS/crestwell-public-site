@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const DESTINATIONS = [
-  { label: 'All Destinations', href: '/destinations', icon: '🗺️' },
+  { label: 'All Destinations', href: '/destinations', icon: '' },
   { label: 'Featured Trips', href: '/trips', icon: '⭐' },
-  { label: 'Bahamas', href: '/destinations/bahamas', icon: '🏝️' },
-  { label: 'Caribbean', href: '/destinations/caribbean', icon: '🌊' },
-  { label: 'Mexico', href: '/destinations/mexico', icon: '🌵' },
-  { label: 'Mediterranean', href: '/destinations/mediterranean', icon: '🏛️' },
-  { label: 'Alaska', href: '/destinations/alaska', icon: '🏔️' },
-  { label: 'Europe', href: '/destinations/europe', icon: '🏰' },
+  { label: 'Bahamas', href: '/destinations/bahamas', icon: '' },
+  { label: 'Caribbean', href: '/destinations/caribbean', icon: '' },
+  { label: 'Mexico', href: '/destinations/mexico', icon: '' },
+  { label: 'Mediterranean', href: '/destinations/mediterranean', icon: '' },
+  { label: 'Alaska', href: '/destinations/alaska', icon: '' },
+  { label: 'Europe', href: '/destinations/europe', icon: '' },
 ];
 
 const navItems = [
