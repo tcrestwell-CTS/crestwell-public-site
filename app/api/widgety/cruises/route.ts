@@ -161,59 +161,203 @@ export async function GET(req: NextRequest) {
   const sp          = req.nextUrl.searchParams;
   const destination = sp.get('destination') || 'any';
   const operator    = sp.get('operator')    || 'any';
-  const cruiseType  = sp.get('cruise_type') || 'any';
+  const cruiseType  = sp.get('cruise_type') || 'any';  // 'ocean', 'river', 'luxury', or 'any'
   const duration    = sp.get('duration')    || 'any';
   const month       = sp.get('month')       || 'any';
   const year        = sp.get('year')        || 'any';
   const page        = parseInt(sp.get('page') || '1', 10);
 
   const imgMap = await getOperatorImages();
-  const params: Record<string, string> = { limit: String(PER_PAGE), page: String(page) };
 
-  if (destination !== 'any' && REGION_MAP[destination]) params.regions    = REGION_MAP[destination];
-  if (operator    !== 'any')                             params.operators  = operator;
-  // holiday_type not supported by API — filtered client-side below
+  // ── Resolve operator set from cruise type ──────────────────────────────────
+  // cruise_type filter is done by routing to specific operators
+  // (holiday_type param causes 400 on the Widgety API)
+  const LUXURY_OPERATOR_SET = new Set([
+    'silversea-cruises', 'seabourn-cruise-line', 'explora-journeys',
+    'ritz-carlton-yacht-collection',
+  ]);
+  const OCEAN_OPERATOR_SET = new Set([
+    'norwegian-cruise-line','royal-caribbean-international','carnival-cruise-lines-operator',
+    'disney-cruise-line','celebrity-cruises','holland-america-line','msc-cruises',
+    'virgin-voyages','princess-cruises','cunard-line',
+  ]);
 
-  let hasDateFilter = false;
+  let operatorPool: string[] = [];
+  if (cruiseType === 'river') {
+    operatorPool = Array.from(RIVER_OPERATOR_SET);
+  } else if (cruiseType === 'luxury') {
+    operatorPool = Array.from(LUXURY_OPERATOR_SET);
+  } else if (cruiseType === 'ocean') {
+    operatorPool = Array.from(OCEAN_OPERATOR_SET);
+  }
+
+  // If a specific operator is selected, that overrides cruise type pool
+  const effectiveOperator = operator !== 'any' ? operator : null;
+
+  // When duration filter is set, fetch a larger pool since we filter client-side
+  const poolSize = duration !== 'any' ? PER_PAGE * 8 : PER_PAGE * 3;
+  const baseParams: Record<string, string> = { market: 'us', limit: String(poolSize) };
+
+  if (destination !== 'any' && REGION_MAP[destination]) baseParams.regions = REGION_MAP[destination];
+  if (effectiveOperator) baseParams.operators = effectiveOperator;
+
+  // Date filter
   if (month !== 'any') {
     const y = year !== 'any' ? parseInt(year) : new Date().getFullYear();
     const m = parseInt(month);
-    params.date_from = `${y}-${String(m).padStart(2,'0')}-01`;
-    params.date_to   = `${y}-${String(m).padStart(2,'0')}-${new Date(y,m,0).getDate()}`;
-    hasDateFilter = true;
+    baseParams.date_from = `${y}-${String(m).padStart(2,'0')}-01`;
+    baseParams.date_to   = `${y}-${String(m).padStart(2,'0')}-${new Date(y,m,0).getDate()}`;
   } else if (year !== 'any') {
-    params.date_from = `${year}-01-01`; params.date_to = `${year}-12-31`;
-    hasDateFilter = true;
+    baseParams.date_from = `${year}-01-01`;
+    baseParams.date_to   = `${year}-12-31`;
   }
 
-  let holidays: any[] = []; let total = 0;
+  // ── Fetch list results ─────────────────────────────────────────────────────
+  let rawHolidays: any[] = [];
+  let total = 0;
 
-  const r1 = await searchHolidays(params);
-  if (r1?.holidays.length) { holidays = r1.holidays.map((h: any) => enrich(h, imgMap)); total = r1.total; }
+  if (effectiveOperator) {
+    // Single operator — check if V2-only
+    if (V2_ONLY_OPERATORS.has(effectiveOperator)) {
+      const v2 = await searchCruisesV2({ ...baseParams, operators: effectiveOperator });
+      if (v2) { rawHolidays = v2.holidays; total = v2.total; }
+    } else {
+      const r = await searchHolidays(baseParams);
+      if (r) { rawHolidays = r.holidays; total = r.total; }
+    }
+  } else if (operatorPool.length > 0) {
+    // Cruise type filter — search each operator in parallel, then merge
+    const fetchOp = async (op: string) => {
+      if (V2_ONLY_OPERATORS.has(op)) {
+        return searchCruisesV2({ ...baseParams, operators: op });
+      }
+      return searchHolidays({ ...baseParams, operators: op, limit: '20' });
+    };
+    const results = await Promise.all(operatorPool.map(fetchOp));
+    const merged = results.flatMap(r => r?.holidays || []);
+    rawHolidays = shuffle(merged).slice(0, PER_PAGE * 3);
+    total = results.reduce((s, r) => s + (r?.total || 0), 0);
+  } else {
+    // No operator filter — use duration-aware pools for best results
+    // Short (2-4N): mainly Disney, Royal Caribbean, Virgin, Carnival, NCL, MSC
+    // Long (11N+): mainly luxury, river, and expedition lines
+    const SHORT_OPS = [
+      'disney-cruise-line', 'royal-caribbean-international', 'virgin-voyages',
+      'carnival-cruise-lines-operator', 'norwegian-cruise-line', 'msc-cruises',
+    ];
+    const LONG_OPS = [
+      'silversea-cruises', 'seabourn-cruise-line', 'cunard-line',
+      'holland-america-line', 'celebrity-cruises', 'princess-cruises',
+      'amawaterways', 'avalon-waterways', 'uniworld-boutique-river-cruises',
+    ];
 
-  if (!holidays.length && hasDateFilter) {
-    const { date_from, date_to, ...nd } = params;
-    const r2 = await searchHolidays(nd);
-    if (r2?.holidays.length) { holidays = r2.holidays.map((h: any) => enrich(h, imgMap)); total = r2.total; }
-  }
+    const pool = duration === 'short'     ? SHORT_OPS
+               : duration === 'extended'  ? LONG_OPS
+               : duration === 'fortnight' ? LONG_OPS
+               : shuffle(ACTIVE_OPERATORS).slice(0, 8);
 
-  if (!holidays.length && operator === 'any') {
+    const perOp = String(Math.ceil(poolSize / pool.length));
     const results = await Promise.all(
-      shuffle(ACTIVE_OPERATORS).slice(0, 5).map((op: any) => searchHolidays({ ...params, operators: op }))
+      pool.map(op =>
+        V2_ONLY_OPERATORS.has(op)
+          ? searchCruisesV2({ ...baseParams, operators: op, limit: perOp })
+          : searchHolidays({ ...baseParams, operators: op, limit: perOp })
+      )
     );
-    const merged = results.flatMap((r: any) => r?.holidays || []);
-    holidays = shuffle(merged).slice(0, PER_PAGE).map((h: any) => enrich(h, imgMap));
+    const merged = results.flatMap(r => r?.holidays || []);
+    rawHolidays = shuffle(merged).slice(0, poolSize);
     total = results.reduce((s, r) => s + (r?.total || 0), 0);
   }
 
+  // ── Enrich V3 results with detail (date, nights, ship, regions) ────────────
+  // V3 list results only return: holiday_ref, name, holiday, operator, operator_title
+  // We need detail for dates and cruise_nights to display on cards and filter by duration
+  const enrichWithDetail = async (h: any): Promise<any> => {
+    // V2 normalised results already have all fields — skip detail fetch
+    // V2 results have starts_on from the original V2 response
+    if (h.date_from && h.cruise_nights) return enrich(h, imgMap);
+
+    try {
+      const detRes = await fetch(
+        `${BASE}/holidays/${encodeURIComponent(h.holiday_ref)}.json?${new URLSearchParams({ ...auth(), market: 'us' })}`,
+        { headers: HEADERS }
+      );
+      if (!detRes.ok) return enrich(h, imgMap);
+      const det = await detRes.json();
+
+      // Extract first available sailing date from operating_seasons
+      let date_from: string | null = null;
+      let date_to: string | null = null;
+      let ship_title: string | null = null;
+      for (const s of det.operating_seasons || []) {
+        for (const d of s.dates || []) {
+          if (d.date_from) {
+            date_from = d.date_from;
+            date_to   = d.date_to   || null;
+            ship_title = d.ship_title || null;
+            break;
+          }
+        }
+        if (date_from) break;
+      }
+
+      const enriched = {
+        ...h,
+        cruise_nights: det.cruise_nights   || (det.duration_days ? det.duration_days - 1 : null),
+        duration_days: det.duration_days   || (det.cruise_nights ? det.cruise_nights + 1 : null),
+        regions:       det.regions         || [],
+        holiday_type:  det.holiday_type    || [],
+        countries:     det.countries       || [],
+        starts_at:     det.starts_at       || null,
+        ends_at:       det.ends_at         || null,
+        date_from,
+        date_to,
+        ship_title,
+        description:   det.description     || null,
+        rating:        det.rating          || null,
+      };
+      return enrich(enriched, imgMap);
+    } catch {
+      return enrich(h, imgMap);
+    }
+  };
+
+  // Fetch detail in parallel (up to PER_PAGE*3 holidays, but cap parallel at 18)
+  const toEnrich = rawHolidays.slice(0, PER_PAGE * 3);
+  const enriched: any[] = [];
+  const BATCH = 18;
+  for (let i = 0; i < toEnrich.length; i += BATCH) {
+    const batch = await Promise.all(toEnrich.slice(i, i + BATCH).map(enrichWithDetail));
+    enriched.push(...batch);
+  }
+
+  // ── Apply client-side filters on enriched data ─────────────────────────────
+  let holidays = enriched;
+
+  // Duration filter — now works because cruise_nights is populated
   if (duration !== 'any') {
     const [min, max] = DURATION_RANGES[duration] || [0, 999];
-    holidays = holidays.filter((h: any) => { const n = h.cruise_nights ?? h.duration_days ?? 0; return n >= min && n <= max; });
+    holidays = holidays.filter((h: any) => {
+      const n = h.cruise_nights ?? h.duration_days ?? 0;
+      return n >= min && n <= max;
+    });
   }
-  if (operator === 'any') holidays = shuffle(holidays).slice(0, PER_PAGE);
 
-  return NextResponse.json({ holidays, cruises: holidays, total, page, per_page: PER_PAGE });
+  // Trim to page size
+  const start = (page - 1) * PER_PAGE;
+  const paged = holidays.slice(start, start + PER_PAGE);
+  const filteredTotal = duration !== 'any' ? holidays.length : total;
+
+  return NextResponse.json({
+    holidays: paged,
+    cruises:  paged,
+    total: filteredTotal,
+    page,
+    per_page: PER_PAGE,
+    pages: Math.max(1, Math.ceil(filteredTotal / PER_PAGE)),
+  });
 }
+
 
 // ─── POST — action-based (agent dashboard + detail pages) ────────────────────
 export async function POST(req: NextRequest) {
@@ -271,14 +415,72 @@ export async function POST(req: NextRequest) {
       const res = await fetch(`${BASE}/holidays/${encodeURIComponent(params.holiday_ref)}.json?${sp}`, { headers: HEADERS });
       if (!res.ok) throw new Error(`Widgety error: ${res.status}`);
       const data = await res.json();
-      // Flatten dates from operating_seasons for easy consumption
-      data.all_dates = (data.operating_seasons || []).flatMap((s: any) =>
-        (s.dates || []).map((d: any) => ({
-          date_ref: d.date_ref, date_from: d.date_from, date_to: d.date_to,
-          ship_title: d.ship_title, starts_at: d.starts_at, ends_at: d.ends_at,
-          availability: d.availability_string, season: s.operating_season,
-        }))
-      );
+
+      // Extract operator slug from href
+      const operatorSlug = (data.operator || '').split('/operators/')[1]?.replace('.json', '');
+
+      // Fetch all sibling sailings (same route name, same operator) to get more dates
+      // Each holiday = one sailing date, so we need to search by operator and collect all
+      let allDates: any[] = [];
+      try {
+        const siblingParams = new URLSearchParams({
+          ...auth(), market: 'us', limit: '100',
+          ...(operatorSlug ? { operators: operatorSlug } : {}),
+        });
+        const siblingRes = await fetch(`${BASE}/holidays.json?${siblingParams}`, { headers: HEADERS });
+        if (siblingRes.ok) {
+          const siblingData = await siblingRes.json();
+          // Find holidays with the same name (same route, different departures)
+          const routeName = data.name || '';
+          const siblings = (siblingData.holidays || []).filter(
+            (h: any) => h.name === routeName || h.holiday_ref === params.holiday_ref
+          );
+
+          // Fetch detail for each sibling to extract date_refs (parallel, max 20)
+          const detailFetches = siblings.slice(0, 20).map(async (h: any) => {
+            try {
+              const detRes = await fetch(
+                `${BASE}/holidays/${encodeURIComponent(h.holiday_ref)}.json?${new URLSearchParams({ ...auth(), market: 'us' })}`,
+                { headers: HEADERS }
+              );
+              if (!detRes.ok) return [];
+              const det = await detRes.json();
+              return (det.operating_seasons || []).flatMap((s: any) =>
+                (s.dates || []).map((d: any) => ({
+                  date_ref:     d.date_ref,
+                  date_from:    d.date_from,
+                  date_to:      d.date_to,
+                  ship_title:   d.ship_title,
+                  starts_at:    d.starts_at,
+                  ends_at:      d.ends_at,
+                  availability: d.availability_string,
+                  season:       s.operating_season,
+                  holiday_ref:  h.holiday_ref,
+                  holiday_name: h.name,
+                }))
+              );
+            } catch { return []; }
+          });
+
+          const results = await Promise.all(detailFetches);
+          allDates = results.flat()
+            .filter(d => d.date_ref)
+            .sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime());
+        }
+      } catch { /* non-fatal — fall back to single holiday dates */ }
+
+      // Fall back to current holiday's own dates if sibling fetch failed
+      if (allDates.length === 0) {
+        allDates = (data.operating_seasons || []).flatMap((s: any) =>
+          (s.dates || []).map((d: any) => ({
+            date_ref: d.date_ref, date_from: d.date_from, date_to: d.date_to,
+            ship_title: d.ship_title, starts_at: d.starts_at, ends_at: d.ends_at,
+            availability: d.availability_string, season: s.operating_season,
+          }))
+        );
+      }
+
+      data.all_dates = allDates;
       return NextResponse.json(data);
     }
 
