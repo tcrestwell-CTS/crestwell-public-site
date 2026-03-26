@@ -20,6 +20,7 @@ const navItems = [
   { label: 'Cruise Lines', href: '/cruise-lines' },
     { label: 'Luxury Collection', href: '/luxury-cruises' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
+  { label: 'Group Travel', href: '/group-travel' },
   { label: 'Travel Tips', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'FAQ', href: '/faq' },
