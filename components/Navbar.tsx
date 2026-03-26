@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 const DESTINATIONS = [
   { label: 'All Destinations', href: '/destinations', icon: '🗺️' },
+  { label: 'Featured Trips', href: '/trips', icon: '⭐' },
   { label: 'Bahamas', href: '/destinations/bahamas', icon: '🏝️' },
   { label: 'Caribbean', href: '/destinations/caribbean', icon: '🌊' },
   { label: 'Mexico', href: '/destinations/mexico', icon: '🌵' },
@@ -54,7 +55,7 @@ export default function Navbar() {
     setMenuOpen(false);
   }, [pathname]);
 
-  const isDestActive = pathname?.startsWith('/destinations');
+  const isDestActive = pathname?.startsWith('/destinations') || pathname?.startsWith('/trips');
 
   return (
     <nav
