@@ -145,14 +145,14 @@ function BrandCard({ brand }: { brand: typeof BRANDS[0] }) {
         <div style={{
           position: 'absolute', top: 20, left: 20,
           padding: '5px 14px',
-          background: 'rgba(201,168,76,0.12)',
-          border: '1px solid rgba(201,168,76,0.35)',
+          background: 'rgba(201,168,76,0.25)',
+          border: '1px solid rgba(201,168,76,0.7)',
           backdropFilter: 'blur(8px)',
         }}>
           <span style={{
             fontSize: '0.6rem', letterSpacing: '0.16em',
             textTransform: 'uppercase', color: 'var(--gold)',
-            fontFamily: 'var(--font-body)', fontWeight: 500,
+            fontFamily: 'var(--font-body)', fontWeight: 700,
           }}>
             {brand.category}
           </span>
