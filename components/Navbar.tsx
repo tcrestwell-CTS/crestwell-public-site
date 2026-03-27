@@ -14,25 +14,53 @@ const DESTINATIONS = [
   { label: 'Europe', href: '/destinations/europe', icon: '' },
 ];
 
+const CRUISES = [
+  { label: 'All Cruises', href: '/cruises' },
+  { label: 'Cruise Lines', href: '/cruise-lines' },
+  { label: 'Luxury Collection', href: '/luxury-cruises' },
+];
+
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Cruises', href: '/cruises' },
-  { label: 'Cruise Lines', href: '/cruise-lines' },
-    { label: 'Luxury Collection', href: '/luxury-cruises' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Group Travel', href: '/group-travel' },
   { label: 'Travel Tips', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'FAQ', href: '/faq' },
-    { label: 'Contact', href: '/contact' },
+  { label: 'Contact', href: '/contact' },
 ];
+
+// ─── Shared dropdown styles ───────────────────────────────────────────────────
+
+const dropdownBox: React.CSSProperties = {
+  position: 'absolute', top: 'calc(100% + 14px)',
+  left: '50%', transform: 'translateX(-50%)',
+  background: 'rgba(10, 20, 34, 0.99)',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(201, 168, 76, 0.25)',
+  minWidth: 210, zIndex: 200,
+  boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+  animation: 'dropdownFade 0.15s ease',
+};
+
+const dropdownArrow: React.CSSProperties = {
+  position: 'absolute', top: -6, left: '50%',
+  transform: 'translateX(-50%) rotate(45deg)',
+  width: 10, height: 10,
+  background: 'rgba(10, 20, 34, 0.99)',
+  border: '1px solid rgba(201, 168, 76, 0.25)',
+  borderRight: 'none', borderBottom: 'none',
+};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
+  const [cruiseOpen, setCruiseOpen] = useState(false);
   const [mobileDestOpen, setMobileDestOpen] = useState(false);
+  const [mobileCruiseOpen, setMobileCruiseOpen] = useState(false);
   const destRef = useRef<HTMLDivElement>(null);
+  const cruiseRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -41,11 +69,11 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (destRef.current && !destRef.current.contains(e.target as Node)) {
-        setDestOpen(false);
-      }
+      if (destRef.current && !destRef.current.contains(e.target as Node)) setDestOpen(false);
+      if (cruiseRef.current && !cruiseRef.current.contains(e.target as Node)) setCruiseOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -53,21 +81,42 @@ export default function Navbar() {
 
   useEffect(() => {
     setDestOpen(false);
+    setCruiseOpen(false);
     setMenuOpen(false);
   }, [pathname]);
 
   const isDestActive = pathname?.startsWith('/destinations') || pathname?.startsWith('/trips');
+  const isCruiseActive = pathname?.startsWith('/cruises') || pathname?.startsWith('/cruise-lines') || pathname?.startsWith('/luxury-cruises');
 
-  return (
-    <nav
+  const dropdownTrigger = (label: string, isActive: boolean, isOpen: boolean, onClick: () => void, onHover: () => void) => (
+    <button
+      onClick={onClick}
+      onMouseEnter={onHover}
       style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        transition: 'all 0.4s ease',
-        background: scrolled ? 'rgba(13, 27, 42, 0.97)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(201, 168, 76, 0.15)' : 'none',
+        background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+        display: 'flex', alignItems: 'center', gap: 4,
+        fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase',
+        fontFamily: 'var(--font-body)', fontWeight: 400,
+        color: isActive ? 'var(--gold)' : 'rgba(255,255,255,0.75)',
+        transition: 'color 0.2s',
       }}
     >
+      {label}
+      <svg width="10" height="7" viewBox="0 0 10 7" fill="none"
+        style={{ transition: 'transform 0.2s', transform: isOpen ? 'rotate(180deg)' : 'none', opacity: 0.7 }}>
+        <path d="M1 1.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+
+  return (
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+      transition: 'all 0.4s ease',
+      background: scrolled ? 'rgba(13, 27, 42, 0.97)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(12px)' : 'none',
+      borderBottom: scrolled ? '1px solid rgba(201, 168, 76, 0.15)' : 'none',
+    }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
 
@@ -80,63 +129,60 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 28 }} className="desktop-nav">
 
-            {/* Items before Destinations */}
-            {navItems.slice(0, 3).map((item) => (
-              <Link key={item.href} href={item.href} className="nav-link">{item.label}</Link>
-            ))}
+            {/* Home */}
+            <Link href="/" className="nav-link">Home</Link>
 
-            {/* Destinations dropdown */}
+            {/* ── Cruises dropdown ── */}
+            <div ref={cruiseRef} style={{ position: 'relative' }}>
+              {dropdownTrigger('Cruises', isCruiseActive, cruiseOpen, () => setCruiseOpen(o => !o), () => setCruiseOpen(true))}
+
+              {cruiseOpen && (
+                <div onMouseLeave={() => setCruiseOpen(false)} style={dropdownBox}>
+                  <div style={dropdownArrow} />
+                  <div style={{ padding: '10px 0 8px', borderBottom: '1px solid rgba(201,168,76,0.12)', marginBottom: 4 }}>
+                    <span style={{ padding: '0 20px', fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
+                      Cruise Vacations
+                    </span>
+                  </div>
+                  {CRUISES.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setCruiseOpen(false)}
+                      style={{
+                        display: 'block', padding: '11px 20px', textDecoration: 'none',
+                        borderLeft: pathname === item.href ? '2px solid var(--gold)' : '2px solid transparent',
+                        background: pathname === item.href ? 'rgba(201,168,76,0.08)' : 'transparent',
+                        transition: 'background 0.15s, border-color 0.15s',
+                      }}
+                      onMouseEnter={e => { if (pathname !== item.href) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = pathname === item.href ? 'rgba(201,168,76,0.08)' : 'transparent'; }}
+                    >
+                      <span style={{
+                        fontSize: '0.84rem', letterSpacing: '0.03em',
+                        color: pathname === item.href ? 'var(--gold)' : 'rgba(255,255,255,0.85)',
+                        fontFamily: 'var(--font-body)',
+                      }}>
+                        {item.label}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* ── Destinations dropdown ── */}
             <div ref={destRef} style={{ position: 'relative' }}>
-              <button
-                onClick={() => setDestOpen(!destOpen)}
-                onMouseEnter={() => setDestOpen(true)}
-                style={{
-                  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                  display: 'flex', alignItems: 'center', gap: 4,
-                  fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase',
-                  fontFamily: 'var(--font-body)', fontWeight: 400,
-                  color: isDestActive ? 'var(--gold)' : 'rgba(255,255,255,0.75)',
-                  transition: 'color 0.2s',
-                }}
-              >
-                Destinations
-                <svg width="10" height="7" viewBox="0 0 10 7" fill="none" style={{ transition: 'transform 0.2s', transform: destOpen ? 'rotate(180deg)' : 'none', opacity: 0.7 }}>
-                  <path d="M1 1.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+              {dropdownTrigger('Destinations', isDestActive, destOpen, () => setDestOpen(o => !o), () => setDestOpen(true))}
 
               {destOpen && (
-                <div
-                  onMouseLeave={() => setDestOpen(false)}
-                  style={{
-                    position: 'absolute', top: 'calc(100% + 14px)',
-                    left: '50%', transform: 'translateX(-50%)',
-                    background: 'rgba(10, 20, 34, 0.99)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(201, 168, 76, 0.25)',
-                    minWidth: 230, zIndex: 200,
-                    boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-                    animation: 'dropdownFade 0.15s ease',
-                  }}
-                >
-                  {/* Pointer arrow */}
-                  <div style={{
-                    position: 'absolute', top: -6, left: '50%',
-                    transform: 'translateX(-50%) rotate(45deg)',
-                    width: 10, height: 10,
-                    background: 'rgba(10, 20, 34, 0.99)',
-                    border: '1px solid rgba(201, 168, 76, 0.25)',
-                    borderRight: 'none', borderBottom: 'none',
-                  }} />
-
-                  {/* Header */}
-                  <div style={{ padding: '12px 20px 8px', borderBottom: '1px solid rgba(201,168,76,0.15)' }}>
-                    <span style={{ fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
+                <div onMouseLeave={() => setDestOpen(false)} style={{ ...dropdownBox, minWidth: 230 }}>
+                  <div style={dropdownArrow} />
+                  <div style={{ padding: '10px 20px 8px', borderBottom: '1px solid rgba(201,168,76,0.12)' }}>
+                    <span style={{ fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
                       Explore by Destination
                     </span>
                   </div>
-
-                  {/* Destination links */}
                   <div style={{ padding: '6px 0 8px' }}>
                     {DESTINATIONS.map((dest, i) => (
                       <Link
@@ -155,18 +201,16 @@ export default function Navbar() {
                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = pathname === dest.href ? 'rgba(201,168,76,0.08)' : 'transparent'; }}
                       >
                         <span style={{ fontSize: '1rem', lineHeight: 1, flexShrink: 0 }}>{dest.icon}</span>
-                        <div>
-                          <span style={{
-                            fontSize: i === 0 ? '0.7rem' : '0.82rem',
-                            letterSpacing: i === 0 ? '0.1em' : '0.03em',
-                            textTransform: i === 0 ? 'uppercase' : 'none',
-                            color: pathname === dest.href ? 'var(--gold)' : i === 0 ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.85)',
-                            fontFamily: 'var(--font-body)',
-                            fontWeight: i === 0 ? 500 : 400,
-                          }}>
-                            {dest.label}
-                          </span>
-                        </div>
+                        <span style={{
+                          fontSize: i === 0 ? '0.7rem' : '0.84rem',
+                          letterSpacing: i === 0 ? '0.1em' : '0.03em',
+                          textTransform: i === 0 ? 'uppercase' : 'none',
+                          color: pathname === dest.href ? 'var(--gold)' : i === 0 ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.85)',
+                          fontFamily: 'var(--font-body)',
+                          fontWeight: i === 0 ? 500 : 400,
+                        }}>
+                          {dest.label}
+                        </span>
                       </Link>
                     ))}
                   </div>
@@ -174,8 +218,8 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Items after Destinations */}
-            {navItems.slice(3).map((item) => (
+            {/* Remaining nav items */}
+            {navItems.slice(1).map((item) => (
               <Link key={item.href} href={item.href} className="nav-link">{item.label}</Link>
             ))}
 
@@ -205,15 +249,51 @@ export default function Navbar() {
           }}>
             <div style={{ padding: '24px 32px 40px' }}>
 
-              {navItems.slice(0, 3).map((item) => (
-                <Link key={item.href} href={item.href} className="nav-link"
-                  style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '1rem', letterSpacing: '0.05em' }}
-                  onClick={() => setMenuOpen(false)}>
-                  {item.label}
-                </Link>
-              ))}
+              <Link href="/" className="nav-link"
+                style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '1rem', letterSpacing: '0.05em' }}
+                onClick={() => setMenuOpen(false)}>
+                Home
+              </Link>
 
-              {/* Destinations accordion for mobile */}
+              {/* Cruises accordion */}
+              <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <button
+                  onClick={() => setMobileCruiseOpen(!mobileCruiseOpen)}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    width: '100%', padding: '16px 0', background: 'none', border: 'none',
+                    cursor: 'pointer', fontSize: '1rem', letterSpacing: '0.05em',
+                    fontFamily: 'var(--font-body)',
+                    color: isCruiseActive ? 'var(--gold)' : 'rgba(255,255,255,0.75)',
+                  }}
+                >
+                  Cruises
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style={{ transition: 'transform 0.25s', transform: mobileCruiseOpen ? 'rotate(180deg)' : 'none', opacity: 0.6 }}>
+                    <path d="M1 1.5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                {mobileCruiseOpen && (
+                  <div style={{ paddingBottom: 12, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                    {CRUISES.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        style={{
+                          display: 'block', padding: '13px 16px', textDecoration: 'none',
+                          borderLeft: pathname === item.href ? '2px solid var(--gold)' : '2px solid transparent',
+                          color: pathname === item.href ? 'var(--gold)' : 'rgba(255,255,255,0.7)',
+                          fontSize: '0.92rem', fontFamily: 'var(--font-body)',
+                        }}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Destinations accordion */}
               <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                 <button
                   onClick={() => setMobileDestOpen(!mobileDestOpen)}
@@ -230,7 +310,6 @@ export default function Navbar() {
                     <path d="M1 1.5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
-
                 {mobileDestOpen && (
                   <div style={{ paddingBottom: 12, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                     {DESTINATIONS.map((dest) => (
@@ -258,7 +337,8 @@ export default function Navbar() {
                 )}
               </div>
 
-              {navItems.slice(3).map((item) => (
+              {/* Remaining items */}
+              {navItems.slice(1).map((item) => (
                 <Link key={item.href} href={item.href} className="nav-link"
                   style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '1rem', letterSpacing: '0.05em' }}
                   onClick={() => setMenuOpen(false)}>
