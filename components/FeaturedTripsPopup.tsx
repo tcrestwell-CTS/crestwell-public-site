@@ -64,20 +64,19 @@ export default function FeaturedTripsPopup() {
       {/* ── Panel ── */}
       <div style={{
         position: 'fixed',
-        bottom: 'clamp(16px, 4vw, 32px)',
-        right:  'clamp(16px, 4vw, 32px)',
+        top: '50%',
+        left: '50%',
         zIndex: 901,
-        width: 'clamp(300px, 90vw, 420px)',
+        width: 'clamp(300px, 90vw, 460px)',
         background: 'rgba(10, 20, 34, 0.98)',
         border: '1px solid rgba(201, 168, 76, 0.35)',
         boxShadow: '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.08)',
         overflow: 'hidden',
-        // Enter: slide up + fade in; Exit: slide down + fade out
         transform: animIn && !animOut
-          ? 'translateY(0) scale(1)'
+          ? 'translate(-50%, -50%) scale(1)'
           : animOut
-            ? 'translateY(24px) scale(0.97)'
-            : 'translateY(40px) scale(0.96)',
+            ? 'translate(-50%, -50%) scale(0.95)'
+            : 'translate(-50%, -44%) scale(0.96)',
         opacity: animIn && !animOut ? 1 : 0,
         transition: animOut
           ? 'transform 0.38s cubic-bezier(0.4,0,1,1), opacity 0.38s ease'
