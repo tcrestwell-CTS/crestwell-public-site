@@ -22,7 +22,8 @@ const LEVEL_LABEL: Record<string, string> = {
   '4': 'Do Not Travel',
 };
 
-export default function TravelAdvisoryTicker() {
+// speed: seconds per advisory item — lower = faster. Default 4, try 1.5–2 for fast.
+export default function TravelAdvisoryTicker({ speed = 2 }: { speed?: number }) {
   const [advisories, setAdvisories] = useState<Advisory[]>([]);
   const [paused, setPaused]         = useState(false);
   const [loading, setLoading]       = useState(true);
@@ -85,7 +86,7 @@ export default function TravelAdvisoryTicker() {
         style={{
           display: 'flex', alignItems: 'center', gap: 0,
           paddingLeft: 200, // space for the label
-          animation: `advisoryScroll ${advisories.length * 4}s linear infinite`,
+          animation: `advisoryScroll ${advisories.length * speed}s linear infinite`,
           animationPlayState: paused ? 'paused' : 'running',
           whiteSpace: 'nowrap',
         }}
