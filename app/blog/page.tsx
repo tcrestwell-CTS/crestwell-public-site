@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import TravelAdvisoryTicker from '@/components/TravelAdvisoryTicker';
 import { createClient } from '@supabase/supabase-js';
 
 type BlogPost = {
@@ -96,6 +97,9 @@ export default function BlogPage() {
           </p>
         </div>
       </section>
+
+      {/* Travel Advisory Ticker */}
+      <TravelAdvisoryTicker />
 
       {/* Posts */}
       <section style={{ background: 'var(--cream)', padding: '64px 32px' }}>
