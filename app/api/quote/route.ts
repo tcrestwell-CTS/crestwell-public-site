@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function POST(request: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -22,14 +23,29 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Save to Supabase
-    await supabase.from('quote_requests').insert([{
+    // Save to Supabase — capture id to pass to AI agent
+    const { data: insertedLead } = await supabase.from('quote_requests').insert([{
       first_name, last_name, email, phone,
       trip_type, destination, departure_date,
       travelers_adults, travelers_children,
       budget, flexibility, message,
       status: 'new',
-    }]);
+    }]).select('id').single();
+
+    // ── Fire AI qualification agent (non-blocking) ──
+    // Uses CW_AGENT_SECRET shared secret — no service role key needed in Vercel
+    if (insertedLead?.id) {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      fetch(`${supabaseUrl}/functions/v1/qualify-lead`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-agent-secret': process.env.CW_AGENT_SECRET || '',
+        },
+        body: JSON.stringify({ lead_id: insertedLead.id }),
+      }).catch(err => console.error('AI qualification error:', err));
+      // Non-blocking — user gets instant confirmation, agent runs in background
+    }
 
     // Send notification to Tim
     await resend.emails.send({
