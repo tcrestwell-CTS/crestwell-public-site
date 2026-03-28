@@ -33,8 +33,9 @@ export async function POST(request: NextRequest) {
     }]).select('id').single();
 
     // ── Fire AI qualification agent (non-blocking) ──
-    // Uses CW_AGENT_SECRET shared secret — no service role key needed in Vercel
-    if (insertedLead?.id) {
+    // Works with or without CW_AGENT_SECRET in Vercel env vars
+    const leadId = insertedLead?.id;
+    if (leadId) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       fetch(`${supabaseUrl}/functions/v1/qualify-lead`, {
         method: 'POST',
@@ -42,9 +43,12 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
           'x-agent-secret': process.env.CW_AGENT_SECRET || '',
         },
-        body: JSON.stringify({ lead_id: insertedLead.id }),
-      }).catch(err => console.error('AI qualification error:', err));
-      // Non-blocking — user gets instant confirmation, agent runs in background
+        body: JSON.stringify({ lead_id: leadId }),
+      })
+        .then(r => r.json().then(d => console.log('Agent response:', r.status, d)))
+        .catch(err => console.error('AI qualification error:', err));
+    } else {
+      console.warn('No lead_id returned from insert — agent not fired. Check RLS SELECT policy on quote_requests.');
     }
 
     // Send notification to Tim
