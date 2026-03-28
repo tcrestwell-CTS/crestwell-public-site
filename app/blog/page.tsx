@@ -99,7 +99,7 @@ export default function BlogPage() {
       </section>
 
       {/* Travel Advisory Ticker */}
-      <TravelAdvisoryTicker />
+      <TravelAdvisoryTicker speed={1.5} />
 
       {/* Posts */}
       <section style={{ background: 'var(--cream)', padding: '64px 32px' }}>
