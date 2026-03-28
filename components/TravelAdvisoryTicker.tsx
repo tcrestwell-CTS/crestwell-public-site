@@ -49,9 +49,64 @@ export default function TravelAdvisoryTicker({ speed = 2 }: { speed?: number }) 
       background: 'rgba(13,27,42,0.95)',
       borderTop:    '1px solid rgba(201,168,76,0.2)',
       borderBottom: '1px solid rgba(201,168,76,0.2)',
-      overflow: 'hidden',
-      position: 'relative',
     }}>
+      {/* ── Color key ── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '7px clamp(16px, 4vw, 24px)',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        flexWrap: 'wrap', gap: 8,
+      }}>
+        <span style={{
+          fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)',
+        }}>
+          U.S. State Dept · Advisory Levels
+        </span>
+        <div style={{ display: 'flex', gap: 'clamp(10px, 3vw, 24px)', flexWrap: 'wrap' }}>
+          {[
+            { level: '1', color: '#22c55e', label: 'Normal Precautions' },
+            { level: '2', color: '#f59e0b', label: 'Exercise Caution' },
+            { level: '3', color: '#f97316', label: 'Reconsider Travel' },
+            { level: '4', color: '#ef4444', label: 'Do Not Travel' },
+          ].map(k => (
+            <div key={k.level} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                width: 24, height: 16, borderRadius: 2,
+                background: `${k.color}20`,
+                border: `1px solid ${k.color}50`,
+                fontSize: '0.5rem', fontWeight: 700, color: k.color,
+                fontFamily: 'var(--font-body)', letterSpacing: '0.04em',
+              }}>
+                L{k.level}
+              </span>
+              <span style={{
+                fontSize: '0.65rem', color: 'rgba(255,255,255,0.45)',
+                fontFamily: 'var(--font-body)', whiteSpace: 'nowrap',
+              }}>
+                {k.label}
+              </span>
+            </div>
+          ))}
+        </div>
+        <a
+          href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html"
+          target="_blank" rel="noopener noreferrer"
+          style={{
+            fontSize: '0.58rem', color: 'rgba(255,255,255,0.25)',
+            fontFamily: 'var(--font-body)', textDecoration: 'none',
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+            borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 1,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          travel.state.gov →
+        </a>
+      </div>
+
+      {/* ── Scrolling ticker ── */}
+      <div style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Label */}
       <div style={{
         position: 'absolute', left: 0, top: 0, bottom: 0, zIndex: 10,
@@ -152,6 +207,7 @@ export default function TravelAdvisoryTicker({ speed = 2 }: { speed?: number }) 
           100% { transform: translateX(-50%); }
         }
       `}</style>
+      </div>
     </div>
   );
 }
