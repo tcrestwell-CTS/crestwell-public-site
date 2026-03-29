@@ -6,8 +6,19 @@ import { useSearchParams } from 'next/navigation';
 import { getAttribution } from '@/lib/utm-capture';
 
 const payload = {
-  ...existingFormFields,
-  ...getAttribution(),  // adds gclid, utm_source, utm_campaign, etc.
+  first_name,
+  last_name,
+  email,
+  phone,
+  trip_type,
+  destination,
+  departure_date,
+  travelers_adults,
+  travelers_children,
+  budget,
+  flexibility,
+  message,
+  ...getAttribution(),
 };
 
 const tripTypes = [
