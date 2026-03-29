@@ -4,17 +4,6 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FeaturedTripsPopup from '@/components/FeaturedTripsPopup';
-import Script from 'next/script';
-
-<Script id="utm-capture" strategy="afterInteractive">{`
-  (function() {
-    try {
-      const p = new URLSearchParams(window.location.search);
-      ['gclid','utm_source','utm_medium','utm_campaign','utm_term','utm_content']
-        .forEach(function(k) { const v = p.get(k); if (v) localStorage.setItem(k, v); });
-    } catch(e) {}
-  })();
-`}</Script>
 
 export const metadata: Metadata = {
   title: {
@@ -64,6 +53,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             });
           `}
         </Script>
+       <Script id="utm-capture" strategy="afterInteractive">{`
+               (function() {
+               try {
+               const p = new URLSearchParams(window.location.search);
+               ['gclid','utm_source','utm_medium','utm_campaign','utm_term','utm_content']
+                 .forEach(function(k) { const v = p.get(k); if (v) localStorage.setItem(k, v); });
+           } catch(e) {}
+       })();
+     `}
+     </Script>
       </head>
       <body>
         <Navbar />
