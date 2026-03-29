@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getAttribution } from '@/lib/utm-capture';
 
+const payload = {
+  ...existingFormFields,
+  ...getAttribution(),  // adds gclid, utm_source, utm_campaign, etc.
+};
 export async function POST(request: NextRequest) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
