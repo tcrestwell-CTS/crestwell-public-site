@@ -5,22 +5,6 @@ import { EmailField, HoneypotField } from '@/components/EmailField';
 import { useSearchParams } from 'next/navigation';
 import { getAttribution } from '@/lib/utm-capture';
 
-const payload = {
-  first_name,
-  last_name,
-  email,
-  phone,
-  trip_type,
-  destination,
-  departure_date,
-  travelers_adults,
-  travelers_children,
-  budget,
-  flexibility,
-  message,
-  ...getAttribution(),
-};
-
 const tripTypes = [
   'Cruise Vacation',
   'All-Inclusive Resort',
@@ -54,7 +38,6 @@ const initialForm = {
   budget: '',
   flexibility: 'flexible',
   message: '',
-  // Pre-filled from source page — not shown as editable fields, appended to submission
   _cruise_name: '',
   _cruise_line: '',
   _cruise_ship: '',
@@ -68,7 +51,6 @@ const initialForm = {
 function RequestQuoteForm() {
   const searchParams = useSearchParams();
   const [form, setForm] = useState(() => {
-    // Build a pre-filled message from cruise/resort context if provided
     const cruiseName   = searchParams.get('cruise_name') || '';
     const cruiseLine   = searchParams.get('line') || '';
     const cruiseShip   = searchParams.get('ship') || '';
@@ -77,7 +59,6 @@ function RequestQuoteForm() {
     const resortName   = searchParams.get('resort') || searchParams.get('destination') || '';
     const tripType     = searchParams.get('trip_type') || 'Cruise Vacation';
 
-    // Auto-compose message from available context
     const parts: string[] = [];
     if (cruiseName)  parts.push(`Cruise: ${cruiseName}`);
     if (cruiseLine)  parts.push(`Line: ${cruiseLine}`);
@@ -93,25 +74,24 @@ function RequestQuoteForm() {
       parts.push(`Resort Brand: ${resortName}`);
     }
 
-    const autoMessage = parts.length > 0 ? parts.join('\n') : '';
-
     return {
       ...initialForm,
-      trip_type:       tripType,
-      destination:     searchParams.get('destination') || '',
-      departure_date:  sailingDate.slice(0, 10) || '',
+      trip_type:        tripType,
+      destination:      searchParams.get('destination') || '',
+      departure_date:   sailingDate.slice(0, 10) || '',
       travelers_adults: parseInt(searchParams.get('travelers') || '2'),
-      message:         autoMessage,
-      _cruise_name:    cruiseName,
-      _cruise_line:    cruiseLine,
-      _cruise_ship:    cruiseShip,
+      message:          parts.length > 0 ? parts.join('\n') : '',
+      _cruise_name:     cruiseName,
+      _cruise_line:     cruiseLine,
+      _cruise_ship:     cruiseShip,
       _cruise_duration: cruiseDur,
-      _cruise_id:      searchParams.get('cruise_id') || '',
-      _sailing_date:   sailingDate,
-      _resort_name:    resortName,
-      _resort_tag:     searchParams.get('resort_tag') || '',
+      _cruise_id:       searchParams.get('cruise_id') || '',
+      _sailing_date:    sailingDate,
+      _resort_name:     resortName,
+      _resort_tag:      searchParams.get('resort_tag') || '',
     };
   });
+
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -131,7 +111,7 @@ function RequestQuoteForm() {
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, ...getAttribution() }),
       });
       if (!res.ok) throw new Error('Something went wrong. Please try again or email us directly.');
       setSubmitted(true);
@@ -171,7 +151,6 @@ function RequestQuoteForm() {
 
   return (
     <>
-      {/* Hero */}
       <section style={{ background: 'var(--navy)', paddingTop: 140, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.2 }} />
         <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
@@ -185,7 +164,6 @@ function RequestQuoteForm() {
         </div>
       </section>
 
-      {/* Form */}
       <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
@@ -203,11 +181,11 @@ function RequestQuoteForm() {
                 )}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
                   {[
-                    form._cruise_line   && `✈ ${form._cruise_line}`,
-                    form._cruise_ship   && `🚢 ${form._cruise_ship}`,
+                    form._cruise_line     && `✈ ${form._cruise_line}`,
+                    form._cruise_ship     && `🚢 ${form._cruise_ship}`,
                     form._cruise_duration && `⏱ ${form._cruise_duration}`,
-                    form._sailing_date  && (() => { try { return `📅 ${new Date(form._sailing_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`; } catch { return `📅 ${form._sailing_date}`; } })(),
-                    form.destination    && !form._cruise_name && `📍 ${form.destination}`,
+                    form._sailing_date    && (() => { try { return `📅 ${new Date(form._sailing_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`; } catch { return `📅 ${form._sailing_date}`; } })(),
+                    form.destination      && !form._cruise_name && `📍 ${form.destination}`,
                     searchParams.get('resort_tag') && `🏷 ${searchParams.get('resort_tag')}`,
                   ].filter(Boolean).map((tag, i) => (
                     <span key={i} style={{ padding: '4px 12px', background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.25)', color: 'rgba(255,255,255,0.75)', fontSize: '0.72rem' }}>
@@ -219,8 +197,6 @@ function RequestQuoteForm() {
             </div>
           )}
 
-
-          {/* Financing nudge */}
           <div style={{ background: 'var(--navy)', padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: '1.1rem' }}>💳</span>
@@ -233,7 +209,6 @@ function RequestQuoteForm() {
             </Link>
           </div>
 
-          {/* Progress Steps */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 56 }}>
             {[1, 2, 3].map((s) => (
               <div key={s} style={{ display: 'flex', alignItems: 'center', flex: s < 3 ? 1 : 'none' }}>
@@ -244,8 +219,7 @@ function RequestQuoteForm() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '0.75rem', fontWeight: 500,
                   color: step >= s ? 'var(--navy)' : 'var(--slate)',
-                  transition: 'all 0.3s',
-                  flexShrink: 0,
+                  transition: 'all 0.3s', flexShrink: 0,
                 }}>
                   {step > s ? '✓' : s}
                 </div>
@@ -266,40 +240,21 @@ function RequestQuoteForm() {
                 <div>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Trip Details</h2>
                   <p style={{ color: 'var(--slate)', fontSize: '0.875rem', marginBottom: 36 }}>Tell us what kind of trip you're dreaming about.</p>
-
                   <div style={{ display: 'grid', gap: 24 }}>
                     <div>
                       <label className="form-label">Type of Trip *</label>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
                         {tripTypes.map(t => (
-                          <button
-                            key={t}
-                            type="button"
-                            onClick={() => update('trip_type', t)}
-                            style={{
-                              padding: '12px 16px',
-                              border: form.trip_type === t ? '2px solid var(--gold)' : '2px solid #e2e8f0',
-                              background: form.trip_type === t ? 'var(--gold-pale)' : 'white',
-                              color: form.trip_type === t ? 'var(--navy)' : 'var(--text-secondary)',
-                              fontSize: '0.8rem',
-                              fontFamily: 'var(--font-body)',
-                              cursor: 'pointer',
-                              textAlign: 'left',
-                              transition: 'all 0.2s',
-                              fontWeight: form.trip_type === t ? 500 : 400,
-                            }}
-                          >
+                          <button key={t} type="button" onClick={() => update('trip_type', t)} style={{ padding: '12px 16px', border: form.trip_type === t ? '2px solid var(--gold)' : '2px solid #e2e8f0', background: form.trip_type === t ? 'var(--gold-pale)' : 'white', color: form.trip_type === t ? 'var(--navy)' : 'var(--text-secondary)', fontSize: '0.8rem', fontFamily: 'var(--font-body)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s', fontWeight: form.trip_type === t ? 500 : 400 }}>
                             {t}
                           </button>
                         ))}
                       </div>
                     </div>
-
                     <div>
                       <label className="form-label">Destination / Area of Interest</label>
                       <input className="form-input" type="text" placeholder="e.g. Caribbean, Mediterranean, Not sure yet" value={form.destination} onChange={e => update('destination', e.target.value)} />
                     </div>
-
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                       <div>
                         <label className="form-label">Preferred Departure Date</label>
@@ -315,7 +270,6 @@ function RequestQuoteForm() {
                         </select>
                       </div>
                     </div>
-
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                       <div>
                         <label className="form-label">Adult Travelers (18+)</label>
@@ -326,7 +280,6 @@ function RequestQuoteForm() {
                         <input className="form-input" type="number" min={0} max={20} value={form.travelers_children} onChange={e => update('travelers_children', parseInt(e.target.value))} />
                       </div>
                     </div>
-
                     <div>
                       <label className="form-label">Approximate Budget</label>
                       <select className="form-input" value={form.budget} onChange={e => update('budget', e.target.value)}>
@@ -335,15 +288,8 @@ function RequestQuoteForm() {
                       </select>
                     </div>
                   </div>
-
                   <div style={{ marginTop: 40, display: 'flex', justifyContent: 'flex-end' }}>
-                    <button
-                      type="button"
-                      className="btn-primary"
-                      onClick={() => setStep(2)}
-                      disabled={!form.trip_type}
-                      style={{ opacity: !form.trip_type ? 0.5 : 1, cursor: !form.trip_type ? 'not-allowed' : 'pointer' }}
-                    >
+                    <button type="button" className="btn-primary" onClick={() => setStep(2)} disabled={!form.trip_type} style={{ opacity: !form.trip_type ? 0.5 : 1, cursor: !form.trip_type ? 'not-allowed' : 'pointer' }}>
                       Continue →
                     </button>
                   </div>
@@ -354,7 +300,6 @@ function RequestQuoteForm() {
                 <div>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Your Information</h2>
                   <p style={{ color: 'var(--slate)', fontSize: '0.875rem', marginBottom: 36 }}>How can we reach you with your personalized quote?</p>
-
                   <div style={{ display: 'grid', gap: 24 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                       <div>
@@ -367,14 +312,7 @@ function RequestQuoteForm() {
                       </div>
                     </div>
                     <div>
-                      <EmailField
-                        value={form.email}
-                        onChange={v => update('email', v)}
-                        required
-                        placeholder="jane@email.com"
-                        label="Email Address"
-                        inputClassName="form-input"
-                      />
+                      <EmailField value={form.email} onChange={v => update('email', v)} required placeholder="jane@email.com" label="Email Address" inputClassName="form-input" />
                     </div>
                     <div>
                       <label className="form-label">Phone Number</label>
@@ -385,18 +323,11 @@ function RequestQuoteForm() {
                       <textarea className="form-input" rows={4} placeholder="Special occasions, accessibility needs, preferences..." value={form.message} onChange={e => update('message', e.target.value)} style={{ resize: 'vertical' }} />
                     </div>
                   </div>
-
                   <div style={{ marginTop: 40, display: 'flex', justifyContent: 'space-between' }}>
                     <button type="button" onClick={() => setStep(1)} style={{ background: 'none', border: 'none', color: 'var(--slate)', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
                       ← Back
                     </button>
-                    <button
-                      type="button"
-                      className="btn-primary"
-                      onClick={() => setStep(3)}
-                      disabled={!form.first_name || !form.last_name || !form.email}
-                      style={{ opacity: (!form.first_name || !form.last_name || !form.email) ? 0.5 : 1, cursor: (!form.first_name || !form.last_name || !form.email) ? 'not-allowed' : 'pointer' }}
-                    >
+                    <button type="button" className="btn-primary" onClick={() => setStep(3)} disabled={!form.first_name || !form.last_name || !form.email} style={{ opacity: (!form.first_name || !form.last_name || !form.email) ? 0.5 : 1, cursor: (!form.first_name || !form.last_name || !form.email) ? 'not-allowed' : 'pointer' }}>
                       Review Request →
                     </button>
                   </div>
@@ -407,22 +338,21 @@ function RequestQuoteForm() {
                 <div>
                   <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>Review & Submit</h2>
                   <p style={{ color: 'var(--slate)', fontSize: '0.875rem', marginBottom: 36 }}>Please confirm your details before we send this to our team.</p>
-
                   <div style={{ display: 'grid', gap: 24 }}>
                     <div style={{ background: 'var(--cream)', padding: '24px', borderLeft: '3px solid var(--gold)' }}>
                       <div className="overline" style={{ marginBottom: 12 }}>Trip Details</div>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
                         {[
-                          { label: 'Trip Type', value: form.trip_type || 'Not specified' },
-                          ...(form._cruise_name ? [{ label: 'Cruise', value: form._cruise_name }] : []),
-                          ...(form._cruise_line ? [{ label: 'Cruise Line', value: form._cruise_line }] : []),
-                          ...(form._cruise_ship ? [{ label: 'Ship', value: form._cruise_ship }] : []),
-                          ...(form._cruise_duration ? [{ label: 'Duration', value: form._cruise_duration }] : []),
+                          { label: 'Trip Type',   value: form.trip_type || 'Not specified' },
+                          ...(form._cruise_name     ? [{ label: 'Cruise',    value: form._cruise_name }]     : []),
+                          ...(form._cruise_line     ? [{ label: 'Line',      value: form._cruise_line }]     : []),
+                          ...(form._cruise_ship     ? [{ label: 'Ship',      value: form._cruise_ship }]     : []),
+                          ...(form._cruise_duration ? [{ label: 'Duration',  value: form._cruise_duration }] : []),
                           ...(form._resort_name && !form._cruise_name ? [{ label: 'Resort', value: form._resort_name }] : []),
                           { label: 'Destination', value: form.destination || 'Open' },
-                          { label: 'Departure', value: form.departure_date || 'Flexible' },
-                          { label: 'Travelers', value: `${form.travelers_adults} adult${form.travelers_adults !== 1 ? 's' : ''}${form.travelers_children > 0 ? `, ${form.travelers_children} child${form.travelers_children !== 1 ? 'ren' : ''}` : ''}` },
-                          { label: 'Budget', value: form.budget || 'Not specified' },
+                          { label: 'Departure',   value: form.departure_date || 'Flexible' },
+                          { label: 'Travelers',   value: `${form.travelers_adults} adult${form.travelers_adults !== 1 ? 's' : ''}${form.travelers_children > 0 ? `, ${form.travelers_children} child${form.travelers_children !== 1 ? 'ren' : ''}` : ''}` },
+                          { label: 'Budget',      value: form.budget || 'Not specified' },
                         ].map(item => (
                           <div key={item.label}>
                             <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 3 }}>{item.label}</div>
@@ -431,12 +361,11 @@ function RequestQuoteForm() {
                         ))}
                       </div>
                     </div>
-
                     <div style={{ background: 'var(--cream)', padding: '24px', borderLeft: '3px solid var(--gold)' }}>
                       <div className="overline" style={{ marginBottom: 12 }}>Contact Information</div>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
                         {[
-                          { label: 'Name', value: `${form.first_name} ${form.last_name}` },
+                          { label: 'Name',  value: `${form.first_name} ${form.last_name}` },
                           { label: 'Email', value: form.email },
                           { label: 'Phone', value: form.phone || 'Not provided' },
                         ].map(item => (
@@ -447,36 +376,33 @@ function RequestQuoteForm() {
                         ))}
                       </div>
                     </div>
-
                     {form.message && (
                       <div style={{ background: 'var(--cream)', padding: '24px', borderLeft: '3px solid var(--gold)' }}>
                         <div className="overline" style={{ marginBottom: 8 }}>Additional Notes</div>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{form.message}</p>
                       </div>
                     )}
-
                     <p style={{ fontSize: '0.75rem', color: 'var(--slate)', lineHeight: 1.6 }}>
                       By submitting, you agree to be contacted by a Crestwell Travel specialist. We'll never share your information or send spam.
                     </p>
                   </div>
-
                   {error && (
                     <div style={{ marginTop: 20, padding: '14px 20px', background: '#fff0f0', border: '1px solid #ffcccc', color: '#c0392b', fontSize: '0.85rem' }}>
                       {error}
                     </div>
                   )}
-
                   <div style={{ marginTop: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <button type="button" onClick={() => setStep(2)} style={{ background: 'none', border: 'none', color: 'var(--slate)', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
                       ← Back
                     </button>
                     <HoneypotField value={honeypot} onChange={setHoneypot} />
-                <button type="submit" className="btn-primary" disabled={submitting} style={{ opacity: submitting ? 0.6 : 1, minWidth: 160 }}>
+                    <button type="submit" className="btn-primary" disabled={submitting} style={{ opacity: submitting ? 0.6 : 1, minWidth: 160 }}>
                       {submitting ? 'Submitting…' : 'Submit Request'}
                     </button>
                   </div>
                 </div>
               )}
+
             </div>
           </form>
 
