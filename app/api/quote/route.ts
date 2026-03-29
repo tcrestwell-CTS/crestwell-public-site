@@ -1,11 +1,8 @@
+// app/api/quote/route.ts
+// Updated to capture UTM parameters + gclid for Google Ads attribution
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { getAttribution } from '@/lib/utm-capture';
 
-const payload = {
-  ...existingFormFields,
-  ...getAttribution(),  // adds gclid, utm_source, utm_campaign, etc.
-};
 export async function POST(request: NextRequest) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,30 +15,48 @@ export async function POST(request: NextRequest) {
     trip_type, destination, departure_date,
     travelers_adults, travelers_children,
     budget, flexibility, message,
+    // ── Attribution fields (new) ──────────────────────────────────
+    gclid,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_term,
+    utm_content,
   } = body;
 
   if (!first_name || !last_name || !email) {
     return NextResponse.json({ error: 'Name and email required' }, { status: 400 });
   }
 
+  // Derive lead_source from UTM/gclid
+  const lead_source = gclid
+    ? 'google_ads'
+    : utm_source
+      ? utm_source
+      : 'direct';
+
   try {
-    // Record timestamp BEFORE insert so agent can find the row by email+time
     const submitted_at = new Date().toISOString();
 
-    // Save to Supabase (anon key — insert only, no SELECT needed)
     await supabase.from('quote_requests').insert([{
       first_name, last_name, email, phone,
       trip_type, destination, departure_date,
       travelers_adults, travelers_children,
       budget, flexibility, message,
       status: 'new',
+      // Attribution
+      gclid:        gclid        || null,
+      utm_source:   utm_source   || null,
+      utm_medium:   utm_medium   || null,
+      utm_campaign: utm_campaign || null,
+      utm_term:     utm_term     || null,
+      utm_content:  utm_content  || null,
+      lead_source,
     }]);
 
-    // ── Fire AI qualification agent (non-blocking) ──────────────────────────
-    // Passes email + submitted_at — the edge function uses its service role
-    // key to look up the row, so no service role key needed here.
+    // ── Fire Tiara (Agent 1) — AI qualification ───────────────────────────
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    fetch(`${supabaseUrl}/functions/v1/qualify-lead`, {
+    fetch(`${supabaseUrl}/functions/v1/tiara`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -49,11 +64,10 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({ email, submitted_at }),
     })
-      .then(r => r.json().then(d => console.log('Agent:', r.status, d)))
-      .catch(err => console.error('Agent error:', err));
+      .then(r => r.json().then(d => console.log('Tiara:', r.status, d)))
+      .catch(err => console.error('Tiara error:', err));
 
-    // ── Confirmation email to the client ────────────────────────────────────
-    // The AI-enriched notification to Tim is sent by the edge function above.
+    // ── Confirmation email to client ──────────────────────────────────────
     const { Resend } = await import('resend');
     const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -83,24 +97,22 @@ export async function POST(request: NextRequest) {
               <p style="font-family: sans-serif; font-size: 0.875rem; color: #0d1b2a; margin: 4px 0;"><strong>Travelers:</strong> ${travelers_adults || 2} adult(s), ${travelers_children || 0} child(ren)</p>
               <p style="font-family: sans-serif; font-size: 0.875rem; color: #0d1b2a; margin: 4px 0;"><strong>Departure:</strong> ${departure_date || 'Flexible'}</p>
             </div>
-            <p style="font-family: sans-serif; font-size: 0.85rem; color: #94a3b8; margin: 0 0 24px;">
-              Questions? Reply to this email or reach us at<br/>
-              <a href="mailto:info@crestwellgetaways.com" style="color: #c9a84c;">info@crestwellgetaways.com</a>
+            <p style="font-family: sans-serif; font-size: 0.85rem; color: #64748b;">
+              Questions? Call us at <strong style="color: #0d1b2a;">888.508.6893</strong>
             </p>
-            <a href="https://crestwellgetaways.com/destinations" style="background: #c9a84c; color: #0d1b2a; padding: 14px 32px; text-decoration: none; font-family: sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">
-              Browse Destinations
-            </a>
           </div>
-          <div style="background: #0d1b2a; padding: 20px 32px; text-align: center;">
-            <p style="color: rgba(255,255,255,0.4); font-size: 0.75rem; font-family: sans-serif; margin: 0;">© ${new Date().getFullYear()} Crestwell Travel Services · Georgia · Tennessee · Alabama</p>
+          <div style="background: #0d1b2a; padding: 24px 32px; text-align: center;">
+            <p style="color: rgba(255,255,255,0.4); font-family: sans-serif; font-size: 0.75rem; margin: 0;">
+              © Crestwell Travel Services · <a href="https://crestwellgetaways.com" style="color: #c9a84c;">crestwellgetaways.com</a>
+            </p>
           </div>
         </div>
       `,
     });
 
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error('Quote submission error:', err);
-    return NextResponse.json({ error: 'Failed to submit' }, { status: 500 });
+    return NextResponse.json({ success: true, submitted_at });
+  } catch (error) {
+    console.error('Quote route error:', error);
+    return NextResponse.json({ error: 'Failed to submit quote' }, { status: 500 });
   }
 }
