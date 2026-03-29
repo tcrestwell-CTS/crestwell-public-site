@@ -3,6 +3,12 @@ import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { EmailField, HoneypotField } from '@/components/EmailField';
 import { useSearchParams } from 'next/navigation';
+import { getAttribution } from '@/lib/utm-capture';
+
+const payload = {
+  ...existingFormFields,
+  ...getAttribution(),  // adds gclid, utm_source, utm_campaign, etc.
+};
 
 const tripTypes = [
   'Cruise Vacation',
