@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CruiseSearch from '@/components/CruiseSearch';
+import TravelHeroSlider from '@/components/TravelHeroSlider';
 import { getFeaturedTrips } from '@/lib/supabase';
 import type { FeaturedTrip } from '@/lib/supabase';
 
@@ -159,6 +160,9 @@ export default function HomePage() {
           <div style={{ width: 1, height: 48, background: 'linear-gradient(180deg, transparent, var(--gold))' }} />
         </div>
       </section>
+
+      {/* ── HERO SLIDER ── */}
+      <TravelHeroSlider />
 
       {/* ── PARTNER LOGOS STRIP ── */}
       <section style={{ background: 'var(--navy)', borderBottom: '1px solid rgba(201,168,76,0.15)', padding: '32px 0' }}>
