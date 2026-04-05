@@ -68,8 +68,8 @@ const slides: Slide[] = [
 
 export default function TravelHeroSlider() {
   return (
-    <section className="w-full bg-white py-8 md:py-12">
-      <div className="mx-auto w-full max-w-[1320px] px-4">
+    <section style={{ width: "100%", background: "white", padding: "40px 0" }}>
+      <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 16px" }}>
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           slidesPerView={1}
@@ -82,94 +82,104 @@ export default function TravelHeroSlider() {
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              {/* Split-panel slide */}
-              <div
-                className="relative overflow-hidden rounded-[28px] md:rounded-[36px]"
-                style={{ minHeight: "clamp(420px, 55vw, 600px)" }}
-              >
-                {/* Full-bleed background image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                  style={{ backgroundImage: `url(${slide.image})` }}
-                />
+              {/* ── Split panel: fixed ~400px height matching screenshot ── */}
+              <div style={{
+                position: "relative",
+                height: 400,
+                borderRadius: 12,
+                overflow: "hidden",
+                display: "flex",
+              }}>
 
-                {/* Subtle left-fade so image reads well */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-transparent" />
+                {/* Left: photo ~65% width */}
+                <div style={{
+                  flex: "0 0 65%",
+                  backgroundImage: `url(${slide.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center top",
+                }} />
 
-                {/* Right content panel — overlaps image */}
-                <div className="absolute inset-y-0 right-0 flex items-stretch" style={{ width: "clamp(260px, 40%, 500px)" }}>
-                  <div
-                    className="flex items-center w-full"
-                    style={{
-                      background: "rgba(255,255,255,0.88)",
-                      backdropFilter: "blur(14px)",
-                      WebkitBackdropFilter: "blur(14px)",
-                    }}
-                  >
-                    <div className="px-8 py-10 md:px-12 md:py-14 w-full">
+                {/* Right: plain white content panel ~35% width */}
+                <div style={{
+                  flex: "0 0 35%",
+                  background: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "40px 36px",
+                }}>
+                  <div style={{ width: "100%" }}>
 
-                      {/* Eyebrow */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-                        <span style={{ display: "inline-block", width: 32, height: 1.5, background: "#c9a84c", flexShrink: 0 }} />
-                        <span style={{
-                          fontSize: "0.65rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.22em",
-                          textTransform: "uppercase",
-                          color: "#c9a84c",
-                        }}>
-                          {slide.subtitle}
-                        </span>
-                      </div>
-
-                      {/* Title */}
-                      <h2 style={{
-                        fontFamily: "var(--font-display, 'Cormorant Garamond', Georgia, serif)",
-                        fontSize: "clamp(1.5rem, 2.8vw, 2.5rem)",
-                        fontWeight: 400,
+                    {/* Eyebrow */}
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 16 }}>
+                      <span style={{
+                        display: "inline-block",
+                        width: 28,
+                        height: 1.5,
+                        background: "#c9a84c",
+                        flexShrink: 0,
+                        marginTop: 7,
+                      }} />
+                      <span style={{
+                        fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+                        fontSize: "0.62rem",
+                        fontWeight: 600,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
                         color: "#0d1b2a",
-                        lineHeight: 1.18,
-                        marginBottom: "0.9rem",
-                        letterSpacing: "-0.01em",
+                        lineHeight: 1.5,
                       }}>
-                        {slide.title}
-                      </h2>
-
-                      {/* Description */}
-                      <p style={{
-                        fontSize: "0.875rem",
-                        color: "#4a5568",
-                        lineHeight: 1.8,
-                        marginBottom: "1.75rem",
-                        maxWidth: 320,
-                      }}>
-                        {slide.description}
-                      </p>
-
-                      {/* CTA button */}
-                      <Link
-                        href={slide.href}
-                        className="cw-slide-btn"
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          minHeight: 46,
-                          padding: "11px 26px",
-                          background: "#0d1b2a",
-                          color: "white",
-                          fontSize: "0.7rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.16em",
-                          textTransform: "uppercase",
-                          textDecoration: "none",
-                          borderRadius: 9999,
-                          transition: "background 0.2s, color 0.2s",
-                        }}
-                      >
-                        {slide.buttonText}
-                      </Link>
+                        {slide.subtitle}
+                      </span>
                     </div>
+
+                    {/* Title */}
+                    <h2 style={{
+                      fontFamily: "var(--font-display, 'Cormorant Garamond', Georgia, serif)",
+                      fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
+                      fontWeight: 400,
+                      color: "#0d1b2a",
+                      lineHeight: 1.2,
+                      marginBottom: 12,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.03em",
+                    }}>
+                      {slide.title}
+                    </h2>
+
+                    {/* Description */}
+                    <p style={{
+                      fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+                      fontSize: "0.85rem",
+                      color: "#4a5568",
+                      lineHeight: 1.75,
+                      marginBottom: 24,
+                    }}>
+                      {slide.description}
+                    </p>
+
+                    {/* CTA */}
+                    <Link
+                      href={slide.href}
+                      className="cw-slide-btn"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: 44,
+                        padding: "0 24px",
+                        background: "#c9a84c",
+                        color: "#0d1b2a",
+                        fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+                        fontSize: "0.68rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.16em",
+                        textTransform: "uppercase",
+                        textDecoration: "none",
+                        transition: "background 0.2s, color 0.2s",
+                      }}
+                    >
+                      {slide.buttonText}
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -180,25 +190,26 @@ export default function TravelHeroSlider() {
 
       <style jsx global>{`
         .cw-hero-swiper {
-          padding-bottom: 52px;
+          padding-bottom: 48px;
         }
 
-        /* Nav arrows */
+        /* Nav arrows — sit on the image portion */
         .cw-hero-swiper .swiper-button-prev,
         .cw-hero-swiper .swiper-button-next {
-          width: 46px;
-          height: 46px;
+          width: 42px;
+          height: 42px;
           border-radius: 9999px;
-          background: rgba(255, 255, 255, 0.92);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+          background: rgba(255, 255, 255, 0.9);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
           color: #0d1b2a;
-          transition: background 0.2s, color 0.2s, transform 0.15s;
+          top: 50%;
+          transform: translateY(calc(-50% - 24px));
+          transition: background 0.2s, color 0.2s;
         }
         .cw-hero-swiper .swiper-button-prev:hover,
         .cw-hero-swiper .swiper-button-next:hover {
           background: #c9a84c;
           color: #0d1b2a;
-          transform: scale(1.06);
         }
         .cw-hero-swiper .swiper-button-prev::after,
         .cw-hero-swiper .swiper-button-next::after {
@@ -206,10 +217,7 @@ export default function TravelHeroSlider() {
           font-weight: 800;
         }
         .cw-hero-swiper .swiper-button-prev { left: 16px; }
-        .cw-hero-swiper .swiper-button-next {
-          /* Keep arrow on image side, not over panel */
-          right: calc(clamp(260px, 40%, 500px) + 16px);
-        }
+        .cw-hero-swiper .swiper-button-next { right: calc(35% + 16px); }
 
         /* Pagination */
         .cw-hero-swiper .swiper-pagination { bottom: 0 !important; }
@@ -217,32 +225,26 @@ export default function TravelHeroSlider() {
           width: 8px;
           height: 8px;
           opacity: 1;
-          background: rgba(13, 27, 42, 0.18);
+          background: rgba(13, 27, 42, 0.2);
           transition: all 0.3s;
         }
         .cw-hero-swiper .swiper-pagination-bullet-active {
           background: #c9a84c;
-          width: 24px;
+          width: 22px;
           border-radius: 4px;
         }
 
         /* CTA hover */
         .cw-slide-btn:hover {
-          background: #c9a84c !important;
-          color: #0d1b2a !important;
+          background: #0d1b2a !important;
+          color: white !important;
         }
 
-        /* Mobile: arrows stay visible */
+        /* Mobile: stack vertically */
         @media (max-width: 640px) {
-          .cw-hero-swiper .swiper-button-prev,
           .cw-hero-swiper .swiper-button-next {
-            width: 36px;
-            height: 36px;
+            right: 16px;
           }
-          .cw-hero-swiper .swiper-button-prev::after,
-          .cw-hero-swiper .swiper-button-next::after { font-size: 11px; }
-          .cw-hero-swiper .swiper-button-prev { left: 8px; }
-          .cw-hero-swiper .swiper-button-next { right: 8px; }
         }
       `}</style>
     </section>
