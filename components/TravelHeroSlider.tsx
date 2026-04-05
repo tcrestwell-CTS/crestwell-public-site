@@ -124,7 +124,7 @@ export default function TravelHeroSlider() {
 
                       {/* Title */}
                       <h2 style={{
-                        fontFamily: "Georgia, 'Times New Roman', serif",
+                        fontFamily: "var(--font-display, 'Cormorant Garamond', Georgia, serif)",
                         fontSize: "clamp(1.5rem, 2.8vw, 2.5rem)",
                         fontWeight: 400,
                         color: "#0d1b2a",
