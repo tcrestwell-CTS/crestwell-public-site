@@ -47,7 +47,7 @@ const slides: Slide[] = [
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1400&q=85",
     subtitle: "Empowering journeys with every step.",
     title: "Solo & Women's Travel",
     description: "Safe, empowering adventures crafted for solo travelers and women's groups — explore the world on your terms.",
@@ -101,7 +101,7 @@ export default function TravelHeroSlider() {
                   flex: "0 0 65%",
                   backgroundImage: `url(${slide.image})`,
                   backgroundSize: "cover",
-                  backgroundPosition: "center top",
+                  backgroundPosition: "center center",
                 }} />
 
                 {/* Right: plain white content panel ~35% */}
