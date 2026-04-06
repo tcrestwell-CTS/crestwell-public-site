@@ -89,30 +89,20 @@ export default function TravelHeroSlider() {
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div style={{
-                position: "relative",
-                height: 400,
-                borderRadius: 12,
-                overflow: "hidden",
-                display: "flex",
-              }}>
+              <div className="cw-slide-container" style={{ position: "relative", borderRadius: 12, overflow: "hidden" }}>
                 {/* Left: photo ~65% */}
-                <div style={{
-                  flex: "0 0 65%",
-                  backgroundImage: `url(${slide.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                }} />
+                <div
+                  className="cw-slide-image"
+                  style={{
+                    backgroundImage: `url(${slide.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center center",
+                  }}
+                />
 
                 {/* Right: plain white content panel ~35% */}
-                <div style={{
-                  flex: "0 0 35%",
-                  background: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "40px 36px",
-                }}>
-                  <div style={{ width: "100%" }}>
+                <div className="cw-slide-panel" style={{ background: "white", display: "flex", alignItems: "center" }}>
+                  <div style={{ width: "100%", maxWidth: 360 }}>
 
                     {/* Eyebrow */}
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 16 }}>
@@ -202,6 +192,45 @@ export default function TravelHeroSlider() {
         .cw-hero-swiper .swiper-button-prev,
         .cw-hero-swiper .swiper-button-next {
           display: none;
+        }
+
+        /* Slide container */
+        .cw-slide-container {
+          display: flex;
+          height: 400px;
+        }
+
+        /* Image panel */
+        .cw-slide-image {
+          flex: 0 0 65%;
+          min-height: 100%;
+          background-size: cover;
+          background-position: center center;
+        }
+
+        /* Content panel */
+        .cw-slide-panel {
+          flex: 0 0 35%;
+          padding: 40px 36px;
+        }
+
+        /* Mobile: stack vertically */
+        @media (max-width: 640px) {
+          .cw-slide-container {
+            flex-direction: column;
+            height: auto;
+          }
+          .cw-slide-image {
+            flex: none;
+            width: 100%;
+            height: 260px;
+            background-position: center center;
+          }
+          .cw-slide-panel {
+            flex: none;
+            width: 100%;
+            padding: 28px 24px;
+          }
         }
 
         /* Pagination dots */
