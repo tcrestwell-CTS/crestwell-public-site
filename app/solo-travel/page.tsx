@@ -55,7 +55,7 @@ const resorts = [
   {
     name: 'Excellence Resorts',
     tagline: 'Adults-Only · Mexico & Jamaica',
-    image: 'https://images.unsplash.com/photo-1540541338537-1220059ddcb4?w=900&q=80',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80',
     why: 'Boutique adults-only properties with solo-friendly single rates (often 30% less than double). Serene atmosphere, swim-up suites, and gourmet dining across Mexico and Jamaica.',
     highlights: ['Solo single rates available', 'Swim-up suites', 'No-reservation dining', 'Quiet, boutique atmosphere'],
     badge: 'Best Value Solo Rate',
