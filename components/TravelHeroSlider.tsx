@@ -34,7 +34,7 @@ const slides: Slide[] = [
     subtitle: "See more, stress less.",
     title: "All-Inclusive Resorts",
     description: "Sandals, Secrets, Beaches, and more — unlimited dining, drinks, and experiences included.",
-    href: "/request-quote",
+    href: "/all-inclusive",
     buttonText: "PLAN MY TRIP",
   },
   {
@@ -43,7 +43,7 @@ const slides: Slide[] = [
     subtitle: "Travel better, together.",
     title: "Cruises & Group Travel",
     description: "Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.",
-    href: "/request-quote",
+    href: "/group-travel",
     buttonText: "GET A GROUP QUOTE",
   },
   {
