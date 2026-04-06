@@ -51,7 +51,7 @@ const slides: Slide[] = [
     subtitle: "Empowering journeys with every step.",
     title: "Solo & Women's Travel",
     description: "Safe, empowering adventures crafted for solo travelers and women's groups — explore the world on your terms.",
-    href: "/request-quote?trip_type=Solo+%26+Women%27s+Travel",
+    href: "/solo-travel",
     buttonText: "PLAN MY JOURNEY",
   },
   {
