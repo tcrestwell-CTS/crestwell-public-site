@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 type Slide = {
@@ -48,6 +47,15 @@ const slides: Slide[] = [
   },
   {
     id: 4,
+    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&q=85",
+    subtitle: "Empowering journeys with every step.",
+    title: "Solo & Women's Travel",
+    description: "Safe, empowering adventures crafted for solo travelers and women's groups — explore the world on your terms.",
+    href: "/request-quote?trip_type=Solo+%26+Women%27s+Travel",
+    buttonText: "PLAN MY JOURNEY",
+  },
+  {
+    id: 5,
     image: "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1400&q=85",
     subtitle: "Adventure meets elegance.",
     title: "Family Vacations",
@@ -56,7 +64,7 @@ const slides: Slide[] = [
     buttonText: "PLAN A FAMILY TRIP",
   },
   {
-    id: 5,
+    id: 6,
     image: "https://images.unsplash.com/photo-1501426026826-31c667bdf23d?w=1400&q=85",
     subtitle: "Your trip, upgraded.",
     title: "Custom Travel Planning",
@@ -71,18 +79,16 @@ export default function TravelHeroSlider() {
     <section style={{ width: "100%", background: "white", padding: "40px 0" }}>
       <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 16px" }}>
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[Pagination, Autoplay]}
           slidesPerView={1}
           loop
           speed={900}
-          navigation
           pagination={{ clickable: true }}
           autoplay={{ delay: 5000, disableOnInteraction: false }}
           className="cw-hero-swiper"
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              {/* ── Split panel: fixed ~400px height matching screenshot ── */}
               <div style={{
                 position: "relative",
                 height: 400,
@@ -90,8 +96,7 @@ export default function TravelHeroSlider() {
                 overflow: "hidden",
                 display: "flex",
               }}>
-
-                {/* Left: photo ~65% width */}
+                {/* Left: photo ~65% */}
                 <div style={{
                   flex: "0 0 65%",
                   backgroundImage: `url(${slide.image})`,
@@ -99,7 +104,7 @@ export default function TravelHeroSlider() {
                   backgroundPosition: "center top",
                 }} />
 
-                {/* Right: plain white content panel ~35% width */}
+                {/* Right: plain white content panel ~35% */}
                 <div style={{
                   flex: "0 0 35%",
                   background: "white",
@@ -193,33 +198,13 @@ export default function TravelHeroSlider() {
           padding-bottom: 48px;
         }
 
-        /* Nav arrows — sit on the image portion */
+        /* No navigation arrows */
         .cw-hero-swiper .swiper-button-prev,
         .cw-hero-swiper .swiper-button-next {
-          width: 42px;
-          height: 42px;
-          border-radius: 9999px;
-          background: rgba(255, 255, 255, 0.9);
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-          color: #0d1b2a;
-          top: 50%;
-          transform: translateY(calc(-50% - 24px));
-          transition: background 0.2s, color 0.2s;
+          display: none;
         }
-        .cw-hero-swiper .swiper-button-prev:hover,
-        .cw-hero-swiper .swiper-button-next:hover {
-          background: #c9a84c;
-          color: #0d1b2a;
-        }
-        .cw-hero-swiper .swiper-button-prev::after,
-        .cw-hero-swiper .swiper-button-next::after {
-          font-size: 13px;
-          font-weight: 800;
-        }
-        .cw-hero-swiper .swiper-button-prev { left: 16px; }
-        .cw-hero-swiper .swiper-button-next { right: calc(35% + 16px); }
 
-        /* Pagination */
+        /* Pagination dots */
         .cw-hero-swiper .swiper-pagination { bottom: 0 !important; }
         .cw-hero-swiper .swiper-pagination-bullet {
           width: 8px;
@@ -238,13 +223,6 @@ export default function TravelHeroSlider() {
         .cw-slide-btn:hover {
           background: #0d1b2a !important;
           color: white !important;
-        }
-
-        /* Mobile: stack vertically */
-        @media (max-width: 640px) {
-          .cw-hero-swiper .swiper-button-next {
-            right: 16px;
-          }
         }
       `}</style>
     </section>
