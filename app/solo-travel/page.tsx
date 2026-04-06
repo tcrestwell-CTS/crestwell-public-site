@@ -105,7 +105,7 @@ export default function SoloWomensTravelPage() {
             <em style={{ color: 'var(--gold-light)' }}>Every Step of the Way.</em>
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.75, marginBottom: 40, maxWidth: 580, margin: '0 auto 40px' }}>
-            Safe, empowering journeys for solo women and women's groups. From Norwegian Studio Cabins to adults-only resorts — we handle every detail so you can focus on the adventure.
+            Safe, empowering journeys for solo women and women&apos;s groups. From Norwegian Studio Cabins to adults-only resorts — we handle every detail so you can focus on the adventure.
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/request-quote?trip_type=Solo+%26+Women%27s+Travel" className="btn-primary" style={{ textDecoration: 'none' }}>
