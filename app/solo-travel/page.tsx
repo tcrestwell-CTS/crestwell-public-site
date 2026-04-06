@@ -73,7 +73,7 @@ const resorts = [
 const whyUs = [
   { icon: '🛡️', title: 'Safety First', body: 'We only recommend vetted, women-traveler-approved properties with strong solo safety records and responsive staff.' },
   { icon: '💰', title: 'No Hidden Fees', body: 'We negotiate solo-friendly rates and know which lines waive single supplements — so you never pay double for one.' },
-  { icon: '👯', title: 'Women's Groups', body: 'Planning a girls' trip, birthday group, or women's retreat? We coordinate groups of 4–40 with private spaces and group perks.' },
+  { icon: '👯', title: "Women's Groups", body: "Planning a girls' trip, birthday group, or women's retreat? We coordinate groups of 4–40 with private spaces and group perks." },
   { icon: '🤝', title: 'Personal Planning', body: 'Tim personally reviews every solo booking to ensure the ship, cabin, and itinerary match your comfort level and travel goals.' },
 ];
 
@@ -95,7 +95,7 @@ export default function SoloWomensTravelPage() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.2) 0%, rgba(13,27,42,0.75) 100%)' }} />
         <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px', maxWidth: 760, zIndex: 1 }}>
           <div className="overline" style={{ marginBottom: 20, color: 'var(--gold)' }}>
-            Solo Travel · Women's Groups
+            Solo Travel &amp; Women&apos;s Groups
           </div>
           <h1 className="font-display" style={{
             fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 300,
