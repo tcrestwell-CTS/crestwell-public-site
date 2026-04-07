@@ -110,6 +110,29 @@ export default function PublicPayPage() {
     tryMount();
   };
 
+  // ── Decode compact invite links (?d=base64) before reading params ──────────
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const d = params.get('d');
+    if (!d) return;
+    try {
+      const json = atob(d.replace(/-/g, '+').replace(/_/g, '/'));
+      const data = JSON.parse(json);
+      const url = new URL(window.location.href);
+      url.searchParams.delete('d');
+      Object.entries(data).forEach(([key, value]) => {
+        url.searchParams.set(key, String(value));
+      });
+      window.history.replaceState({}, '', url.toString());
+      // Reload so the page re-reads expanded params
+      window.location.replace(url.toString());
+    } catch (e) {
+      console.error('Failed to decode invite link data:', e);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (tab === 'stripe') { if (window.Stripe) mountStripe(); }
     else {
