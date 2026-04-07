@@ -22,7 +22,35 @@ type Props = {
 
 export default function TokenGate({ linkType, children }: Props) {
   const searchParams = useSearchParams();
-  const token = searchParams?.get('token');
+
+  // ── Decode compact invite links (?d=base64) into individual params ──────────
+  // Must run synchronously before token validation so ?token= is visible.
+  // We use a ref flag so it only runs once on mount.
+  const didDecodeRef = useState(false);
+  if (typeof window !== 'undefined' && !didDecodeRef[0]) {
+    const params = new URLSearchParams(window.location.search);
+    const d = params.get('d');
+    if (d) {
+      try {
+        const json = atob(d.replace(/-/g, '+').replace(/_/g, '/'));
+        const data = JSON.parse(json);
+        const url = new URL(window.location.href);
+        url.searchParams.delete('d');
+        Object.entries(data).forEach(([key, value]) => {
+          url.searchParams.set(key, String(value));
+        });
+        window.history.replaceState({}, '', url.toString());
+      } catch (e) {
+        console.error('Failed to decode invite link data:', e);
+      }
+    }
+    didDecodeRef[1](true);
+  }
+
+  // Re-read after potential decode
+  const token = (typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('token')
+    : searchParams?.get('token'));
   const [status, setStatus] = useState<'loading' | 'valid' | 'invalid'>('loading');
   const [tokenData, setTokenData] = useState<TokenData | null>(null);
   const [reason, setReason] = useState('');
