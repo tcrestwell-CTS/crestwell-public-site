@@ -15,7 +15,6 @@ export async function POST(request: NextRequest) {
     trip_type, destination, departure_date,
     travelers_adults, travelers_children,
     budget, flexibility, message,
-    // ── Attribution fields (new) ──────────────────────────────────
     gclid,
     utm_source,
     utm_medium,
@@ -28,7 +27,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Name and email required' }, { status: 400 });
   }
 
-  // Derive lead_source from UTM/gclid
   const lead_source = gclid
     ? 'google_ads'
     : utm_source
@@ -44,7 +42,6 @@ export async function POST(request: NextRequest) {
       travelers_adults, travelers_children,
       budget, flexibility, message,
       status: 'new',
-      // Attribution
       gclid:        gclid        || null,
       utm_source:   utm_source   || null,
       utm_medium:   utm_medium   || null,
@@ -54,18 +51,36 @@ export async function POST(request: NextRequest) {
       lead_source,
     }]);
 
-    // ── Fire Tiara (Agent 1) — AI qualification ───────────────────────────
+    // ── Fire Tiara — send full lead data so AI can qualify properly ──────
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const agentSecret = process.env.CW_AGENT_SECRET || 'crestwell-agent-2024';
     fetch(`${supabaseUrl}/functions/v1/tiara`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-agent-secret': process.env.CW_AGENT_SECRET || '',
+        'x-agent-secret': agentSecret,
+        'Origin': 'https://crestwellgetaways.com',
       },
-      body: JSON.stringify({ email, submitted_at }),
+      body: JSON.stringify({
+        name: `${first_name} ${last_name}`.trim(),
+        email,
+        phone:        phone         || '',
+        trip_type:    trip_type     || '',
+        destination:  destination   || '',
+        travel_date:  departure_date|| '',
+        group_size:   travelers_adults ? `${travelers_adults} adults` : '',
+        budget:       budget        || '',
+        message:      message       || '',
+        submitted_at,
+        lead_source,
+        gclid:        gclid         || '',
+        utm_source:   utm_source    || '',
+        utm_medium:   utm_medium    || '',
+        utm_campaign: utm_campaign  || '',
+      }),
     })
-      .then(r => r.json().then(d => console.log('Tiara:', r.status, d)))
-      .catch(err => console.error('Tiara error:', err));
+      .then(r => r.json().then(d => console.log('Tiara:', r.status, JSON.stringify(d).slice(0, 200))))
+      .catch(err => console.error('Tiara fire error:', err));
 
     // ── Confirmation email to client ──────────────────────────────────────
     const { Resend } = await import('resend');
