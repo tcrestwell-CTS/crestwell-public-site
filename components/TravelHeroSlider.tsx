@@ -47,7 +47,7 @@ const slides: Slide[] = [
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=1400&q=85",
     subtitle: "Empowering journeys with every step.",
     title: "Solo & Women's Travel",
     description: "Safe, empowering adventures crafted for solo travelers and women's groups — explore the world on your terms.",
