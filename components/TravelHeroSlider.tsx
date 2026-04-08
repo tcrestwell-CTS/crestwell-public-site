@@ -56,7 +56,7 @@ const slides: Slide[] = [
   },
   {
     id: 5,
-    image: "https://images.unsplash.com/photo-1511895426328-dc8714191011?w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1400&q=85",
     subtitle: "Adventure meets elegance.",
     title: "Family Vacations",
     description: "Disney, Universal, Aulani — kid-friendly adventures with every detail handled for you.",
