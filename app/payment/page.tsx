@@ -342,12 +342,12 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
         merchant: {
           user_cancel_url: `${SITE_DOMAIN}/payment`,
           user_confirmation_url: 'https://zbtnulzvwreqzbmxulpv.supabase.co/functions/v1/affirm-webhook',
-          user_confirmation_url_action: 'GET',
+          user_confirmation_url_action: 'POST',
           name: 'Crestwell Travel Services',
           public_api_key: process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || '',
         },
         shipping: {
-          name: { full: customerName },
+          name: { first: customerName.split(' ')[0] || customerName, last: customerName.split(' ').slice(1).join(' ') || '' },
           address: {
             line1: customerAddress || '1 Travel Plaza',
             line2: '',
@@ -360,7 +360,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
           phone_number: customerPhone || '0000000000',
         },
         billing: {
-          name: { full: customerName },
+          name: { first: customerName.split(' ')[0] || customerName, last: customerName.split(' ').slice(1).join(' ') || '' },
           address: {
             line1: customerAddress || '1 Travel Plaza',
             line2: '',
@@ -377,12 +377,17 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
           sku: orderId,
           unit_price: calcAffirmTotal(amountCents),
           qty: 1,
-          item_image_url: 'https://crestwell-public-site.vercel.app/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
+          item_image_url: 'https://crestwellgetaways.com/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
           item_url: `${SITE_DOMAIN}/payment`,
         }],
         metadata: {
           shipping_type: 'travel_service',
           booking_ref: orderId,
+          itinerary: [{
+            type: 'cruise',
+            sku: orderId,
+            display_name: itemName || 'Cruise Vacation',
+          }],
         },
         order_id: orderId,
         currency: 'USD',
