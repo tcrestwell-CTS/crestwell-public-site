@@ -20,7 +20,7 @@ type Slide = {
 const slides: Slide[] = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=1400&q=85",
     subtitle: "Escape the ordinary.",
     title: "Luxury Cruise Vacations",
     description: "From Caribbean getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.",
