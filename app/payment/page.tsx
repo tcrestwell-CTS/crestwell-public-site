@@ -361,11 +361,14 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
         metadata: {
           shipping_type: 'travel_service',
           booking_ref: orderId,
-          itinerary: [{
-            type: 'cruise',
-            sku: orderId,
-            display_name: itemName || 'Cruise Vacation',
-          }],
+          itinerary: [
+            {
+              type: 'cruise',
+              sku: orderId,
+              display_name: (itemName || 'Cruise Vacation').replace(/\+/g, ' '),
+              additional_value: [{ booking_ref: orderId }],
+            }
+          ],
         },
         order_id: orderId,
         currency: 'USD',
