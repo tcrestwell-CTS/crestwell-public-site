@@ -20,7 +20,7 @@ const PACKAGES = [
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const STRIPE_PK = 'pk_live_51RrgVIPJljF0WNcYMZK3XH5QGmffC4LsV0e8EdSglGdrD8SlY9akQwJhBO8N2d87i574E3ONKvbsabfgKc3SDSq500gJ96MghZ';
-const SITE_DOMAIN = 'https://crestwell-public-site.vercel.app';
+const SITE_DOMAIN = 'https://crestwellgetaways.com';
 
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
