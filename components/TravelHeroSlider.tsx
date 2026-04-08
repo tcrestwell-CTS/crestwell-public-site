@@ -38,7 +38,7 @@ const slides: Slide[] = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=1400&q=85",
+    image: "https://myextraordinaryadventures.com/wp-content/uploads/2022/09/group-cruises-8-700x467.jpg",
     subtitle: "Travel better, together.",
     title: "Cruises & Group Travel",
     description: "Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.",
@@ -56,7 +56,7 @@ const slides: Slide[] = [
   },
   {
     id: 5,
-    image: "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1511895426328-dc8714191011?w=1400&q=85",
     subtitle: "Adventure meets elegance.",
     title: "Family Vacations",
     description: "Disney, Universal, Aulani — kid-friendly adventures with every detail handled for you.",
