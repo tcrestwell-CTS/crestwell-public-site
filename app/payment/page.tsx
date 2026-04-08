@@ -209,6 +209,29 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
     tryMount();
   };
 
+
+  // Handle Affirm confirmation redirect (?affirm_success=1 or ?affirm_error=...)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('affirm_success') === '1') {
+      const ref = params.get('ref') ?? '';
+      const chargeId = params.get('charge') ?? '';
+      setSuccessData({
+        amount: 0, // amount not available in redirect
+        method: 'affirm',
+        name: 'Valued Client',
+        bookingRef: ref,
+      });
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+    } else if (params.get('affirm_error')) {
+      setError('Affirm checkout could not be completed. Please try again or pay by card.');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (tab === 'stripe') {
       if (window.Stripe) {
@@ -318,7 +341,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
       window.affirm.checkout({
         merchant: {
           user_cancel_url: `${SITE_DOMAIN}/payment`,
-          user_confirmation_url: `${SITE_DOMAIN}/payment`,
+          user_confirmation_url: 'https://zbtnulzvwreqzbmxulpv.supabase.co/functions/v1/affirm-webhook',
           user_confirmation_url_action: 'GET',
           name: 'Crestwell Travel Services',
           public_api_key: process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || '',
