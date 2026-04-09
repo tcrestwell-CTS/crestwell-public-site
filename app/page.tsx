@@ -1,3 +1,5 @@
+'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import FeaturedTrips from '@/components/FeaturedTrips';
 import NewsletterSection from '@/components/NewsletterSection';
