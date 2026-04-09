@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 
@@ -93,12 +94,18 @@ export default function TravelHeroSlider() {
                 {/* Left: photo ~65% */}
                 <div
                   className="cw-slide-image"
-                  style={{
-                    backgroundImage: `url(${slide.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center center",
-                  }}
-                />
+                  style={{ position: "relative", overflow: "hidden" }}
+                >
+                  <Image
+                    src={slide.image}
+                    alt={slide.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 65vw"
+                    style={{ objectFit: "cover", objectPosition: "center center" }}
+                    priority={slide.id === 1}
+                    loading={slide.id === 1 ? "eager" : "lazy"}
+                  />
+                </div>
 
                 {/* Right: plain white content panel ~35% */}
                 <div className="cw-slide-panel" style={{ background: "white", display: "flex", alignItems: "center" }}>
