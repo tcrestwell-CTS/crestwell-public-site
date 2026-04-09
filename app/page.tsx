@@ -306,7 +306,7 @@ export default function HomePage() {
                     {trip.description && <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>{trip.description}</p>}
                     <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <span style={{ color: 'var(--gold)', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Request a Quote →</span>
-                      {trip.starting_from && <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>From {typeof trip.starting_from === 'number' ? `$${trip.starting_from.toLocaleString()}` : trip.starting_from}</span>}
+                      {trip.starting_from && <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>From {String(trip.starting_from)}</span>}
                     </div>
                   </div>
                 </Link>
