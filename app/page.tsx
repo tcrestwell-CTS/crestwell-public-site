@@ -84,11 +84,14 @@ function NewsletterSection() {
         ) : (
           <>
             <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 0, maxWidth: 440, margin: '0 auto' }}>
+              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
               <input
+                id="newsletter-email"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Your email address"
+                aria-label="Email address for newsletter signup"
                 required
                 disabled={status === 'loading'}
                 style={{
@@ -164,6 +167,46 @@ export default function HomePage() {
       {/* ── HERO SLIDER ── */}
       <TravelHeroSlider />
 
+
+      {/* ── LOCAL SEO: VALUE PROP + SERVICE REGIONS ── */}
+      <section style={{ background: 'white', padding: '64px 32px', borderBottom: '1px solid #f0ece4' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 48, alignItems: 'start' }}>
+            <div>
+              <div className="overline" style={{ marginBottom: 16 }}>Why Crestwell</div>
+              <h2 className="font-display" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 300, color: 'var(--navy)', marginBottom: 16, lineHeight: 1.25 }}>
+                Your Personal Travel Advisor — Not an Algorithm
+              </h2>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 16 }}>
+                Unlike online booking engines, Crestwell Travel Services assigns you a dedicated advisor who learns your preferences, tracks price drops, and handles every detail — from cabin selection to shore excursion timing. No hold music. No bots.
+              </p>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+                As an ASTA member and CLIA-certified agency, we have access to exclusive rates, group blocks, and amenities that aren&apos;t available when booking direct.
+              </p>
+            </div>
+            <div>
+              <div className="overline" style={{ marginBottom: 16 }}>Serving the Southeast</div>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 20 }}>
+                Based in Chattanooga, TN, we&apos;re the go-to travel agency for families and couples across the region — with clients from Atlanta to Huntsville, Nashville to Birmingham.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {[
+                  { region: 'Georgia', services: 'Cruise advisor in Atlanta, Savannah & Augusta' },
+                  { region: 'Tennessee', services: 'Travel planner in Nashville, Knoxville & Memphis' },
+                  { region: 'Alabama', services: 'Vacation planner in Birmingham & Huntsville' },
+                  { region: 'Florida', services: 'Group & cruise travel from Jacksonville to Pensacola' },
+                ].map((r, i) => (
+                  <div key={i} style={{ padding: '16px', background: 'var(--cream)', borderLeft: '3px solid var(--gold)' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--navy)', marginBottom: 4, letterSpacing: '0.05em' }}>{r.region}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{r.services}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── PARTNER LOGOS STRIP ── */}
       <section style={{ background: 'var(--navy)', borderBottom: '1px solid rgba(201,168,76,0.15)', padding: '32px 0' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
@@ -215,12 +258,18 @@ export default function HomePage() {
             <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'var(--navy)', lineHeight: 1.2 }}>Every Journey, Expertly Crafted</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 2 }}>
-            {services.map((s, i) => (
-              <div key={i} className="card-hover service-card" style={{ background: 'white', padding: '48px 36px', borderBottom: '3px solid transparent', transition: 'border-bottom-color 0.3s ease', cursor: 'default' }}>
+            {[
+              { icon: '⚓', title: 'Cruise Vacations', description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.', href: '/cruises', cta: 'Browse Cruise Vacations' },
+              { icon: '🌴', title: 'All-Inclusive Resorts', description: 'Sandals, Secrets, Beaches, and more. Unlimited dining, drinks, and experiences included.', href: '/all-inclusive', cta: 'Plan an All-Inclusive Vacation' },
+              { icon: '👨‍👩‍👧‍👦', title: 'Family Vacations', description: 'Disney, Universal, Aulani — kid-friendly adventures with seamless logistics handled for you.', href: '/request-quote?trip_type=Family+Vacation', cta: 'Plan a Family Trip' },
+              { icon: '🥂', title: 'Group Travel', description: 'Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.', href: '/group-travel', cta: 'Get a Group Quote' },
+            ].map((s, i) => (
+              <Link key={i} href={s.href} className="card-hover service-card" style={{ background: 'white', padding: '48px 36px', borderBottom: '3px solid transparent', transition: 'border-bottom-color 0.3s ease', textDecoration: 'none', display: 'block' }}>
                 <div style={{ fontSize: '2rem', marginBottom: 20 }}>{s.icon}</div>
                 <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>{s.title}</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>{s.description}</p>
-              </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 20 }}>{s.description}</p>
+                <span style={{ fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)' }}>{s.cta} →</span>
+              </Link>
             ))}
           </div>
         </div>
@@ -240,7 +289,7 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
               {featuredTrips.map(trip => (
                 <Link key={trip.id} href={`/request-quote?destination=${encodeURIComponent(trip.destination)}&trip_type=${encodeURIComponent(trip.trip_type || 'Cruise Vacation')}&trip_name=${encodeURIComponent(trip.trip_name)}`} className="card-hover" style={{ overflow: 'hidden', background: 'var(--navy)', cursor: 'pointer', textDecoration: 'none', display: 'block' }}>
-                  <div style={{ height: 220, backgroundImage: `url(${trip.cover_image_url || 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80'})`, backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+                  <div style={{ height: 220, backgroundImage: `url(${trip.cover_image_url || 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80'})`, backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative', contentVisibility: 'auto' }}>
                     {trip.trip_type && (
                       <div style={{ position: 'absolute', top: 16, left: 16, background: 'rgba(13,27,42,0.8)', padding: '4px 12px', backdropFilter: 'blur(4px)' }}>
                         <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)' }}>{trip.trip_type}</span>
@@ -257,7 +306,7 @@ export default function HomePage() {
                     {trip.description && <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>{trip.description}</p>}
                     <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <span style={{ color: 'var(--gold)', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Request a Quote →</span>
-                      {trip.starting_from && <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>From {trip.starting_from}</span>}
+                      {trip.starting_from && <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>From {typeof trip.starting_from === 'number' ? `$${trip.starting_from.toLocaleString()}` : trip.starting_from}</span>}
                     </div>
                   </div>
                 </Link>
@@ -289,13 +338,33 @@ export default function HomePage() {
             <div className="overline" style={{ marginBottom: 12 }}>Traveler Stories</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: 'var(--navy)' }}>What Our Clients Say</h2>
           </div>
+          {/* Review schema for Google */}
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'TravelAgency',
+            name: 'Crestwell Travel Services',
+            review: testimonials.map(t => ({
+              '@type': 'Review',
+              reviewBody: t.quote,
+              author: { '@type': 'Person', name: t.name },
+              reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+            })),
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: '5',
+              reviewCount: testimonials.length.toString(),
+              bestRating: '5',
+            },
+          }) }} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
             {testimonials.map((t, i) => (
-              <div key={i} style={{ background: 'white', padding: '40px 36px', borderTop: '3px solid var(--gold)' }}>
+              <div key={i} itemScope itemType="https://schema.org/Review" style={{ background: 'white', padding: '40px 36px', borderTop: '3px solid var(--gold)' }}>
                 <div style={{ fontSize: '2rem', color: 'var(--gold)', marginBottom: 16, fontFamily: 'Georgia', lineHeight: 1 }}>"</div>
-                <p className="font-display" style={{ fontSize: '1.1rem', fontWeight: 300, fontStyle: 'italic', color: 'var(--navy)', lineHeight: 1.7, marginBottom: 24 }}>{t.quote}</p>
+                <p className="font-display" itemProp="reviewBody" style={{ fontSize: '1.1rem', fontWeight: 300, fontStyle: 'italic', color: 'var(--navy)', lineHeight: 1.7, marginBottom: 24 }}>{t.quote}</p>
                 <div style={{ borderTop: '1px solid #eee', paddingTop: 16 }}>
-                  <div style={{ fontWeight: 500, fontSize: '0.85rem', color: 'var(--navy)' }}>{t.name}</div>
+                  <div itemProp="author" itemScope itemType="https://schema.org/Person" style={{ fontWeight: 500, fontSize: '0.85rem', color: 'var(--navy)' }}>
+                    <span itemProp="name">{t.name}</span>
+                  </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 2 }}>{t.location}</div>
                 </div>
               </div>
@@ -353,6 +422,36 @@ export default function HomePage() {
                 <span style={{ marginLeft: 'auto', color: 'var(--gold)', fontSize: '0.9rem', flexShrink: 0 }}>→</span>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ── FAQ SECTION (matches FAQPage schema in layout) ── */}
+      <section style={{ background: 'var(--cream)', padding: '72px 32px', borderTop: '1px solid #e8e3da' }}>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div className="overline" style={{ marginBottom: 12 }}>Common Questions</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 300, color: 'var(--navy)' }}>Travel Planning FAQ</h2>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {[
+              { q: 'Does Crestwell charge a planning fee?', a: 'No — our travel planning services are complimentary. We are compensated by cruise lines and resorts, so there is no extra cost to you.' },
+              { q: 'What areas do you serve?', a: 'We primarily serve clients in Georgia, Tennessee, Alabama, and Florida, but we plan vacations for travelers across the entire United States.' },
+              { q: 'Can you coordinate group and corporate travel?', a: 'Yes — we specialize in group travel including corporate retreats, family reunions, church groups, and milestone celebrations of any size.' },
+              { q: 'How quickly can I get a cruise quote?', a: 'Most quote requests are responded to within one business day. Fill out our quote form and a dedicated advisor will reach out to discuss your options.' },
+            ].map((item, i) => (
+              <details key={i} style={{ borderBottom: '1px solid #ddd6c8', padding: '20px 0' }}>
+                <summary style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 400, color: 'var(--navy)', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  {item.q}
+                  <span style={{ color: 'var(--gold)', fontSize: '1.2rem', marginLeft: 16 }}>+</span>
+                </summary>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginTop: 12, paddingRight: 32 }}>{item.a}</p>
+              </details>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 40 }}>
+            <Link href="/request-quote" className="btn-navy" style={{ textDecoration: 'none' }}>Request a Free Quote</Link>
           </div>
         </div>
       </section>
