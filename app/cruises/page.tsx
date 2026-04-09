@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import CruiseSearch from '@/components/CruiseSearch';
+import Breadcrumb from "@/components/Breadcrumb";
 
 const highlights = [
   { icon: '🌊', title: 'Ocean Cruises', description: 'Caribbean, Mediterranean, Alaska, and beyond — we match you with the right ship and itinerary.' },
@@ -32,6 +33,7 @@ function CruisesContent() {
 
   return (
     <>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Cruise Vacations"}]} />
       {/* Hero */}
       <section style={{ background: 'var(--navy)', padding: '80px 32px 64px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15 }} />
