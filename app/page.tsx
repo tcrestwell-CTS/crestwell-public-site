@@ -128,7 +128,7 @@ export default function HomePage() {
     <>
       {/* ── HERO ── */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--navy)' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.35 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.35 }} aria-hidden="true" />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.3) 0%, rgba(13,27,42,0.6) 60%, rgba(13,27,42,0.95) 100%)' }} />
         <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px', maxWidth: 860, zIndex: 1 }}>
           <div className="overline animate-fade-up" style={{ marginBottom: 24 }}>Georgia · Tennessee · Alabama · Florida</div>
@@ -215,6 +215,10 @@ export default function HomePage() {
                   <img
                     src={p.logo}
                     alt={p.name}
+                    loading="lazy"
+                    decoding="async"
+                    width={110}
+                    height={32}
                     style={{ maxHeight: 32, maxWidth: 110, objectFit: 'contain', filter: 'brightness(0) invert(1)', opacity: 0.7 }}
                     onError={e => {
                       (e.currentTarget.parentElement!.parentElement as HTMLElement).style.display = 'none';
@@ -322,7 +326,7 @@ export default function HomePage() {
 
 
       {/* ── FINANCING STRIP ── */}
-      <section style={{ background: 'var(--navy)', borderTop: '1px solid rgba(201,168,76,0.2)', borderBottom: '1px solid rgba(201,168,76,0.2)', padding: 'clamp(32px, 5vw, 48px) clamp(18px, 5vw, 32px)' }}>
+      <section style={{ background: 'var(--navy)', borderTop: '1px solid rgba(201,168,76,0.2)', borderBottom: '1px solid rgba(201,168,76,0.2)', padding: 'clamp(32px, 5vw, 48px) clamp(18px, 5vw, 32px)', contentVisibility: 'auto', containIntrinsicSize: '0 300px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 10, fontFamily: 'var(--font-body)' }}>
