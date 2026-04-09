@@ -95,6 +95,52 @@ function CruisesContent() {
         </div>
       </section>
     </>
+
+      {/* ── EEAT CONTENT: Cruise expertise ── */}
+      <section style={{ background: 'white', padding: '72px 32px' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <div className="overline" style={{ marginBottom: 16 }}>Cruise Planning Guidance</div>
+          <h2 className="font-display" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 300, color: 'var(--navy)', marginBottom: 32, lineHeight: 1.25 }}>
+            How to Choose the Right Cruise for Your Family or Couple
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 48 }}>
+            <div>
+              <h3 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>Caribbean Cruises</h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.85, marginBottom: 16 }}>
+                The Caribbean is the most accessible cruise region for travelers from Georgia, Tennessee, and Alabama. Miami, Port Canaveral, and New Orleans are all within driving distance, making 7-night sailings a practical option. Eastern Caribbean routes cover St. Thomas, St. Maarten, and Nassau — Western Caribbean routes include Cozumel, Belize, and Roatán.
+              </p>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.85 }}>
+                For first-time cruisers from the Southeast, we typically recommend a 7-night Eastern Caribbean sailing on Royal Caribbean or Carnival — the right balance of ports, amenities, and value.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>Mediterranean Cruises</h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.85, marginBottom: 16 }}>
+                Mediterranean cruises depart from Barcelona, Rome, or Athens and cover Spain, France, Italy, Greece, and Croatia in a single 10–12 night sailing. May through October is the ideal window. Norwegian, Celebrity, and MSC operate strong programs with convenient connections from Atlanta&apos;s Hartsfield-Jackson.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>Alaska Cruises</h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.85 }}>
+                Alaska sailings run May through September from Seattle or Vancouver. Glacier Bay, Tracy Arm, and Hubbard Glacier are signature highlights. Princess and Holland America lead in Alaska expertise. Pre-cruise land tours through Denali are available and highly recommended.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>Which Cruise Line is Right for You?</h3>
+              <ul style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 2.1, paddingLeft: 20 }}>
+                <li><strong style={{ color: 'var(--navy)' }}>Best for families:</strong> Disney Cruise Line, Royal Caribbean</li>
+                <li><strong style={{ color: 'var(--navy)' }}>Best for adults:</strong> Virgin Voyages, Celebrity, Norwegian</li>
+                <li><strong style={{ color: 'var(--navy)' }}>Best value:</strong> Carnival, MSC Cruises</li>
+                <li><strong style={{ color: 'var(--navy)' }}>Best luxury:</strong> Oceania, Regent, Viking</li>
+                <li><strong style={{ color: 'var(--navy)' }}>Best for Alaska:</strong> Princess, Holland America</li>
+              </ul>
+            </div>
+          </div>
+          <div style={{ marginTop: 48, textAlign: 'center' }}>
+            <Link href="/request-quote?trip_type=Cruise+Vacation" className="btn-primary" style={{ textDecoration: 'none' }}>Get a Free Cruise Quote</Link>
+          </div>
+        </div>
+      </section>
   );
 }
 
