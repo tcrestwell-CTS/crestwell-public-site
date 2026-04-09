@@ -66,7 +66,7 @@ const included = [
 export default function AllInclusivePage() {
   return (
     <>
-      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "All-Inclusive Resorts"}]} />
+      <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'All-Inclusive Resorts' }]} />
       {/* Hero */}
       <section style={{ background: 'var(--navy)', padding: '80px 32px 64px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.18 }} />
