@@ -155,7 +155,41 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
+        {/* NAP Trust Block — local SEO signals */}
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '28px 32px', maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, alignItems: 'start' }}>
+          <div>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Contact</div>
+            <address style={{ fontStyle: 'normal', fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8 }}>
+              <div>Chattanooga, TN</div>
+              <a href="tel:+18885086893" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>888.508.6893</a><br />
+              <a href="mailto:info@crestwellgetaways.com" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>info@crestwellgetaways.com</a>
+            </address>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Service Areas</div>
+            <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, margin: 0 }}>
+              Georgia · Tennessee · Alabama · Florida<br />
+              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>Serving clients nationwide</span>
+            </p>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Accreditations</div>
+            <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, margin: 0 }}>
+              ASTA Member · CLIA Certified<br />
+              Carnival Diamond · NCL Master&apos;s Degree
+            </p>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Legal</div>
+            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', lineHeight: 1.7, margin: 0 }}>
+              Seller of Travel laws may apply for bookings to CA, FL, HI & WA. Prices subject to availability.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>
             © {new Date().getFullYear()} Crestwell Travel Services. All rights reserved.
