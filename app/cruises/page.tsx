@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import CruiseSearch from '@/components/CruiseSearch';
 import Breadcrumb from "@/components/Breadcrumb";
+import ViatorSearch from "@/components/ViatorSearch";
 
 const highlights = [
   { icon: '🌊', title: 'Ocean Cruises', description: 'Caribbean, Mediterranean, Alaska, and beyond — we match you with the right ship and itinerary.' },
@@ -142,6 +143,17 @@ function CruisesContent() {
     </>
   );
 }
+
+      {/* ── SHORE EXCURSIONS ── */}
+      <section style={{ background: "white", padding: "64px 32px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <ViatorSearch
+            defaultDestination="caribbean"
+            title="Shore Excursions & Port Activities"
+            subtitle="Complete your cruise with unforgettable experiences at every port"
+          />
+        </div>
+      </section>
 
 export default function CruisesPage() {
   return (
