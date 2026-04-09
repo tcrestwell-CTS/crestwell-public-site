@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb";
 
 // ─── Group types ──────────────────────────────────────────────────────────────
 
@@ -160,6 +161,7 @@ export default function GroupTravelPage() {
 
   return (
     <>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Group Travel"}]} />
       {/* ── Hero ── */}
       <section style={{
         background: '#05080f', position: 'relative', overflow: 'hidden',
