@@ -36,7 +36,7 @@ export default function MediterraneanDestinationPage() {
 
   return (
     <>
-      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations", "href": "/destinations"}, {"name": "Mediterranean"}]} />
+      <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Destinations', href: '/destinations' }, { name: 'Mediterranean' }]} />
       <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 40%' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.15) 0%, rgba(13,27,42,0.75) 100%)' }} />
