@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb";
 
 const PORTS = [
   { name: 'Santorini, Greece', tagline: 'Caldera Views & Volcanic Beauty', image: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=85', description: 'Santorini is one of the most photographed places on earth — and the reality exceeds every photo. The island sits inside the caldera of an ancient volcanic explosion, with whitewashed villages clinging to cliffs 1,000 feet above the Aegean. Oia\'s blue-domed churches at sunset are the image the Mediterranean was made for. Arrive by tender and take the cable car up to Fira.', mustDo: ['Oia village sunset (arrive by 5pm)', 'Caldera rim walk from Fira to Oia (9km)', 'Red Beach & White Beach', 'Akrotiri Minoan ruins (a "Bronze Age Pompeii")', 'Volcanic hot springs swim by boat', 'Santo Wines winery & caldera view'] },
@@ -35,6 +36,7 @@ export default function MediterraneanDestinationPage() {
 
   return (
     <>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations", "href": "/destinations"}, {"name": "Mediterranean"}]} />
       <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 40%' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.15) 0%, rgba(13,27,42,0.75) 100%)' }} />
