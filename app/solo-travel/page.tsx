@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
   title: 'Solo & Women\'s Travel | Crestwell Travel Services',
@@ -80,6 +81,7 @@ const whyUs = [
 export default function SoloWomensTravelPage() {
   return (
     <main style={{ background: 'var(--warm-white)', color: 'var(--navy)' }}>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Solo Travel"}]} />
 
       {/* ── HERO ── */}
       <section style={{
