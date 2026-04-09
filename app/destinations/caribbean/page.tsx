@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb";
 
 const PORTS = [
   { name: 'St. Thomas, USVI', tagline: 'Duty-Free Shopping & World-Class Diving', image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=85', description: 'The most visited US Virgin Island offers an extraordinary combination of duty-free shopping in Charlotte Amalie, pristine beaches, and some of the best snorkeling in the Caribbean. Magens Bay is consistently rated one of the world\'s most beautiful beaches. The views from Drake\'s Seat — a hillside overlook — are breathtaking.', mustDo: ['Magens Bay Beach', 'Coral World Ocean Park', 'Trunk Bay snorkeling (St. John, 20min ferry)', 'Charlotte Amalie duty-free shopping', 'Skyride to Paradise Point', 'Hassel Island hiking'] },
@@ -35,6 +36,7 @@ export default function CaribbeanDestinationPage() {
 
   return (
     <>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations", "href": "/destinations"}, {"name": "Caribbean"}]} />
       {/* Hero */}
       <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 40%' }} />
