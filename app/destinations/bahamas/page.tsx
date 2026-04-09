@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb";
 
 const ISLANDS = [
   {
@@ -125,6 +126,7 @@ export default function BahamasDestinationPage() {
 
   return (
     <>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations", "href": "/destinations"}, {"name": "Bahamas"}]} />
       {/* Hero */}
       <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 50%' }} />
