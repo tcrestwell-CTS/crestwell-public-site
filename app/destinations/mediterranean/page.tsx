@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
+import ViatorSearch from "@/components/ViatorSearch";
 
 const PORTS = [
   { name: 'Santorini, Greece', tagline: 'Caldera Views & Volcanic Beauty', image: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=85', description: 'Santorini is one of the most photographed places on earth — and the reality exceeds every photo. The island sits inside the caldera of an ancient volcanic explosion, with whitewashed villages clinging to cliffs 1,000 feet above the Aegean. Oia\'s blue-domed churches at sunset are the image the Mediterranean was made for. Arrive by tender and take the cable car up to Fira.', mustDo: ['Oia village sunset (arrive by 5pm)', 'Caldera rim walk from Fira to Oia (9km)', 'Red Beach & White Beach', 'Akrotiri Minoan ruins (a "Bronze Age Pompeii")', 'Volcanic hot springs swim by boat', 'Santo Wines winery & caldera view'] },
@@ -174,6 +175,22 @@ export default function MediterraneanDestinationPage() {
       </section>
 
       <style>{`@media (max-width: 900px) { section div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; } }`}</style>
+
+      {/* ── SHORE EXCURSIONS ── */}
+      <section style={{ background: "var(--cream)", padding: "64px 32px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <ViatorSearch
+            defaultDestination="mediterranean"
+            title="Mediterranean Shore Excursions"
+            subtitle="Book tours and activities at every Mediterranean port — snorkeling, city tours, beach breaks, and more"
+            showDestinationFilter={false}
+          />
+          <div style={{ textAlign: "center", marginTop: 32 }}>
+            <a href="/excursions" style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--gold)", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase" }}>Browse All Destinations →</a>
+          </div>
+        </div>
+      </section>
+
     </>
   );
 }
