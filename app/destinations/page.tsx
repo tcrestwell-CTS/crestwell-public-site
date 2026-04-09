@@ -159,7 +159,7 @@ export default function DestinationsPage() {
 
   return (
     <>
-      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations"}]} />
+      <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Destinations' }]} />
       {/* Hero */}
       <section style={{
         background: 'var(--navy)',
