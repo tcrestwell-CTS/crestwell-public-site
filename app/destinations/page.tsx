@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb";
 
 const DESTINATIONS = [
   {
@@ -158,6 +159,7 @@ export default function DestinationsPage() {
 
   return (
     <>
+      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations"}]} />
       {/* Hero */}
       <section style={{
         background: 'var(--navy)',
