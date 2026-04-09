@@ -174,7 +174,6 @@ const DESTINATIONS = [
   { value: 'hawaii',        label: 'Hawaii' },
   { value: 'europe',        label: 'Europe' },
   { value: 'northern_europe', label: 'Northern Europe & Fjords' },
-  { value: 'mediterranean', label: 'Mediterranean' },
   { value: 'asia',          label: 'Asia' },
   { value: 'south_america', label: 'South America' },
   { value: 'americas',      label: 'Americas' },
