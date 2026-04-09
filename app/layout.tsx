@@ -82,9 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Crestwell Travel Services — Cruises, All-Inclusive Resorts &amp; Group Vacations" />
         <meta property="og:locale" content="en_US" />
-        <meta property="fb:app_id" content="966242223397" />
         <meta property="og:image:alt" content="Crestwell Travel Services — cruises, all-inclusive resorts, and group vacations" />
-        <meta property="fb:app_id" content="811514062015268" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
