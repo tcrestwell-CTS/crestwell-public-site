@@ -161,7 +161,7 @@ export default function GroupTravelPage() {
 
   return (
     <>
-      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Group Travel"}]} />
+      <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Group Travel' }]} />
       {/* ── Hero ── */}
       <section style={{
         background: '#05080f', position: 'relative', overflow: 'hidden',
