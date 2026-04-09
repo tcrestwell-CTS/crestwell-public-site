@@ -36,7 +36,7 @@ export default function CaribbeanDestinationPage() {
 
   return (
     <>
-      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Destinations", "href": "/destinations"}, {"name": "Caribbean"}]} />
+      <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Destinations', href: '/destinations' }, { name: 'Caribbean' }]} />
       {/* Hero */}
       <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 40%' }} />
