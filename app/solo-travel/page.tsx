@@ -81,7 +81,7 @@ const whyUs = [
 export default function SoloWomensTravelPage() {
   return (
     <main style={{ background: 'var(--warm-white)', color: 'var(--navy)' }}>
-      <Breadcrumb items={[{"name": "Home", "href": "/"}, {"name": "Solo Travel"}]} />
+      <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Solo Travel' }]} />
 
       {/* ── HERO ── */}
       <section style={{
