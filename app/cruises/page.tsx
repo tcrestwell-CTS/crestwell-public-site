@@ -138,8 +138,8 @@ function CruisesContent() {
             <Link href="/request-quote?trip_type=Cruise+Vacation" className="btn-primary" style={{ textDecoration: 'none' }}>Get a Free Cruise Quote</Link>
           </div>
         </div>
-    </>
       </section>
+    </>
   );
 }
 
