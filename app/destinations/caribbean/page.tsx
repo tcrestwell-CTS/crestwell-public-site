@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
+import ViatorSearch from "@/components/ViatorSearch";
 
 const PORTS = [
   { name: 'St. Thomas, USVI', tagline: 'Duty-Free Shopping & World-Class Diving', image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=85', description: 'The most visited US Virgin Island offers an extraordinary combination of duty-free shopping in Charlotte Amalie, pristine beaches, and some of the best snorkeling in the Caribbean. Magens Bay is consistently rated one of the world\'s most beautiful beaches. The views from Drake\'s Seat — a hillside overlook — are breathtaking.', mustDo: ['Magens Bay Beach', 'Coral World Ocean Park', 'Trunk Bay snorkeling (St. John, 20min ferry)', 'Charlotte Amalie duty-free shopping', 'Skyride to Paradise Point', 'Hassel Island hiking'] },
@@ -220,6 +221,22 @@ export default function CaribbeanDestinationPage() {
       </section>
 
       <style>{`@media (max-width: 900px) { section div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; } }`}</style>
+
+      {/* ── SHORE EXCURSIONS ── */}
+      <section style={{ background: "var(--cream)", padding: "64px 32px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <ViatorSearch
+            defaultDestination="caribbean"
+            title="Caribbean Shore Excursions"
+            subtitle="Book tours and activities at every Caribbean port — snorkeling, city tours, beach breaks, and more"
+            showDestinationFilter={false}
+          />
+          <div style={{ textAlign: "center", marginTop: 32 }}>
+            <a href="/excursions" style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--gold)", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase" }}>Browse All Destinations →</a>
+          </div>
+        </div>
+      </section>
+
     </>
   );
 }
