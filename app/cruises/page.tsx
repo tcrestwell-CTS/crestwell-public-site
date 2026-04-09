@@ -94,8 +94,6 @@ function CruisesContent() {
           </Link>
         </div>
       </section>
-    </>
-
       {/* ── EEAT CONTENT: Cruise expertise ── */}
       <section style={{ background: 'white', padding: '72px 32px' }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
@@ -140,6 +138,7 @@ function CruisesContent() {
             <Link href="/request-quote?trip_type=Cruise+Vacation" className="btn-primary" style={{ textDecoration: 'none' }}>Get a Free Cruise Quote</Link>
           </div>
         </div>
+    </>
       </section>
   );
 }
