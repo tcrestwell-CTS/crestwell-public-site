@@ -16,21 +16,31 @@ interface ViatorProduct {
 }
 
 const PORT_LABELS: Record<string, string> = {
-  nassau: "Nassau, Bahamas",
-  cozumel: "Cozumel, Mexico",
-  "st-thomas": "St. Thomas, USVI",
-  "st-maarten": "St. Maarten",
+  // Caribbean ports
+  caribbean:      "Caribbean",
+  nassau:         "Nassau, Bahamas",
+  cozumel:        "Cozumel, Mexico",
+  "st-thomas":    "St. Thomas, USVI",
+  "st-maarten":   "St. Maarten",
   "grand-cayman": "Grand Cayman",
-  "key-west": "Key West",
-  caribbean: "Caribbean",
-  mediterranean: "Mediterranean",
-  barcelona: "Barcelona",
-  rome: "Rome",
-  athens: "Athens",
-  santorini: "Santorini",
-  alaska: "Alaska",
-  juneau: "Juneau",
-  europe: "Europe",
+  roatan:         "Roatan, Honduras",
+  belize:         "Belize City",
+  // Alaska cruise ports
+  alaska:         "Alaska",
+  juneau:         "Juneau",
+  ketchikan:      "Ketchikan",
+  skagway:        "Skagway",
+  sitka:          "Sitka",
+  anchorage:      "Anchorage",
+  // Mediterranean
+  mediterranean:  "Mediterranean",
+  barcelona:      "Barcelona",
+  rome:           "Rome",
+  athens:         "Athens",
+  santorini:      "Santorini",
+  dubrovnik:      "Dubrovnik",
+  venice:         "Venice",
+  lisbon:         "Lisbon",
 };
 
 function formatDuration(d: ViatorProduct["duration"]): string {
