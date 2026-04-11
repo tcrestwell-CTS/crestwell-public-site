@@ -17,6 +17,7 @@ const AFFIRM_FIXED    = 30;
 const GROUP_TRIPS = [
   { id: 'bsc-cobb', name: 'BSC for Cobb County Cruise', depositPerPerson: 25000 },  // $250
   { id: 'angels-first', name: "Angels First Cruise", depositPerPerson: 15000 },       // $150
+  { id: 'claires-60th', name: "Claire's 60th Birthday Celebration", depositPerPerson: 35000 },  // $350
 ];
 
 function formatCents(cents: number) {
