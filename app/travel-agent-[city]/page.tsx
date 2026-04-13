@@ -1,5 +1,7 @@
 import { cities } from '@/data/cities';
+import { notFound } from 'next/navigation';
 import CityPageClient from '@/components/CityPageClient';
+import type { CityData } from '@/data/cities';
 
 export async function generateStaticParams() {
   return cities.map((c) => ({ city: c.slug }));
@@ -25,5 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city } = await params;
-  return <CityPageClient city={city} />;
+  const cityData = cities.find((c) => c.slug === city);
+  if (!cityData) notFound();
+  return <CityPageClient cityData={cityData!} />;
 }
