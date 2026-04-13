@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://crestwellgetaways.com/eurotour-og.webp',
+        url: 'https://crestwellgetaways.com/eurotour-og.webp?v=2',
         width: 1200,
         height: 630,
         alt: 'Travel Tips & Guides — Crestwell Travel Services',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Travel Tips & Guides | Crestwell Travel Services',
     description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team.',
-    images: ['https://crestwellgetaways.com/eurotour-og.webp'],
+    images: ['https://crestwellgetaways.com/eurotour-og.webp?v=2'],
   },
   alternates: {
     canonical: 'https://www.crestwellgetaways.com/blog',
