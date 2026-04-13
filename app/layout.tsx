@@ -106,22 +106,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-        {/* Canonical */}
-        <link rel="canonical" href={SITE_URL} />
-
         {/* Google Search Console */}
         <meta name="google-site-verification" content="B9Gt4g3dHtK4WGm22Iv_ucUai4QFAa-eRjlI7tMAuNY" />
 
-        {/* Open Graph */}
+        {/* Open Graph — base tags only; page-level layouts override title/description/image/url */}
         <meta property="og:site_name" content="Crestwell Travel Services" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={SITE_URL} />
-        <meta property="og:title" content="Crestwell Travel Services | Cruises & Resorts" />
-        <meta property="og:description" content="Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations across GA, TN & AL." />
-        <meta property="og:image" content={OG_IMAGE} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Crestwell Travel Services — Cruises, All-Inclusive Resorts & Group Vacations" />
         <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card */}
