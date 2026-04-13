@@ -223,7 +223,6 @@ export default function Navbar() {
               <Link key={item.href} href={item.href} className="nav-link">{item.label}</Link>
             ))}
 
-            <Link href="/request-quote" className="btn-primary" style={{ textDecoration: 'none' }}>Get a Quote</Link>
           </div>
 
           {/* Mobile hamburger */}
