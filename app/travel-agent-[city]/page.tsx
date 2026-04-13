@@ -1,47 +1,24 @@
-// /app/travel-agent-[city]/page.tsx
-// Dynamic route — generates all 7 city landing pages from /data/cities.ts
-// Drop this file into your Next.js 15 app directory.
+\'use client\';
+import { useParams, notFound } from 'next/navigation';
+import Link from 'next/link';
+import { cities } from '@/data/cities';
 
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { cities } from "@/data/cities";
-import type { Metadata } from "next";
+export default function CityPage() {
+  const params = useParams();
+  const city = typeof params?.city === 'string' ? params.city : '';
+  const cityData = cities.find((c) => c.slug === city);
 
-type Params = { params: Promise<{ city: string }> };
+  if (!cityData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
+          <Link href="/" className="text-blue-600 underline">Return Home</Link>
+        </div>
+      </div>
+    );
+  }
 
-// -------- Static generation --------
-export async function generateStaticParams() {
-  return cities.map((c) => ({ city: c.slug }));
-}
-
-// -------- SEO metadata --------
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { city } = await params;
-  const data = cities.find((c) => c.slug === city);
-  if (!data) return {};
-  return {
-    title: data.metaTitle,
-    description: data.metaDescription,
-    alternates: { canonical: `https://crestwellgetaways.com/travel-agent-${data.slug}` },
-    openGraph: {
-      title: data.metaTitle,
-      description: data.metaDescription,
-      url: `https://crestwellgetaways.com/travel-agent-${data.slug}`,
-      type: "website",
-    },
-  };
-}
-
-// -------- Page --------
-export default async function CityPage({ params }: Params) {
-  const { city } = await params;
-  const data = cities.find((c) => c.slug === city);
-  if (!data) notFound();
-
-  // TypeScript narrowing — notFound() throws so data is defined here
-  const cityData = data!;
-
-  // JSON-LD structured data — LocalBusiness + FAQPage
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -335,3 +312,4 @@ export default async function CityPage({ params }: Params) {
     </>
   );
 }
+
