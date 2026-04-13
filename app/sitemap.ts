@@ -100,5 +100,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: failed to fetch trips', err);
   }
 
-  return [...staticEntries, ...blogEntries, ...tripEntries];
+  // City landing pages — travel-agent-[city]
+  const cityEntries: MetadataRoute.Sitemap = [
+    'atlanta', 'nashville', 'birmingham', 'chattanooga',
+    'huntsville', 'knoxville', 'memphis', 'savannah',
+  ].map((city) => ({
+    url: `${SITE_URL}/travel-agent-${city}`,
+    lastModified: new Date(now),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+
+  return [...staticEntries, ...blogEntries, ...tripEntries, ...cityEntries];
 }
