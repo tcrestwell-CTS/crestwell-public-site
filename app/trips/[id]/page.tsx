@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
@@ -137,6 +137,7 @@ export default function TripDetailPage() {
   const [trip, setTrip] = useState<FeaturedTripDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeGallery, setActiveGallery] = useState(0);
+  const [autoRotate, setAutoRotate] = useState(true);
 
   useEffect(() => {
     if (!id) return;
@@ -155,6 +156,15 @@ export default function TripDetailPage() {
         setLoading(false);
       });
   }, [id]);
+
+  // Auto-rotate gallery every 4 seconds
+  useEffect(() => {
+    if (!autoRotate || !trip?.gallery_images?.length || trip.gallery_images.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveGallery(prev => (prev + 1) % trip.gallery_images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [autoRotate, trip?.gallery_images?.length]);
 
   if (loading) {
     return (
@@ -307,14 +317,42 @@ export default function TripDetailPage() {
             <section style={{ marginBottom: 52 }}>
               <div className="overline" style={{ marginBottom: 12 }}>Gallery</div>
               <h2 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 24 }}>Photos</h2>
-              <div style={{ height: 340, backgroundImage: `url(${gallery[activeGallery]})`, backgroundSize: 'cover', backgroundPosition: 'center', marginBottom: 8 }} />
+
+              {/* Main image with nav controls */}
+              <div style={{ position: 'relative', marginBottom: 8 }}>
+                <div style={{ height: 340, backgroundImage: `url(${gallery[activeGallery]})`, backgroundSize: 'cover', backgroundPosition: 'center', transition: 'background-image 0.4s ease' }} />
+                {gallery.length > 1 && (
+                  <>
+                    <button onClick={() => { setActiveGallery(p => (p - 1 + gallery.length) % gallery.length); setAutoRotate(false); }}
+                      style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', background: 'rgba(13,27,42,0.7)', border: 'none', color: 'white', width: 36, height: 36, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      aria-label="Previous">&#8249;</button>
+                    <button onClick={() => { setActiveGallery(p => (p + 1) % gallery.length); setAutoRotate(false); }}
+                      style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'rgba(13,27,42,0.7)', border: 'none', color: 'white', width: 36, height: 36, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      aria-label="Next">&#8250;</button>
+                    <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+                      {gallery.map((_, i) => (
+                        <button key={i} onClick={() => { setActiveGallery(i); setAutoRotate(false); }}
+                          style={{ width: i === activeGallery ? 18 : 7, height: 7, borderRadius: 4, background: i === activeGallery ? 'var(--gold)' : 'rgba(255,255,255,0.55)', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.3s' }} />
+                      ))}
+                      <button onClick={() => setAutoRotate(p => !p)}
+                        style={{ marginLeft: 4, background: 'rgba(13,27,42,0.7)', border: 'none', color: autoRotate ? 'var(--gold)' : 'rgba(255,255,255,0.5)', fontSize: '0.62rem', padding: '3px 8px', cursor: 'pointer', letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}
+                      >{autoRotate ? '⏸' : '▶'}</button>
+                    </div>
+                    <div style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(13,27,42,0.7)', color: 'white', fontSize: '0.68rem', padding: '3px 10px', fontFamily: 'var(--font-body)' }}>
+                      {activeGallery + 1} / {gallery.length}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnail strip */}
               {gallery.length > 1 && (
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {gallery.map((img, i) => (
-                    <button key={i} onClick={() => setActiveGallery(i)} style={{
-                      width: 72, height: 52, backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                    <button key={i} onClick={() => { setActiveGallery(i); setAutoRotate(false); }} style={{
+                      width: 68, height: 50, backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center',
                       border: activeGallery === i ? '2px solid var(--gold)' : '2px solid transparent',
-                      cursor: 'pointer', padding: 0, opacity: activeGallery === i ? 1 : 0.6, transition: 'all 0.2s',
+                      cursor: 'pointer', padding: 0, opacity: activeGallery === i ? 1 : 0.55, transition: 'all 0.2s',
                     }} />
                   ))}
                 </div>
