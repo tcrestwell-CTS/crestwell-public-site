@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: 'Travel Tips & Guides | Crestwell Travel Services',
     description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team. Plan smarter, travel better.',
     siteName: 'Crestwell Travel Services',
+    locale: 'en_US',
     images: [
       {
         url: 'https://crestwellgetaways.com/eurotour-og.webp',
