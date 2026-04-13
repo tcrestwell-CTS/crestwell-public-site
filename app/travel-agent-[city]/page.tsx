@@ -38,6 +38,9 @@ export default async function CityPage({ params }: Params) {
   const data = cities.find((c) => c.slug === city);
   if (!data) notFound();
 
+  // TypeScript narrowing — notFound() throws so data is defined here
+  const cityData = data!;
+
   // JSON-LD structured data — LocalBusiness + FAQPage
   const jsonLd = {
     "@context": "https://schema.org",
@@ -46,7 +49,7 @@ export default async function CityPage({ params }: Params) {
         "@type": "TravelAgency",
         name: "Crestwell Travel Services",
         image: "https://crestwellgetaways.com/logo.png",
-        url: `https://crestwellgetaways.com/travel-agent-${data.slug}`,
+        url: `https://crestwellgetaways.com/travel-agent-${cityData.slug}`,
         telephone: "+1-888-508-6893",
         email: "info@crestwellgetaways.com",
         address: {
@@ -55,7 +58,7 @@ export default async function CityPage({ params }: Params) {
           addressRegion: "TN",
           addressCountry: "US",
         },
-        areaServed: data.neighborhoods.map((n) => ({
+        areaServed: cityData.neighborhoods.map((n) => ({
           "@type": "City",
           name: n,
         })),
@@ -68,7 +71,7 @@ export default async function CityPage({ params }: Params) {
       },
       {
         "@type": "FAQPage",
-        mainEntity: data.faqs.map((f) => ({
+        mainEntity: cityData.faqs.map((f) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -88,15 +91,15 @@ export default async function CityPage({ params }: Params) {
       <section className="relative bg-gradient-to-b from-slate-900 to-slate-800 text-white py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <p className="text-sm uppercase tracking-widest text-amber-300 mb-4">
-            Serving Metro {data.city} · ASTA Member · CLIA Certified
+            Serving Metro {cityData.city} · ASTA Member · CLIA Certified
           </p>
           <h1 className="text-4xl md:text-6xl font-serif font-bold leading-tight mb-6">
-            {data.city}'s Personal Travel Advisor for Cruises & All-Inclusive Getaways
+            {cityData.city}'s Personal Travel Advisor for Cruises & All-Inclusive Getaways
           </h1>
-          <p className="text-xl text-slate-200 mb-8 max-w-3xl">{data.heroSubhead}</p>
+          <p className="text-xl text-slate-200 mb-8 max-w-3xl">{cityData.heroSubhead}</p>
           <div className="flex flex-wrap gap-4">
             <Link
-              href={`/request-quote?city=${data.slug}`}
+              href={`/request-quote?city=${cityData.slug}`}
               className="bg-amber-400 text-slate-900 px-8 py-4 rounded-md font-semibold hover:bg-amber-300 transition"
             >
               Request My Free Quote
@@ -109,7 +112,7 @@ export default async function CityPage({ params }: Params) {
             </a>
           </div>
           <p className="mt-8 text-sm text-slate-300">
-            ⭐⭐⭐⭐⭐ Rated 5.0 by {data.city} travelers · ASTA Member · CLIA Certified · Carnival Diamond Expert
+            ⭐⭐⭐⭐⭐ Rated 5.0 by {cityData.city} travelers · ASTA Member · CLIA Certified · Carnival Diamond Expert
           </p>
         </div>
       </section>
@@ -118,9 +121,9 @@ export default async function CityPage({ params }: Params) {
       <section className="py-20 px-6 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-slate-900">
-            Why {data.city} Families Book With Crestwell
+            Why {cityData.city} Families Book With Crestwell
           </h2>
-          {data.localAngle.split("\n\n").map((p, i) => (
+          {cityData.localAngle.split("\n\n").map((p, i) => (
             <p key={i} className="text-lg text-slate-700 leading-relaxed mb-6">
               {p}
             </p>
@@ -135,17 +138,17 @@ export default async function CityPage({ params }: Params) {
       <section className="py-20 px-6 bg-slate-50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-slate-900">
-            Your Best Cruise & Vacation Departure Options From {data.city}
+            Your Best Cruise & Vacation Departure Options From {cityData.city}
           </h2>
           <p className="text-lg text-slate-700 mb-10">
-            {data.majorAirport.note}
+            {cityData.majorAirport.note}
           </p>
 
           <h3 className="text-2xl font-serif font-semibold mb-6 text-slate-800">
-            Closest Cruise Ports to {data.city}
+            Closest Cruise Ports to {cityData.city}
           </h3>
           <div className="space-y-4 mb-10">
-            {data.closestPorts.map((port, i) => (
+            {cityData.closestPorts.map((port, i) => (
               <div key={i} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
                 <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
                   <h4 className="text-xl font-semibold text-slate-900">
@@ -167,7 +170,7 @@ export default async function CityPage({ params }: Params) {
 
           <div className="bg-amber-50 border-l-4 border-amber-400 p-6 rounded">
             <h4 className="font-semibold text-lg mb-2 text-slate-900">Flying vs. Driving</h4>
-            <p className="text-slate-700">{data.drivingVsFlying}</p>
+            <p className="text-slate-700">{cityData.drivingVsFlying}</p>
           </div>
         </div>
       </section>
@@ -176,7 +179,7 @@ export default async function CityPage({ params }: Params) {
       <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-slate-900 text-center">
-            What We Plan for {data.city} Travelers
+            What We Plan for {cityData.city} Travelers
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="p-6 border border-slate-200 rounded-lg">
@@ -208,10 +211,10 @@ export default async function CityPage({ params }: Params) {
       <section className="py-20 px-6 bg-slate-50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-slate-900 text-center">
-            What {data.city} Clients Say
+            What {cityData.city} Clients Say
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {data.testimonials.map((t, i) => (
+            {cityData.testimonials.map((t, i) => (
               <div key={i} className="bg-white p-6 rounded-lg shadow-sm">
                 <p className="text-slate-700 italic mb-4">"{t.quote}"</p>
                 <p className="font-semibold text-slate-900">{t.name}</p>
@@ -226,17 +229,17 @@ export default async function CityPage({ params }: Params) {
       <section className="py-20 px-6 bg-gradient-to-r from-amber-50 to-orange-50">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-slate-900">
-            Free Download: The {data.city} Cruiser's Port Guide
+            Free Download: The {cityData.city} Cruiser's Port Guide
           </h2>
           <p className="text-lg text-slate-700 mb-6">
-            Our free 12-page guide breaks down every major cruise port within driving distance of {data.city} — drive times, parking costs, hotel recommendations, and which cruise lines sail where. Plus a detailed comparison of flying vs. driving.
+            Our free 12-page guide breaks down every major cruise port within driving distance of {cityData.city} — drive times, parking costs, hotel recommendations, and which cruise lines sail where. Plus a detailed comparison of flying vs. driving.
           </p>
           <form
             className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
             action="/api/lead-magnet"
             method="POST"
           >
-            <input type="hidden" name="city" value={data.slug} />
+            <input type="hidden" name="city" value={cityData.slug} />
             <input
               type="email"
               name="email"
@@ -288,7 +291,7 @@ export default async function CityPage({ params }: Params) {
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">
-            {data.faqs.map((f, i) => (
+            {cityData.faqs.map((f, i) => (
               <details key={i} className="bg-white rounded-lg shadow-sm p-6 cursor-pointer group">
                 <summary className="font-semibold text-lg text-slate-900 flex justify-between items-center">
                   {f.q}
@@ -305,14 +308,14 @@ export default async function CityPage({ params }: Params) {
       <section className="py-20 px-6 bg-slate-900 text-white text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-            Ready to Start Planning Your {data.city} Getaway?
+            Ready to Start Planning Your {cityData.city} Getaway?
           </h2>
           <p className="text-xl text-slate-200 mb-8">
             Tell us what you're dreaming about. Three hand-picked options back to you within 24 hours — and there's never a planning fee.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
-              href={`/request-quote?city=${data.slug}`}
+              href={`/request-quote?city=${cityData.slug}`}
               className="bg-amber-400 text-slate-900 px-8 py-4 rounded-md font-semibold hover:bg-amber-300 transition"
             >
               Request My Free Quote
