@@ -1,21 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { cities } from '@/data/cities';
+import type { CityData } from '@/data/cities';
 
-export default function CityPageClient({ city }: { city: string }) {
-  const cityData = cities.find((c) => c.slug === city);
-
-  if (!cityData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
-          <Link href="/" className="text-blue-600 underline">Return Home</Link>
-        </div>
-      </div>
-    );
-  }
-
+export default function CityPageClient({ cityData }: { cityData: CityData }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -309,5 +296,6 @@ export default function CityPageClient({ city }: { city: string }) {
     </>
   );
 }
+
 
 
