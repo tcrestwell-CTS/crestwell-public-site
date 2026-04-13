@@ -1,5 +1,5 @@
-\'use client\';
-import { useParams, notFound } from 'next/navigation';
+'use client';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { cities } from '@/data/cities';
 
