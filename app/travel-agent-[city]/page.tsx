@@ -1,5 +1,5 @@
 import { cities } from '@/data/cities';
-import CityPageClient from './CityPageClient';
+import CityPageClient from '@/app/travel-agent-[city]/CityPageClient';
 
 export async function generateStaticParams() {
   return cities.map((c) => ({ city: c.slug }));
