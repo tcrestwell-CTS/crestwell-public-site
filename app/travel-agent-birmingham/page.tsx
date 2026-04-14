@@ -1,28 +1,26 @@
 import { cities } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export const metadata = (() => {
-  const d = cities.find((c) => c.slug === 'birmingham');
-  if (!d) return {};
-  return {
-    title: d.metaTitle,
-    description: d.metaDescription,
-    alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-birmingham' },
-    openGraph: {
-      title: d.metaTitle,
-      description: d.metaDescription,
-      url: 'https://crestwellgetaways.com/travel-agent-birmingham',
-      siteName: 'Crestwell Travel Services',
-      type: 'website',
-    },
-  };
-})();
+export const metadata: Metadata = {
+  title: 'Travel Agent Birmingham AL | Cruises & Resorts | Crestwell',
+  description: 'Birmingham',
+  alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-birmingham' },
+  openGraph: {
+    title: 'Travel Agent Birmingham AL | Cruises & Resorts | Crestwell',
+    description: 'Birmingham',
+    url: 'https://crestwellgetaways.com/travel-agent-birmingham',
+    siteName: 'Crestwell Travel Services',
+    type: 'website',
+  },
+};
 
 export default function Page() {
   const cityData = cities.find((c) => c.slug === 'birmingham');
   if (!cityData) notFound();
   const d = cityData!;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
