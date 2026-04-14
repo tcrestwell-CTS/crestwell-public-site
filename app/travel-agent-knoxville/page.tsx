@@ -1,28 +1,26 @@
 import { cities } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export const metadata = (() => {
-  const d = cities.find((c) => c.slug === 'knoxville');
-  if (!d) return {};
-  return {
-    title: d.metaTitle,
-    description: d.metaDescription,
-    alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-knoxville' },
-    openGraph: {
-      title: d.metaTitle,
-      description: d.metaDescription,
-      url: 'https://crestwellgetaways.com/travel-agent-knoxville',
-      siteName: 'Crestwell Travel Services',
-      type: 'website',
-    },
-  };
-})();
+export const metadata: Metadata = {
+  title: 'Travel Agent Knoxville | Cruises & Resorts | Crestwell',
+  description: 'Knoxville',
+  alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-knoxville' },
+  openGraph: {
+    title: 'Travel Agent Knoxville | Cruises & Resorts | Crestwell',
+    description: 'Knoxville',
+    url: 'https://crestwellgetaways.com/travel-agent-knoxville',
+    siteName: 'Crestwell Travel Services',
+    type: 'website',
+  },
+};
 
 export default function Page() {
   const cityData = cities.find((c) => c.slug === 'knoxville');
   if (!cityData) notFound();
   const d = cityData!;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
