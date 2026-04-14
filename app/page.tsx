@@ -4,7 +4,6 @@ import Link from 'next/link';
 import FeaturedTrips from '@/components/FeaturedTrips';
 import NewsletterSection from '@/components/NewsletterSection';
 import PartnerLogos from '@/components/PartnerLogos';
-import CruiseSearch from '@/components/CruiseSearch';
 import TravelHeroSlider from '@/components/TravelHeroSlider';
 
 const services = [
@@ -93,8 +92,6 @@ export default function HomePage() {
       {/* ── PARTNER LOGOS STRIP ── */}
       <PartnerLogos />
 
-      {/* ── CRUISE SEARCH ── */}
-      <CruiseSearch redirectTo="/cruises" searchOnly />
 
       {/* ── SERVICES ── */}
       <section className="section-pad" style={{ background: 'var(--cream)' }}>
@@ -235,6 +232,47 @@ export default function HomePage() {
       </section>
 
 
+
+      {/* ── SOUTHEAST CITIES ── */}
+      <section style={{ background: 'var(--cream)', padding: 'clamp(48px,6vw,72px) clamp(16px,5vw,32px)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+          <div className="overline" style={{ marginBottom: 12 }}>Serving the Southeast</div>
+          <h2 className="font-display" style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 300, color: 'var(--navy)', marginBottom: 8 }}>
+            Your Local Travel Advisor
+          </h2>
+          <p style={{ color: 'var(--slate)', fontSize: '0.95rem', maxWidth: 560, margin: '0 auto 40px' }}>
+            Based in Chattanooga — serving families and groups across Georgia, Tennessee, Alabama, and beyond.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+            {[
+              { city: 'Atlanta', slug: 'atlanta', state: 'GA' },
+              { city: 'Nashville', slug: 'nashville', state: 'TN' },
+              { city: 'Birmingham', slug: 'birmingham', state: 'AL' },
+              { city: 'Chattanooga', slug: 'chattanooga', state: 'TN' },
+              { city: 'Huntsville', slug: 'huntsville', state: 'AL' },
+              { city: 'Knoxville', slug: 'knoxville', state: 'TN' },
+              { city: 'Memphis', slug: 'memphis', state: 'TN' },
+              { city: 'Savannah', slug: 'savannah', state: 'GA' },
+            ].map(({ city, slug, state }) => (
+              <a
+                key={slug}
+                href={`/travel-agent-${slug}`}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '10px 20px', border: '1px solid rgba(13,27,42,0.15)',
+                  background: 'white', color: 'var(--navy)', textDecoration: 'none',
+                  fontSize: '0.85rem', letterSpacing: '0.03em', transition: 'all 0.2s',
+                  fontFamily: 'var(--font-body)',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--gold)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--gold)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(13,27,42,0.15)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--navy)'; }}
+              >
+                {city}, {state}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* ── FAQ SECTION (matches FAQPage schema in layout) ── */}
       <section style={{ background: 'var(--cream)', padding: '72px 32px', borderTop: '1px solid #e8e3da' }}>
         <div style={{ maxWidth: 780, margin: '0 auto' }}>
