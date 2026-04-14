@@ -1,28 +1,26 @@
 import { cities } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export const metadata = (() => {
-  const d = cities.find((c) => c.slug === 'savannah');
-  if (!d) return {};
-  return {
-    title: d.metaTitle,
-    description: d.metaDescription,
-    alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-savannah' },
-    openGraph: {
-      title: d.metaTitle,
-      description: d.metaDescription,
-      url: 'https://crestwellgetaways.com/travel-agent-savannah',
-      siteName: 'Crestwell Travel Services',
-      type: 'website',
-    },
-  };
-})();
+export const metadata: Metadata = {
+  title: 'Travel Agent Savannah GA | Cruises & Resorts | Crestwell',
+  description: 'Savannah',
+  alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-savannah' },
+  openGraph: {
+    title: 'Travel Agent Savannah GA | Cruises & Resorts | Crestwell',
+    description: 'Savannah',
+    url: 'https://crestwellgetaways.com/travel-agent-savannah',
+    siteName: 'Crestwell Travel Services',
+    type: 'website',
+  },
+};
 
 export default function Page() {
   const cityData = cities.find((c) => c.slug === 'savannah');
   if (!cityData) notFound();
   const d = cityData!;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
