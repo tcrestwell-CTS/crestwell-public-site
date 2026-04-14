@@ -84,10 +84,10 @@ export default function HomePage() {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 {[
-                  { region: 'Georgia', services: 'Cruise advisor in Atlanta, Savannah & Augusta' },
-                  { region: 'Tennessee', services: 'Travel planner in Nashville, Knoxville & Memphis' },
-                  { region: 'Alabama', services: 'Vacation planner in Birmingham & Huntsville' },
-                  { region: 'Florida', services: 'Group & cruise travel from Jacksonville to Pensacola' },
+                  { region: 'Georgia', services: <><a href="/travel-agent-atlanta" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Atlanta</a>, <a href="/travel-agent-savannah" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Savannah</a> &amp; Augusta</> },
+                  { region: 'Tennessee', services: <><a href="/travel-agent-nashville" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Nashville</a>, <a href="/travel-agent-knoxville" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Knoxville</a> &amp; <a href="/travel-agent-memphis" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Memphis</a></> },
+                  { region: 'Alabama', services: <><a href="/travel-agent-birmingham" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Birmingham</a> &amp; <a href="/travel-agent-huntsville" style={{color:'inherit',borderBottom:'1px dotted var(--gold)',textDecoration:'none'}}>Huntsville</a></> },
+                  { region: 'Florida', services: <>Group &amp; cruise travel from Jacksonville to Pensacola</> },
                 ].map((r, i) => (
                   <div key={i} style={{ padding: '16px', background: 'var(--cream)', borderLeft: '3px solid var(--gold)' }}>
                     <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--navy)', marginBottom: 4, letterSpacing: '0.05em' }}>{r.region}</div>
