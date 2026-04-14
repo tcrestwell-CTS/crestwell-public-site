@@ -1,6 +1,7 @@
 import { cities } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import LeadMagnetForm from '@/components/LeadMagnetForm';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -213,26 +214,7 @@ export default function Page() {
           <p className="text-lg text-slate-700 mb-6">
             Our free 12-page guide breaks down every major cruise port within driving distance of {d.city} — drive times, parking costs, hotel recommendations, and which cruise lines sail where. Plus a detailed comparison of flying vs. driving.
           </p>
-          <form
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-            action="/api/lead-magnet"
-            method="POST"
-          >
-            <input type="hidden" name="city" value={d.slug} />
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="your@email.com"
-              className="flex-1 px-4 py-3 rounded-md border border-slate-300"
-            />
-            <button
-              type="submit"
-              className="bg-slate-900 text-white px-6 py-3 rounded-md font-semibold hover:bg-slate-800"
-            >
-              Send Me the Guide
-            </button>
-          </form>
+          <LeadMagnetForm city={d.slug} cityName={d.city} />
         </div>
       </section>
 
