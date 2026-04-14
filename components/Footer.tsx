@@ -93,6 +93,33 @@ export default function Footer() {
             </ul>
           </div>
 
+
+          {/* Cities */}
+          <div>
+            <div className="overline" style={{ marginBottom: 20 }}>Serving</div>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                { label: 'Atlanta, GA', href: '/travel-agent-atlanta' },
+                { label: 'Nashville, TN', href: '/travel-agent-nashville' },
+                { label: 'Birmingham, AL', href: '/travel-agent-birmingham' },
+                { label: 'Chattanooga, TN', href: '/travel-agent-chattanooga' },
+                { label: 'Huntsville, AL', href: '/travel-agent-huntsville' },
+                { label: 'Knoxville, TN', href: '/travel-agent-knoxville' },
+                { label: 'Memphis, TN', href: '/travel-agent-memphis' },
+                { label: 'Savannah, GA', href: '/travel-agent-savannah' },
+              ].map(item => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.02em' }}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Contact */}
           <div>
             <div className="overline" style={{ marginBottom: 20 }}>Contact</div>
