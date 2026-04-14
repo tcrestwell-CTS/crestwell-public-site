@@ -5,7 +5,7 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 const PDF_URL = "https://crestwellgetaways.com/southeast-port-guide.pdf";
-const FROM = "Tim Crestwell <tim@crestwellgetaways.com>";
+const FROM = "Tim Crestwell <send@crestwellgetaways.com>";
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -106,9 +106,9 @@ export async function POST(req: NextRequest) {
     });
 
     if (!emailRes.ok) {
-      const err = await emailRes.json();
-      console.error("Resend error:", err);
-      return NextResponse.json({ error: "Failed to send email" }, { status: 500, headers: CORS });
+      const err = await emailRes.json().catch(() => ({}));
+      console.error("Resend error:", JSON.stringify(err));
+      return NextResponse.json({ error: `Email failed: ${err?.message || err?.name || 'unknown'}` }, { status: 500, headers: CORS });
     }
 
     return NextResponse.json({ success: true }, { status: 200, headers: CORS });
