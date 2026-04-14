@@ -13,6 +13,17 @@ const services = [
   { icon: '🥂', title: 'Group Travel', description: 'Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.' },
 ];
 
+const CITY_SLUGS: Record<string, string> = {
+  'Atlanta, GA': 'atlanta',
+  'Nashville, TN': 'nashville',
+  'Birmingham, AL': 'birmingham',
+  'Chattanooga, TN': 'chattanooga',
+  'Huntsville, AL': 'huntsville',
+  'Knoxville, TN': 'knoxville',
+  'Memphis, TN': 'memphis',
+  'Savannah, GA': 'savannah',
+};
+
 const testimonials = [
   { quote: 'Crestwell made our anniversary cruise completely effortless. Every detail was handled perfectly.', name: 'Sarah & Marcus T.', location: 'Atlanta, GA' },
   { quote: "Our family trip to the Bahamas was the best vacation we've ever taken. They knew exactly what we needed.", name: 'The Johnson Family', location: 'Chattanooga, TN' },
@@ -170,7 +181,11 @@ export default function HomePage() {
                   <div itemProp="author" itemScope itemType="https://schema.org/Person" style={{ fontWeight: 500, fontSize: '0.85rem', color: 'var(--navy)' }}>
                     <span itemProp="name">{t.name}</span>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 2 }}>{t.location}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 2 }}>
+                    {CITY_SLUGS[t.location]
+                      ? <a href={`/travel-agent-${CITY_SLUGS[t.location]}`} style={{ color: 'var(--slate)', textDecoration: 'none', borderBottom: '1px dotted var(--gold)' }}>{t.location}</a>
+                      : t.location}
+                  </div>
                 </div>
               </div>
             ))}
