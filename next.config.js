@@ -45,4 +45,7 @@ const nextConfig = {
   // Power ETags for better caching
   generateEtags: true,
 }
+// Disable Next.js telemetry at build time
+process.env.NEXT_TELEMETRY_DISABLED = '1';
+
 module.exports = nextConfig
