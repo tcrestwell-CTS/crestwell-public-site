@@ -48,11 +48,11 @@ export default function DisplayPage() {
           0%   { transform: translateX(100vw); }
           100% { transform: translateX(-100%); }
         }
-        .slide { animation: fadeSlide 10s ease-in-out infinite; }
+        .slide { animation: fadeSlide 20s ease-in-out infinite; }
         .slide:nth-child(1) { animation-delay: 0s; }
-        .slide:nth-child(2) { animation-delay: 10s; }
-        .slide:nth-child(3) { animation-delay: 20s; }
-        .slide:nth-child(4) { animation-delay: 30s; }
+        .slide:nth-child(2) { animation-delay: 40s; }
+        .slide:nth-child(3) { animation-delay: 40s; }
+        .slide:nth-child(4) { animation-delay: 60s; }
         .ticker-track { animation: ticker 30s linear infinite; white-space: nowrap; }
       `}</style>
 
