@@ -93,27 +93,27 @@ export default function DisplayPage() {
         html, body { width: 100%; height: 100%; overflow: hidden; background: #0D1B2A; }
         @keyframes fadeSlide {
           0%   { opacity: 0; transform: scale(1.04); }
-          3%   { opacity: 1; transform: scale(1); }
-          17%  { opacity: 1; transform: scale(1.01); }
-          20%  { opacity: 0; transform: scale(1.04); }
+          4%   { opacity: 1; transform: scale(1); }
+          8%   { opacity: 1; transform: scale(1.01); }
+          10%  { opacity: 0; transform: scale(1.04); }
           100% { opacity: 0; transform: scale(1.04); }
         }
         @keyframes ticker {
           0%   { transform: translateX(100vw); }
           100% { transform: translateX(-100%); }
         }
-        .slide { animation: fadeSlide 20s ease-in-out infinite; animation-duration: 220s; }
+        .slide { animation: fadeSlide 10s ease-in-out infinite; animation-duration: 110s; }
         .slide:nth-child(1) { animation-delay: 0s; }
-        .slide:nth-child(2) { animation-delay: 20s; }
-        .slide:nth-child(3) { animation-delay: 40s; }
-        .slide:nth-child(4) { animation-delay: 60s; }
-        .slide:nth-child(5) { animation-delay: 80s; }
-        .slide:nth-child(6) { animation-delay: 100s; }
-        .slide:nth-child(7) { animation-delay: 120s; }
-        .slide:nth-child(8) { animation-delay: 140s; }
-        .slide:nth-child(9) { animation-delay: 160s; }
-        .slide:nth-child(10) { animation-delay: 180s; }
-        .slide:nth-child(11) { animation-delay: 200s; }
+        .slide:nth-child(2) { animation-delay: 10s; }
+        .slide:nth-child(3) { animation-delay: 20s; }
+        .slide:nth-child(4) { animation-delay: 30s; }
+        .slide:nth-child(5) { animation-delay: 40s; }
+        .slide:nth-child(6) { animation-delay: 50s; }
+        .slide:nth-child(7) { animation-delay: 60s; }
+        .slide:nth-child(8) { animation-delay: 70s; }
+        .slide:nth-child(9) { animation-delay: 80s; }
+        .slide:nth-child(10) { animation-delay: 90s; }
+        .slide:nth-child(11) { animation-delay: 100s; }
         .ticker-track { animation: ticker 30s linear infinite; white-space: nowrap; }
       `}</style>
 
