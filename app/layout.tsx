@@ -8,7 +8,7 @@ import { headers } from 'next/headers';
 async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) {
   const headersList = await headers();
   const pathname = headersList.get('x-invoke-path') || headersList.get('x-pathname') || '';
-  const isDisplay = pathname === '/display' || pathname.startsWith('/display/');
+  const isDisplay = pathname === '/display' || pathname.startsWith('/display/') || pathname === '/win' || pathname.startsWith('/win/');
   if (isDisplay) return <main style={{ margin: 0, padding: 0 }}>{children}</main>;
   return (
     <>
