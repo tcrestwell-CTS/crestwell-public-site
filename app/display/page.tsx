@@ -35,6 +35,27 @@ const slides = [
     isGiveaway: false,
   },
   {
+    bg: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=90',
+    headline: 'Holland America Line',
+    sub: 'Alaska · Europe · Caribbean · World Voyages',
+    cta: 'Planning is always FREE',
+    isGiveaway: false,
+  },
+  {
+    bg: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1920&q=90',
+    headline: 'Princess Cruises',
+    sub: 'Caribbean · Alaska · Mediterranean · South Pacific',
+    cta: 'Planning is always FREE',
+    isGiveaway: false,
+  },
+  {
+    bg: 'https://images.unsplash.com/photo-1467189386127-c4e5e31ee213?w=1920&q=90',
+    headline: 'River Cruises',
+    sub: 'Danube · Rhine · Seine · Douro · Mekong · Amazon',
+    cta: 'Planning is always FREE',
+    isGiveaway: false,
+  },
+  {
     bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90',
     headline: 'Win a Dinner for Two!',
     sub: 'Scan the QR code to enter — and tell us about your dream vacation',
@@ -60,12 +81,15 @@ export default function DisplayPage() {
           0%   { transform: translateX(100vw); }
           100% { transform: translateX(-100%); }
         }
-        .slide { animation: fadeSlide 20s ease-in-out infinite; animation-duration: 100s; }
+        .slide { animation: fadeSlide 20s ease-in-out infinite; animation-duration: 160s; }
         .slide:nth-child(1) { animation-delay: 0s; }
         .slide:nth-child(2) { animation-delay: 20s; }
         .slide:nth-child(3) { animation-delay: 40s; }
         .slide:nth-child(4) { animation-delay: 60s; }
         .slide:nth-child(5) { animation-delay: 80s; }
+        .slide:nth-child(6) { animation-delay: 100s; }
+        .slide:nth-child(7) { animation-delay: 120s; }
+        .slide:nth-child(8) { animation-delay: 140s; }
         .ticker-track { animation: ticker 30s linear infinite; white-space: nowrap; }
       `}</style>
 
