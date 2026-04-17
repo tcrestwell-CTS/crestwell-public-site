@@ -63,7 +63,7 @@ const whyCustom = [
   { icon: '✈️', title: 'Air + Land Packages', text: 'We bundle flights, hotels, rail, transfers, and experiences into one seamless package.' },
   { icon: '🚂', title: 'Rail & Self-Drive', text: 'Explore Europe by train or take a self-drive journey through Italy, France, Ireland, or Costa Rica.' },
   { icon: '💰', title: 'Always Free to Plan', text: `Our planning services are complimentary. We're compensated by our supplier partners — never by you.` },
-  { icon: '🤝', title: 'Avanti Partnership', text: 'We work directly with Avanti Destinations — the travel advisor's travel advisor since 1981.' },
+  { icon: '🤝', title: 'Avanti Partnership', text: `We work directly with Avanti Destinations — the travel advisor's travel advisor since 1981.` },
 ];
 
 export default function DestinationPackagesPage() {
