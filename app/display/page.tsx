@@ -70,6 +70,13 @@ const slides = [
     isGiveaway: false,
   },
   {
+    bg: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1920&q=90',
+    headline: 'Vacations by Rail',
+    sub: 'National · International · Scenic Routes · Amtrak Vacations',
+    cta: 'Planning is always FREE',
+    isGiveaway: false,
+  },
+  {
     bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90',
     headline: 'Win a Dinner for Two!',
     sub: 'Scan the QR code to enter — and tell us about your dream vacation',
@@ -95,7 +102,7 @@ export default function DisplayPage() {
           0%   { transform: translateX(100vw); }
           100% { transform: translateX(-100%); }
         }
-        .slide { animation: fadeSlide 20s ease-in-out infinite; animation-duration: 200s; }
+        .slide { animation: fadeSlide 20s ease-in-out infinite; animation-duration: 220s; }
         .slide:nth-child(1) { animation-delay: 0s; }
         .slide:nth-child(2) { animation-delay: 20s; }
         .slide:nth-child(3) { animation-delay: 40s; }
@@ -106,6 +113,7 @@ export default function DisplayPage() {
         .slide:nth-child(8) { animation-delay: 140s; }
         .slide:nth-child(9) { animation-delay: 160s; }
         .slide:nth-child(10) { animation-delay: 180s; }
+        .slide:nth-child(11) { animation-delay: 200s; }
         .ticker-track { animation: ticker 30s linear infinite; white-space: nowrap; }
       `}</style>
 
