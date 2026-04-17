@@ -57,7 +57,7 @@ export default function WinPage() {
             📣 Follow us on Facebook for deals & travel inspiration!
           </p>
           <a
-            href="https://www.facebook.com/crestwellgetaways"
+            href="https://www.facebook.com/profile.php?id=61572819131364"
             target="_blank"
             rel="noopener noreferrer"
             style={{
