@@ -6,84 +6,27 @@ export const metadata: Metadata = {
 };
 
 const slides = [
-  {
-    bg: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=90',
-    headline: 'Caribbean Cruises',
-    sub: 'Bahamas · Cozumel · Aruba · Grand Cayman',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?w=1920&q=90',
-    headline: 'Mediterranean Getaways',
-    sub: 'Santorini · Rome · Barcelona · Venice',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90',
-    headline: 'Win a Dinner for Two!',
-    sub: 'Scan the QR code to enter — and tell us about your dream vacation',
-    cta: 'No purchase necessary',
-    isGiveaway: true,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=1920&q=90',
-    headline: 'Alaska Adventures',
-    sub: 'Glaciers · Wildlife · Fjords · Wilderness',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=90',
-    headline: 'All-Inclusive Resorts',
-    sub: 'Cancún · Punta Cana · Jamaica · St. Lucia',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90',
-    headline: 'Win a Dinner for Two!',
-    sub: 'Scan the QR code to enter — and tell us about your dream vacation',
-    cta: 'No purchase necessary',
-    isGiveaway: true,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=90',
-    headline: 'Holland America Line',
-    sub: 'Alaska · Europe · Caribbean · World Voyages',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1920&q=90',
-    headline: 'Princess Cruises',
-    sub: 'Caribbean · Alaska · Mediterranean · South Pacific',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1467189386127-c4e5e31ee213?w=1920&q=90',
-    headline: 'River Cruises',
-    sub: 'Danube · Rhine · Seine · Douro · Mekong · Amazon',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1920&q=90',
-    headline: 'Vacations by Rail',
-    sub: 'National · International · Scenic Routes · Amtrak Vacations',
-    cta: 'Planning is always FREE',
-    isGiveaway: false,
-  },
-  {
-    bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90',
-    headline: 'Win a Dinner for Two!',
-    sub: 'Scan the QR code to enter — and tell us about your dream vacation',
-    cta: 'No purchase necessary',
-    isGiveaway: true,
-  },
+  { bg: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=90', headline: 'Caribbean Cruises', sub: 'Bahamas · Cozumel · Aruba · Grand Cayman', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?w=1920&q=90', headline: 'Mediterranean Getaways', sub: 'Santorini · Rome · Barcelona · Venice', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90', headline: 'Win a Dinner for Two!', sub: 'Scan the QR code to enter — and tell us about your dream vacation', cta: 'No purchase necessary', isGiveaway: true, duration: 20 },
+  { bg: 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=1920&q=90', headline: 'Alaska Adventures', sub: 'Glaciers · Wildlife · Fjords · Wilderness', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=90', headline: 'All-Inclusive Resorts', sub: 'Cancún · Punta Cana · Jamaica · St. Lucia', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90', headline: 'Win a Dinner for Two!', sub: 'Scan the QR code to enter — and tell us about your dream vacation', cta: 'No purchase necessary', isGiveaway: true, duration: 20 },
+  { bg: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=90', headline: 'Holland America Line', sub: 'Alaska · Europe · Caribbean · World Voyages', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1920&q=90', headline: 'Princess Cruises', sub: 'Caribbean · Alaska · Mediterranean · South Pacific', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1467189386127-c4e5e31ee213?w=1920&q=90', headline: 'River Cruises', sub: 'Danube · Rhine · Seine · Douro · Mekong · Amazon', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1920&q=90', headline: 'Vacations by Rail', sub: 'National · International · Scenic Routes · Amtrak Vacations', cta: 'Planning is always FREE', isGiveaway: false, duration: 10 },
+  { bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90', headline: 'Win a Dinner for Two!', sub: 'Scan the QR code to enter — and tell us about your dream vacation', cta: 'No purchase necessary', isGiveaway: true, duration: 20 },
+  { bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90', headline: 'Win a Dinner for Two!', sub: 'Scan the QR code to enter — and tell us about your dream vacation', cta: 'No purchase necessary', isGiveaway: true, duration: 20 },
+  { bg: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90', headline: 'Win a Dinner for Two!', sub: 'Scan the QR code to enter — and tell us about your dream vacation', cta: 'No purchase necessary', isGiveaway: true, duration: 20 },
 ];
+
+// Compute cumulative delays — each slide starts after all previous slides finish
+const DELAYS = slides.reduce<number[]>((acc, s, i) => {
+  acc.push(i === 0 ? 0 : acc[i - 1] + slides[i - 1].duration);
+  return acc;
+}, []);
+const TOTAL = slides.reduce((sum, s) => sum + s.duration, 0);
 
 export default function DisplayPage() {
   return (
@@ -92,28 +35,16 @@ export default function DisplayPage() {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; background: #0D1B2A; }
         @keyframes fadeSlide {
-          0%   { opacity: 0; transform: scale(1.04); }
-          4%   { opacity: 1; transform: scale(1); }
-          8%   { opacity: 1; transform: scale(1.01); }
-          10%  { opacity: 0; transform: scale(1.04); }
-          100% { opacity: 0; transform: scale(1.04); }
+          0%    { opacity: 0; transform: scale(1.04); }
+          5%    { opacity: 1; transform: scale(1); }
+          90%   { opacity: 1; transform: scale(1.01); }
+          100%  { opacity: 0; transform: scale(1.04); }
         }
         @keyframes ticker {
           0%   { transform: translateX(100vw); }
           100% { transform: translateX(-100%); }
         }
-        .slide { animation: fadeSlide 10s ease-in-out infinite; animation-duration: 110s; }
-        .slide:nth-child(1) { animation-delay: 0s; }
-        .slide:nth-child(2) { animation-delay: 10s; }
-        .slide:nth-child(3) { animation-delay: 20s; }
-        .slide:nth-child(4) { animation-delay: 30s; }
-        .slide:nth-child(5) { animation-delay: 40s; }
-        .slide:nth-child(6) { animation-delay: 50s; }
-        .slide:nth-child(7) { animation-delay: 60s; }
-        .slide:nth-child(8) { animation-delay: 70s; }
-        .slide:nth-child(9) { animation-delay: 80s; }
-        .slide:nth-child(10) { animation-delay: 90s; }
-        .slide:nth-child(11) { animation-delay: 100s; }
+        .slide { animation: fadeSlide var(--dur, 10s) ease-in-out var(--delay, 0s) infinite; }
         .ticker-track { animation: ticker 30s linear infinite; white-space: nowrap; }
       `}</style>
 
@@ -122,6 +53,8 @@ export default function DisplayPage() {
         {/* SLIDES */}
         {slides.map((s, i) => (
           <div key={i} className="slide" style={{
+            ['--dur' as string]: `${TOTAL}s`,
+            ['--delay' as string]: `${DELAYS[i]}s`,
             position: 'absolute', inset: 0, opacity: 0,
             backgroundImage: `url(${s.bg})`,
             backgroundSize: 'cover', backgroundPosition: 'center',
