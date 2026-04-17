@@ -3,6 +3,21 @@ import Script from 'next/script';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { headers } from 'next/headers';
+
+async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) {
+  const headersList = await headers();
+  const pathname = headersList.get('x-invoke-path') || headersList.get('x-pathname') || '';
+  const isDisplay = pathname === '/display' || pathname.startsWith('/display/');
+  if (isDisplay) return <main style={{ margin: 0, padding: 0 }}>{children}</main>;
+  return (
+    <>
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
+    </>
+  );
+}
 
 const SITE_URL = 'https://crestwellgetaways.com';
 const OG_IMAGE = 'https://crestwellgetaways.com/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png';
@@ -148,9 +163,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}</Script>
       </head>
       <body>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <NavbarFooterWrapper>
+          {children}
+        </NavbarFooterWrapper>
         <Script
           id="bbb-seal"
           strategy="afterInteractive"
