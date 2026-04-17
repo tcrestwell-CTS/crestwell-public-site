@@ -35,7 +35,7 @@ const regions = [
     name: 'Latin America',
     img: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800&q=80',
     tagline: 'Adventure, culture & natural wonders',
-    description: 'Explore Machu Picchu, the Amazon rainforest, Patagonia's glaciers, or the beaches of Costa Rica. Latin America is one of the world's most diverse travel regions — and one of the most underrated.',
+    description: `Explore Machu Picchu, the Amazon rainforest, Patagonia’s glaciers, or the beaches of Costa Rica. Latin America is one of the world’s most diverse travel regions — and one of the most underrated.`,
     highlights: ['Costa Rica', 'Peru', 'Colombia', 'Ecuador / Galápagos', 'Argentina', 'Chile / Patagonia', 'Brazil', 'Mexico', 'Guatemala', 'Panama', 'Belize', 'Bolivia'],
     color: '#2E7D5B',
   },
@@ -62,7 +62,7 @@ const whyCustom = [
   { icon: '🏨', title: 'Hand-Picked Hotels', text: 'Boutique properties, castle stays, eco-resorts, and luxury hotels selected for character and location.' },
   { icon: '✈️', title: 'Air + Land Packages', text: 'We bundle flights, hotels, rail, transfers, and experiences into one seamless package.' },
   { icon: '🚂', title: 'Rail & Self-Drive', text: 'Explore Europe by train or take a self-drive journey through Italy, France, Ireland, or Costa Rica.' },
-  { icon: '💰', title: 'Always Free to Plan', text: 'Our planning services are complimentary. We're compensated by our supplier partners — never by you.' },
+  { icon: '💰', title: 'Always Free to Plan', text: `Our planning services are complimentary. We're compensated by our supplier partners — never by you.` },
   { icon: '🤝', title: 'Avanti Partnership', text: 'We work directly with Avanti Destinations — the travel advisor's travel advisor since 1981.' },
 ];
 
