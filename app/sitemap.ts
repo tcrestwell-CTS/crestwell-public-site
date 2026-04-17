@@ -111,5 +111,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...blogEntries, ...tripEntries, ...cityEntries];
+  const packageEntry: MetadataRoute.Sitemap = [{
+    url: `${SITE_URL}/destination-packages`,
+    lastModified: new Date(now),
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }];
+
+  return [...staticEntries, ...blogEntries, ...tripEntries, ...cityEntries, ...packageEntry];
 }
