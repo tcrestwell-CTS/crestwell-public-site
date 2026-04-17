@@ -66,8 +66,8 @@ export default function WinPage() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', fontWeight: 500, color: 'white', lineHeight: 1 }}>Crestwell</div>
-          <div style={{ fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C9A84C', marginTop: 4, fontFamily: 'system-ui' }}>Travel Services</div>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '2rem', fontWeight: 500, color: 'white', lineHeight: 1 }}>Crestwell</div>
+          <div style={{ fontSize: '0.65rem', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#C9A84C', marginTop: 6, fontFamily: 'system-ui' }}>Travel Services</div>
         </div>
 
         {/* Prize card */}
