@@ -50,10 +50,34 @@ export default function WinPage() {
         <p style={{ color: '#6b7280', lineHeight: 1.7, marginBottom: 24 }}>
           Thanks for entering our <strong>Dinner for Two Gift Card</strong> giveaway. We'll be in touch — and our travel team may reach out about your dream vacation!
         </p>
-        <div style={{ background: '#FEF3C7', border: '1px solid #C9A84C', borderRadius: 8, padding: '16px 20px', marginBottom: 24 }}>
-          <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e', fontWeight: 600 }}>Planning is always FREE at Crestwell Travel Services</p>
+
+        {/* Facebook follow CTA */}
+        <div style={{ background: '#1877F2', borderRadius: 10, padding: '20px 24px', marginBottom: 20, textAlign: 'center' }}>
+          <p style={{ margin: '0 0 14px', fontSize: '1rem', fontWeight: 700, color: 'white' }}>
+            📣 Follow us on Facebook for deals & travel inspiration!
+          </p>
+          <a
+            href="https://www.facebook.com/crestwellgetaways"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              background: 'white', color: '#1877F2', padding: '10px 24px',
+              borderRadius: 6, textDecoration: 'none', fontWeight: 700, fontSize: '0.95rem',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Follow Crestwell Travel
+          </a>
         </div>
-        <Link href="/" style={{ display: 'inline-block', background: '#0D1B2A', color: 'white', padding: '12px 32px', borderRadius: 6, textDecoration: 'none', fontWeight: 600 }}>
+
+        <div style={{ background: '#FEF3C7', border: '1px solid #C9A84C', borderRadius: 8, padding: '14px 20px', marginBottom: 20 }}>
+          <p style={{ margin: 0, fontSize: '0.88rem', color: '#92400e', fontWeight: 600 }}>Planning is always FREE at Crestwell Travel Services</p>
+        </div>
+
+        <Link href="/" style={{ display: 'inline-block', background: '#0D1B2A', color: 'white', padding: '12px 32px', borderRadius: 6, textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
           Visit crestwellgetaways.com
         </Link>
       </div>
