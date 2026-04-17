@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'Crestwell Travel <send@crestwellgetaways.com>',
-        to: ['tim@crestwellgetaways.com'],
+        to: ['tcrestwell@crestwellgetaways.com'],
         subject: `🎉 New Win Entry — ${firstName} ${lastName} (${city})`,
         html: `
           <h2>New Dinner for Two Entry</h2>
