@@ -88,7 +88,7 @@ export default function VacationsByRailPage() {
     <div style={{ background: 'var(--cream)', minHeight: '100vh', WebkitFontSmoothing: 'antialiased' }}>
 
       {/* ANNOUNCEMENT BAR */}
-      <div style={{ background: '#CC2936', padding: '12px 24px', textAlign: 'center', position: 'sticky', top: 0, zIndex: 50 }}>
+      <div style={{ background: '#CC2936', padding: '12px 24px', textAlign: 'center' }}>
         <a href="#deals" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
           <span style={{ background: 'white', color: '#CC2936', fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 10px', fontFamily: 'var(--font-body)', borderRadius: 2 }}>
             Save 10%
