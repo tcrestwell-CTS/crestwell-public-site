@@ -50,9 +50,7 @@ export default function RailDeals() {
         {deals.map((deal, i) => (
           <a
             key={i}
-            href={deal.url}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/request-quote?type=rail-vacation&trip=${encodeURIComponent(deal.name)}&source=rail-deals`}
             style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: 'white', overflow: 'hidden', boxShadow: '0 2px 12px rgba(13,27,42,0.08)', transition: 'transform 0.2s', cursor: 'pointer' }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-3px)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
@@ -73,6 +71,9 @@ export default function RailDeals() {
               )}
               <div style={{ position: 'absolute', top: 12, right: 12, background: deal.type === 'Escorted' ? '#0D1B2A' : '#C9A84C', color: deal.type === 'Escorted' ? 'white' : '#0D1B2A', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', fontFamily: 'var(--font-body)' }}>
                 {deal.type}
+              </div>
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(13,27,42,0.65)', color: 'rgba(255,255,255,0.7)', fontSize: '0.58rem', textAlign: 'center', padding: '4px', fontFamily: 'var(--font-body)', letterSpacing: '0.06em' }}>
+                VIA VACATIONS BY RAIL · BOOK THROUGH CRESTWELL
               </div>
             </div>
 
@@ -100,8 +101,8 @@ export default function RailDeals() {
                     ${deal.price.toLocaleString()}<span style={{ fontSize: '0.7rem', fontWeight: 400 }}> pp</span>
                   </div>
                 </div>
-                <div style={{ background: 'var(--navy)', color: 'white', padding: '8px 16px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-                  View Details →
+                <div style={{ background: '#C9A84C', color: '#0D1B2A', padding: '8px 16px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
+                  Book with Crestwell →
                 </div>
               </div>
             </div>
