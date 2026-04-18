@@ -52,6 +52,7 @@ const initialForm = {
 
 function RequestQuoteForm() {
   const searchParams = useSearchParams();
+  const railTripName = searchParams.get('trip') || '';
   const [form, setForm] = useState(() => {
     const cruiseName   = searchParams.get('cruise_name') || '';
     const cruiseLine   = searchParams.get('line') || '';
@@ -76,9 +77,6 @@ function RequestQuoteForm() {
         parts.push(`Sailing Date: ${formatted}`);
       } catch { parts.push(`Sailing Date: ${sailingDate}`); }
     }
-    // Pre-fill destination with rail trip name if coming from rail deals
-    const railTripName = tripParam || '';
-
     if (tripType.toLowerCase().includes('all-inclusive') && resortName && !cruiseName) {
       parts.push(`Resort Brand: ${resortName}`);
     }
