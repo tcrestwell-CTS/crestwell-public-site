@@ -50,10 +50,107 @@ export default function RailTripDetail() {
     : '/request-quote?type=rail-vacation';
 
   if (loading) return (
-    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <div style={{ width: 48, height: 48, border: '3px solid #e2e8f0', borderTop: '3px solid #0D1B2A', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-      <p style={{ color: '#64748b', fontFamily: 'var(--font-body)', fontSize: '0.9rem' }}>Loading itinerary...</p>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    <div style={{ background: 'var(--cream)', minHeight: '100vh' }}>
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -800px 0; }
+          100% { background-position: 800px 0; }
+        }
+        .sk {
+          background: linear-gradient(90deg, #e8e4dc 25%, #f0ede6 50%, #e8e4dc 75%);
+          background-size: 800px 100%;
+          animation: shimmer 1.6s infinite;
+          border-radius: 4px;
+        }
+        @keyframes trainMove {
+          0%   { transform: translateX(-60px); opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 1; }
+          100% { transform: translateX(calc(100vw + 60px)); opacity: 0; }
+        }
+      `}</style>
+
+      {/* Skeleton hero */}
+      <div style={{ height: 'clamp(300px,45vw,480px)', background: '#1a2a3a', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'clamp(24px,4vw,48px)' }}>
+        {/* Animated train crossing the hero */}
+        <div style={{ position: 'absolute', top: '42%', left: 0, right: 0, height: 40, overflow: 'hidden', pointerEvents: 'none' }}>
+          <div style={{ animation: 'trainMove 2.8s ease-in-out infinite', display: 'inline-flex', alignItems: 'center', gap: 0, fontSize: '1.6rem', whiteSpace: 'nowrap' }}>
+            🚂🚃🚃🚃🚃
+          </div>
+        </div>
+        {/* Skeleton text over dark hero */}
+        <div style={{ width: '30%', height: 12, background: 'rgba(201,168,76,0.4)', borderRadius: 4, marginBottom: 16 }} />
+        <div style={{ width: '65%', height: 28, background: 'rgba(255,255,255,0.15)', borderRadius: 4, marginBottom: 12 }} />
+        <div style={{ width: '45%', height: 20, background: 'rgba(255,255,255,0.1)', borderRadius: 4, marginBottom: 16 }} />
+        <div style={{ display: 'flex', gap: 16 }}>
+          {[80, 100, 90].map((w, i) => (
+            <div key={i} style={{ width: w, height: 14, background: 'rgba(255,255,255,0.1)', borderRadius: 4 }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Skeleton sticky bar */}
+      <div style={{ background: '#0D1B2A', padding: '14px clamp(16px,5vw,32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ width: 180, height: 10, background: 'rgba(255,255,255,0.1)', borderRadius: 3 }} />
+          <div style={{ width: 120, height: 18, background: 'rgba(201,168,76,0.3)', borderRadius: 3 }} />
+        </div>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <div style={{ width: 120, height: 38, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 2 }} />
+          <div style={{ width: 180, height: 38, background: 'rgba(201,168,76,0.4)', borderRadius: 2 }} />
+        </div>
+      </div>
+
+      {/* Skeleton content */}
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(32px,5vw,56px) clamp(16px,5vw,32px)', display: 'grid', gridTemplateColumns: '1fr clamp(280px,30%,340px)', gap: 40 }}>
+        <div>
+          {/* Overview skeleton */}
+          <div style={{ marginBottom: 48 }}>
+            <div className="sk" style={{ width: 100, height: 10, marginBottom: 16 }} />
+            <div style={{ borderLeft: '3px solid #C9A84C', paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {[95, 88, 72].map((w, i) => (
+                <div key={i} className="sk" style={{ width: `${w}%`, height: 14 }} />
+              ))}
+            </div>
+          </div>
+          {/* Itinerary skeleton */}
+          <div>
+            <div className="sk" style={{ width: 140, height: 10, marginBottom: 20 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {[1,2,3,4,5,6].map(i => (
+                <div key={i} style={{ border: '1px solid #e8e4dc', padding: '16px 20px', background: 'white', display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <div className="sk" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
+                  <div className="sk" style={{ width: `${50 + (i * 7) % 30}%`, height: 14 }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar skeleton */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ background: '#0D1B2A', padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ width: 120, height: 10, background: 'rgba(201,168,76,0.3)', borderRadius: 3 }} />
+            {[90, 70].map((w, i) => (
+              <div key={i} style={{ width: `${w}%`, height: 12, background: 'rgba(255,255,255,0.1)', borderRadius: 3 }} />
+            ))}
+            <div style={{ width: 80, height: 32, background: 'rgba(201,168,76,0.3)', borderRadius: 3, marginTop: 8 }} />
+            <div style={{ width: '100%', height: 44, background: 'rgba(201,168,76,0.4)', borderRadius: 2, marginTop: 4 }} />
+            <div style={{ width: '100%', height: 40, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2 }} />
+          </div>
+          <div style={{ background: 'white', padding: 24, boxShadow: '0 2px 12px rgba(13,27,42,0.06)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="sk" style={{ width: 110, height: 10, marginBottom: 6 }} />
+            {[85, 70, 90, 65, 75].map((w, i) => (
+              <div key={i} className="sk" style={{ width: `${w}%`, height: 12 }} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Loading label */}
+      <div style={{ textAlign: 'center', paddingBottom: 40, color: '#94a3b8', fontSize: '0.8rem', fontFamily: 'var(--font-body)', letterSpacing: '0.08em' }}>
+        Fetching itinerary &amp; rewriting in Crestwell voice...
+      </div>
     </div>
   );
 
