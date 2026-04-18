@@ -50,7 +50,7 @@ export default function RailDeals() {
         {deals.map((deal, i) => (
           <a
             key={i}
-            href={`/request-quote?type=rail-vacation&trip=${encodeURIComponent(deal.name)}&source=rail-deals`}
+            href={`/vacations-by-rail/${encodeURIComponent(deal.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}?vbr=${encodeURIComponent(deal.url.replace('https://www.vacationsbyrail.com', ''))}&source=rail-deals`}
             style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: 'white', overflow: 'hidden', boxShadow: '0 2px 12px rgba(13,27,42,0.08)', transition: 'transform 0.2s', cursor: 'pointer' }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-3px)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
@@ -102,7 +102,7 @@ export default function RailDeals() {
                   </div>
                 </div>
                 <div style={{ background: '#C9A84C', color: '#0D1B2A', padding: '8px 16px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', whiteSpace: 'nowrap' }}>
-                  Book with Crestwell →
+                  View Itinerary →
                 </div>
               </div>
             </div>
