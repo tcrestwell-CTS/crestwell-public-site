@@ -8,6 +8,8 @@ import { getAttribution } from '@/lib/utm-capture';
 const tripTypes = [
   'Cruise Vacation',
   'All-Inclusive Resort',
+  'Vacations by Rail',
+  'Destination Package',
   'Family Vacation',
   'Disney / Theme Park',
   'Group Trip',
@@ -57,7 +59,11 @@ function RequestQuoteForm() {
     const cruiseDur    = searchParams.get('duration') || '';
     const sailingDate  = searchParams.get('date_from') || searchParams.get('sailing_date') || '';
     const resortName   = searchParams.get('resort') || searchParams.get('destination') || '';
-    const tripType     = searchParams.get('trip_type') || 'Cruise Vacation';
+    const typeParam    = searchParams.get('type') || '';
+    const tripParam    = searchParams.get('trip') || '';
+    const tripType     = searchParams.get('trip_type') ||
+      (typeParam === 'rail-vacation' ? 'Vacations by Rail' :
+       typeParam === 'destination-package' ? 'Destination Package' : 'Cruise Vacation');
 
     const parts: string[] = [];
     if (cruiseName)  parts.push(`Cruise: ${cruiseName}`);
@@ -70,6 +76,9 @@ function RequestQuoteForm() {
         parts.push(`Sailing Date: ${formatted}`);
       } catch { parts.push(`Sailing Date: ${sailingDate}`); }
     }
+    // Pre-fill destination with rail trip name if coming from rail deals
+    const railTripName = tripParam || '';
+
     if (tripType.toLowerCase().includes('all-inclusive') && resortName && !cruiseName) {
       parts.push(`Resort Brand: ${resortName}`);
     }
@@ -86,6 +95,7 @@ function RequestQuoteForm() {
       _cruise_ship:     cruiseShip,
       _cruise_duration: cruiseDur,
       _cruise_id:       searchParams.get('cruise_id') || '',
+      notes: railTripName ? `Rail trip of interest: ${railTripName}` : '',
       _sailing_date:    sailingDate,
       _resort_name:     resortName,
       _resort_tag:      searchParams.get('resort_tag') || '',
@@ -167,12 +177,15 @@ function RequestQuoteForm() {
       <section style={{ background: 'var(--cream)', padding: '80px 32px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
-          {(form._cruise_name || form._resort_name || searchParams.get('trip_type')) && (
+          {(form._cruise_name || form._resort_name || railTripName || searchParams.get('trip_type')) && (
             <div style={{ background: 'var(--navy)', padding: '20px 24px', marginBottom: 32, borderLeft: '3px solid var(--gold)' }}>
               <div style={{ fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 12 }}>
-                {form._cruise_name ? 'Selected Cruise' : 'Selected Resort'}
+                {form._cruise_name ? 'Selected Cruise' : railTripName ? 'Selected Rail Trip' : 'Selected Resort'}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {railTripName && !form._cruise_name && (
+                  <div style={{ fontSize: '0.95rem', fontWeight: 500, color: 'white', fontFamily: 'var(--font-display)' }}>{railTripName}</div>
+                )}
                 {form._cruise_name && (
                   <div style={{ fontSize: '0.95rem', fontWeight: 500, color: 'white', fontFamily: 'var(--font-display)' }}>{form._cruise_name}</div>
                 )}
