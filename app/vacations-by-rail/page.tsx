@@ -87,25 +87,10 @@ export default function VacationsByRailPage() {
   return (
     <div style={{ background: 'var(--cream)', minHeight: '100vh', WebkitFontSmoothing: 'antialiased' }}>
 
-      {/* ANNOUNCEMENT BAR */}
-      <div style={{ background: '#CC2936', padding: '12px 24px', textAlign: 'center' }}>
-        <a href="#deals" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <span style={{ background: 'white', color: '#CC2936', fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 10px', fontFamily: 'var(--font-body)', borderRadius: 2 }}>
-            Save 10%
-          </span>
-          <span style={{ color: 'white', fontSize: '0.88rem', fontWeight: 600, fontFamily: 'var(--font-body)', letterSpacing: '0.02em' }}>
-            Last-minute rail deals departing in the next 90 days — limited spaces available
-          </span>
-          <span style={{ color: 'white', fontSize: '0.82rem', fontFamily: 'var(--font-body)', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.6)', paddingBottom: 1 }}>
-            View Deals ↓
-          </span>
-        </a>
-      </div>
-
       {/* HERO */}
       <section style={{ position: 'relative', minHeight: 540, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <Image
-          src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1600&q=85"
+          src="https://images.unsplash.com/photo-1501554728187-ce583db33af7?w=1600&q=85"
           alt="Scenic train journey through the mountains"
           fill
           style={{ objectFit: 'cover', objectPosition: 'center 55%' }}
@@ -140,6 +125,21 @@ export default function VacationsByRailPage() {
           </p>
         </div>
       </section>
+
+      {/* ANNOUNCEMENT BAR — after hero, no nav conflict */}
+      <div style={{ background: '#CC2936', padding: '14px 24px', textAlign: 'center' }}>
+        <a href="#deals" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span style={{ background: 'white', color: '#CC2936', fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '4px 12px', fontFamily: 'var(--font-body)', borderRadius: 2 }}>
+            Save 10%
+          </span>
+          <span style={{ color: 'white', fontSize: '0.9rem', fontWeight: 600, fontFamily: 'var(--font-body)', letterSpacing: '0.02em' }}>
+            Last-minute rail deals departing in the next 90 days — limited spaces available
+          </span>
+          <span style={{ color: 'white', fontSize: '0.85rem', fontFamily: 'var(--font-body)', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.6)', paddingBottom: 1 }}>
+            View Deals ↓
+          </span>
+        </a>
+      </div>
 
       {/* TYPES OF RAIL VACATIONS */}
       <section style={{ background: 'var(--navy)', padding: 'clamp(48px,6vw,64px) clamp(16px,5vw,32px)' }}>
