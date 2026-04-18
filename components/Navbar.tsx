@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 const DESTINATIONS = [
   { label: 'All Destinations', href: '/destinations', icon: '' },
   { label: 'Destination Packages', href: '/destination-packages', icon: '' },
+  { label: 'Vacations by Rail', href: '/vacations-by-rail', icon: '' },
   { label: 'Featured Trips', href: '/trips', icon: '⭐' },
   { label: 'Bahamas', href: '/destinations/bahamas', icon: '' },
   { label: 'Caribbean', href: '/destinations/caribbean', icon: '' },
