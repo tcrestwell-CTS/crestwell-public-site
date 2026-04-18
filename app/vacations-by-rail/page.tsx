@@ -87,6 +87,21 @@ export default function VacationsByRailPage() {
   return (
     <div style={{ background: 'var(--cream)', minHeight: '100vh', WebkitFontSmoothing: 'antialiased' }}>
 
+      {/* ANNOUNCEMENT BAR */}
+      <div style={{ background: '#CC2936', padding: '12px 24px', textAlign: 'center', position: 'sticky', top: 0, zIndex: 50 }}>
+        <a href="#deals" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span style={{ background: 'white', color: '#CC2936', fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 10px', fontFamily: 'var(--font-body)', borderRadius: 2 }}>
+            Save 10%
+          </span>
+          <span style={{ color: 'white', fontSize: '0.88rem', fontWeight: 600, fontFamily: 'var(--font-body)', letterSpacing: '0.02em' }}>
+            Last-minute rail deals departing in the next 90 days — limited spaces available
+          </span>
+          <span style={{ color: 'white', fontSize: '0.82rem', fontFamily: 'var(--font-body)', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.6)', paddingBottom: 1 }}>
+            View Deals ↓
+          </span>
+        </a>
+      </div>
+
       {/* HERO */}
       <section style={{ position: 'relative', minHeight: 540, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <Image
@@ -221,7 +236,7 @@ export default function VacationsByRailPage() {
 
 
       {/* LATE AVAILABILITY DEALS */}
-      <section style={{ maxWidth: 1140, margin: '0 auto', padding: 'clamp(48px,6vw,72px) clamp(16px,5vw,32px)' }}>
+      <section id="deals" style={{ maxWidth: 1140, margin: '0 auto', padding: 'clamp(48px,6vw,72px) clamp(16px,5vw,32px)' }}>
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ display: 'inline-block', background: '#CC2936', color: 'white', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '5px 16px', marginBottom: 16, fontFamily: 'var(--font-body)' }}>
             Limited Availability · Next 90 Days
