@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+function stripTags(s: string) {
+  return s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const vbrPath = searchParams.get('path');
@@ -17,63 +21,72 @@ export async function GET(req: NextRequest) {
     if (!res.ok) throw new Error(`VBR fetch ${res.status}`);
     const html = await res.text();
 
-    // ── Parse title ───────────────────────────────────────────────────────
-    const h1Start = html.indexOf('<h1');
-    const h1End   = html.indexOf('</h1>', h1Start);
-    const h1Inner = h1Start > -1 && h1End > -1 ? html.slice(h1Start, h1End) : '';
-    const rawTitle = h1Inner.replace(/<[^>]+>/g, '').trim();
+    // ── Title ─────────────────────────────────────────────────────────────
+    const h1Open  = html.indexOf('<h1 ');
+    const h1Close = html.indexOf('</h1>', h1Open);
+    const rawTitle = h1Open > -1 && h1Close > -1
+      ? stripTags(html.slice(h1Open, h1Close))
+      : '';
 
-    // ── Parse price & meta ────────────────────────────────────────────────
+    // ── Price / meta ──────────────────────────────────────────────────────
     const priceMatch  = html.match(/data-price="(\d+)"/);
     const daysMatch   = html.match(/data-days="(\d+)"/);
     const ratingMatch = html.match(/data-rating="([^"]+)"/);
     const reviewMatch = html.match(/\((\d+)\s*reviews?\)/);
 
-    // ── Parse day-by-day itinerary via string splitting (no /s flag) ──────
+    // ── Day-by-day itinerary ───────────────────────────────────────────────
+    // VBR structure: class="h3 handle ..." > [optional SVG] TITLE TEXT </div><div> CONTENT </div></div>
     const days: { title: string; content: string }[] = [];
     const HANDLE = 'class="h3 handle';
-    let searchFrom = 0;
+    let pos = 0;
     while (true) {
-      const handleIdx = html.indexOf(HANDLE, searchFrom);
-      if (handleIdx === -1) break;
-      // Find the closing > of this div
-      const closeTag = html.indexOf('>', handleIdx);
-      if (closeTag === -1) break;
-      // Title is between > and </div>
-      const titleEnd = html.indexOf('</div>', closeTag);
-      if (titleEnd === -1) break;
-      const title = html.slice(closeTag + 1, titleEnd).replace(/<[^>]+>/g, '').trim();
-      // Content div comes right after
-      const contentDivStart = html.indexOf('<div>', titleEnd);
-      if (contentDivStart === -1) break;
-      const contentDivEnd = html.indexOf('</div></div>', contentDivStart);
-      if (contentDivEnd === -1) break;
-      const rawContent = html.slice(contentDivStart + 5, contentDivEnd);
-      const content = rawContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-      if (title.match(/Day \d+/) && content.length > 20) {
+      const hIdx = html.indexOf(HANDLE, pos);
+      if (hIdx === -1) break;
+      // Find end of opening div tag
+      const divEnd = html.indexOf('>', hIdx);
+      if (divEnd === -1) break;
+      // Find closing </div> for the title div — skip any SVG inside
+      const svgEnd = html.indexOf('</svg>', divEnd);
+      const titleDivClose = html.indexOf('</div>', divEnd);
+      if (titleDivClose === -1) break;
+      // Title text is after </svg> (if present) or after divEnd
+      const titleStart = svgEnd > -1 && svgEnd < titleDivClose ? svgEnd + 6 : divEnd + 1;
+      const title = html.slice(titleStart, titleDivClose).replace(/<[^>]+>/g, '').trim();
+      // Content is in the next <div>...</div>
+      const contentOpen = html.indexOf('<div>', titleDivClose);
+      if (contentOpen === -1) break;
+      const contentClose = html.indexOf('</div></div>', contentOpen);
+      if (contentClose === -1) break;
+      const content = stripTags(html.slice(contentOpen + 5, contentClose));
+      if (title.length > 2 && content.length > 20) {
         days.push({ title, content });
       }
-      searchFrom = contentDivEnd + 12;
+      pos = contentClose + 12;
+      if (days.length >= 15) break; // safety cap
     }
 
-    // ── Parse what's included via string splitting ─────────────────────────
+    // ── What's included — try both apostrophe variants ────────────────────
     const inclItems: Record<string, string[]> = {};
-    const WHATS = "What's included";
-    const inclIdx = html.indexOf(WHATS);
+    const inclMarkers = ["What’s included", "What's included", "whatsIncluded", "Whats included"];
+    let inclIdx = -1;
+    for (const marker of inclMarkers) {
+      inclIdx = html.indexOf(marker);
+      if (inclIdx > -1) break;
+    }
     if (inclIdx > -1) {
-      const inclSection = html.slice(inclIdx, inclIdx + 2500);
+      const inclSection = html.slice(inclIdx, inclIdx + 3000);
       const UPPER = '<span class="upper">';
-      let pos = 0;
+      let uPos = 0;
       while (true) {
-        const catStart = inclSection.indexOf(UPPER, pos);
+        const catStart = inclSection.indexOf(UPPER, uPos);
         if (catStart === -1) break;
         const catEnd = inclSection.indexOf('</span>', catStart);
         if (catEnd === -1) break;
-        const cat = inclSection.slice(catStart + UPPER.length, catEnd).trim();
+        const cat = inclSection.slice(catStart + UPPER.length, catEnd).replace(/&amp;/g, '&').trim();
         const ulStart = inclSection.indexOf('<ul>', catEnd);
         const ulEnd   = inclSection.indexOf('</ul>', ulStart);
         if (ulStart === -1 || ulEnd === -1) break;
-        const ulContent = inclSection.slice(ulStart, ulEnd);
+        const ulContent = inclSection.slice(ulStart + 4, ulEnd);
         const items: string[] = [];
         let liPos = 0;
         while (true) {
@@ -81,17 +94,17 @@ export async function GET(req: NextRequest) {
           if (liStart === -1) break;
           const liEnd = ulContent.indexOf('</li>', liStart);
           if (liEnd === -1) break;
-          const item = ulContent.slice(liStart + 4, liEnd).replace(/<[^>]+>/g, '').trim();
+          const item = stripTags(ulContent.slice(liStart + 4, liEnd));
           if (item) items.push(item);
           liPos = liEnd + 5;
         }
         if (items.length) inclItems[cat] = items;
-        pos = ulEnd + 5;
+        uPos = ulEnd + 5;
       }
     }
 
     // ── Hero image ─────────────────────────────────────────────────────────
-    const imgMatch = html.match(/media\/[\d]+\/[^_"]+_tourlisting\.jpg/);
+    const imgMatch = html.match(/media\/[\d]+\/[^"_]+_tourlisting\.jpg/);
     const heroImg = imgMatch
       ? `https://www.vacationsbyrail.com/${imgMatch[0].replace('_tourlisting', '')}`
       : null;
@@ -101,15 +114,15 @@ export async function GET(req: NextRequest) {
     let rewritten: { overview: string; days: { title: string; content: string }[] } | null = null;
 
     if (ANTHROPIC_KEY && days.length > 0) {
-      const prompt = `You are writing for Crestwell Travel Services, a boutique travel agency in the Southeast US. Rewrite this rail vacation content in a warm, personal, expert travel advisor tone — as if Tim Crestwell personally recommends this trip to clients. Keep all facts accurate. Be enthusiastic but not salesy. Use "you" language. Keep each day to 2-3 sentences.
+      const prompt = \`You are writing for Crestwell Travel Services, a boutique travel agency in the Southeast US. Rewrite this rail vacation in a warm, personal, expert travel advisor tone — as if Tim Crestwell personally recommends this trip. Keep all facts accurate. Be enthusiastic but not salesy. Use "you" language. Keep each day to 2-3 sentences.
 
-Trip: ${rawTitle}
+Trip: \${rawTitle}
 
 Days:
-${days.map(d => `${d.title}: ${d.content.slice(0, 350)}`).join('\n\n')}
+\${days.map(d => \`\${d.title}: \${d.content.slice(0, 350)}\`).join('\n\n')}
 
 Return JSON only, no markdown:
-{"overview":"2-3 sentence overview","days":[{"title":"Day 1 - title","content":"rewritten 2-3 sentences"}]}`;
+{"overview":"2-3 sentence overview of the whole trip","days":[{"title":"day title","content":"rewritten 2-3 sentences"}]}\`;
 
       try {
         const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -127,12 +140,12 @@ Return JSON only, no markdown:
         });
         const aiData = await aiRes.json();
         const text = aiData.content?.[0]?.text || '';
-        const jsonStart = text.indexOf('{');
-        const jsonEnd   = text.lastIndexOf('}');
-        if (jsonStart > -1 && jsonEnd > jsonStart) {
-          rewritten = JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+        const jStart = text.indexOf('{');
+        const jEnd   = text.lastIndexOf('}');
+        if (jStart > -1 && jEnd > jStart) {
+          rewritten = JSON.parse(text.slice(jStart, jEnd + 1));
         }
-      } catch (_) { /* fall through */ }
+      } catch (_) { /* use raw */ }
     }
 
     return NextResponse.json({
