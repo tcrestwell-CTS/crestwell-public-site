@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import RailDeals from '@/components/RailDeals';
 
 export const metadata: Metadata = {
   title: 'Vacations by Rail | Scenic Train Packages | Crestwell Travel Services',
@@ -218,6 +219,37 @@ export default function VacationsByRailPage() {
         </div>
       </section>
 
+
+      {/* LATE AVAILABILITY DEALS */}
+      <section style={{ maxWidth: 1140, margin: '0 auto', padding: 'clamp(48px,6vw,72px) clamp(16px,5vw,32px)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <div style={{ display: 'inline-block', background: '#CC2936', color: 'white', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '5px 16px', marginBottom: 16, fontFamily: 'var(--font-body)' }}>
+            Limited Availability · Next 90 Days
+          </div>
+          <h2 className="font-display" style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 300, color: 'var(--navy)', marginBottom: 12 }}>
+            Last-Minute Rail Deals
+          </h2>
+          <p style={{ color: 'var(--slate)', fontSize: '0.92rem', maxWidth: 560, margin: '0 auto', fontFamily: 'var(--font-body)', lineHeight: 1.7 }}>
+            Departing within the next 90 days — spaces are limited. Call us today to lock in your spot.
+          </p>
+        </div>
+        <RailDeals />
+        <div style={{ textAlign: 'center', marginTop: 40 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)', marginBottom: 16 }}>
+            See all 157 last-minute departures or call to ask about availability on any itinerary.
+          </p>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/request-quote?type=rail-vacation&deal=late-availability"
+              style={{ background: 'var(--navy)', color: 'white', padding: '12px 32px', textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+              Request a Quote
+            </Link>
+            <a href="tel:8885086893"
+              style={{ border: '2px solid var(--navy)', color: 'var(--navy)', padding: '12px 32px', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', fontFamily: 'var(--font-body)' }}>
+              Call 888-508-6893
+            </a>
+          </div>
+        </div>
+      </section>
       {/* FINAL CTA */}
       <section style={{ background: 'var(--navy)', padding: 'clamp(56px,7vw,80px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
