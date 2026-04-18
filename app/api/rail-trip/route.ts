@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     const html = await res.text();
 
     // ── Parse title ─────────────────────────────────────────────────────
-    const titleMatch = html.match(/<h1[^>]*>(.*?)<\/h1>/s);
+    const titleMatch = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
     const rawTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : '';
 
     // ── Parse price & meta ───────────────────────────────────────────────
