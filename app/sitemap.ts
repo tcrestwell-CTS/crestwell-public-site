@@ -118,5 +118,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }];
 
-  return [...staticEntries, ...blogEntries, ...tripEntries, ...cityEntries, ...packageEntry];
+  const railEntry: MetadataRoute.Sitemap = [{
+    url: `${SITE_URL}/vacations-by-rail`,
+    lastModified: new Date(now),
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }];
+
+  return [...staticEntries, ...blogEntries, ...tripEntries, ...cityEntries, ...packageEntry, ...railEntry];
 }
