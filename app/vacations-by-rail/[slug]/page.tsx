@@ -202,27 +202,7 @@ export default function RailTripDetail() {
         </div>
       </div>
 
-      {/* STICKY BOOKING BAR */}
-      <div style={{ background: 'var(--navy)', padding: '14px clamp(16px,5vw,32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, position: 'sticky', top: 0, zIndex: 40, boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }}>
-        <div>
-          <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'var(--font-body)' }}>
-            Via Vacations By Rail · Book Through Crestwell
-          </div>
-          {trip.price && (
-            <div style={{ color: '#C9A84C', fontSize: '1.1rem', fontWeight: 700, fontFamily: 'var(--font-body)' }}>
-              From ${trip.price.toLocaleString()} per person
-            </div>
-          )}
-        </div>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <a href="tel:8885086893" style={{ border: '2px solid rgba(255,255,255,0.3)', color: 'white', padding: '10px 20px', textDecoration: 'none', fontWeight: 600, fontSize: '0.82rem', fontFamily: 'var(--font-body)' }}>
-            888-508-6893
-          </a>
-          <Link href={quoteUrl} style={{ background: '#C9A84C', color: '#0D1B2A', padding: '10px 24px', textDecoration: 'none', fontWeight: 800, fontSize: '0.82rem', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-            Book with Crestwell →
-          </Link>
-        </div>
-      </div>
+
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(32px,5vw,56px) clamp(16px,5vw,32px)', display: 'grid', gridTemplateColumns: '1fr clamp(280px,30%,340px)', gap: 40, alignItems: 'start' }}>
 
@@ -283,28 +263,18 @@ export default function RailTripDetail() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
           {/* Book CTA Card */}
-          <div style={{ background: 'var(--navy)', padding: '28px 24px' }}>
-            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8, fontFamily: 'var(--font-body)' }}>
-              Book Through Crestwell
-            </div>
-            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-body)', marginBottom: 16, lineHeight: 1.6 }}>
-              Planning is always free. We handle everything — no fees, ever.
+          <div style={{ background: 'white', border: '1px solid #e8e4dc', padding: '24px' }}>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 6, fontFamily: 'var(--font-body)' }}>
+              Book through Crestwell · Planning is free
             </div>
             {trip.price && (
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}>From</div>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#C9A84C', fontFamily: 'var(--font-display)' }}>
-                  ${trip.price.toLocaleString()}
-                  <span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-body)' }}> /person</span>
-                </div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--navy)', fontFamily: 'var(--font-display)', marginBottom: 16 }}>
+                from ${trip.price.toLocaleString()}<span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--slate)', fontFamily: 'var(--font-body)' }}>/pp</span>
               </div>
             )}
-            <Link href={quoteUrl} style={{ display: 'block', background: '#C9A84C', color: '#0D1B2A', padding: '14px', textAlign: 'center', textDecoration: 'none', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', marginBottom: 12 }}>
-              Request My Free Quote
+            <Link href={quoteUrl} style={{ display: 'block', background: '#C9A84C', color: '#0D1B2A', padding: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+              Request a Free Quote
             </Link>
-            <a href="tel:8885086893" style={{ display: 'block', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 600, fontSize: '0.82rem', fontFamily: 'var(--font-body)' }}>
-              Call 888-508-6893
-            </a>
           </div>
 
           {/* What's Included */}
@@ -343,20 +313,7 @@ export default function RailTripDetail() {
         </div>
       </div>
 
-      {/* BOTTOM CTA */}
-      <div style={{ background: '#f8f6f0', borderTop: '1px solid #e8e4dc', padding: 'clamp(32px,4vw,48px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
-        <p style={{ color: 'var(--slate)', fontSize: '0.88rem', fontFamily: 'var(--font-body)', marginBottom: 20, lineHeight: 1.7, maxWidth: 560, margin: '0 auto 20px' }}>
-          Questions? Our rail specialists are ready to help you lock in this trip — no fees, ever.
-        </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href={quoteUrl} style={{ background: 'var(--navy)', color: 'white', padding: '12px 32px', textDecoration: 'none', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-            Request My Free Quote
-          </Link>
-          <a href="tel:8885086893" style={{ border: '2px solid var(--navy)', color: 'var(--navy)', padding: '12px 28px', textDecoration: 'none', fontWeight: 600, fontSize: '0.82rem', fontFamily: 'var(--font-body)' }}>
-            888-508-6893
-          </a>
-        </div>
-      </div>
+
 
     </div>
   );
