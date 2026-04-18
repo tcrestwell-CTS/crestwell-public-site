@@ -344,18 +344,15 @@ export default function RailTripDetail() {
       </div>
 
       {/* BOTTOM CTA */}
-      <div style={{ background: 'var(--navy)', padding: 'clamp(40px,5vw,56px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
-        <h2 className="font-display" style={{ fontSize: 'clamp(1.4rem,2.5vw,2.2rem)', fontWeight: 300, color: 'white', marginBottom: 12 }}>
-          Ready to Book This Trip?
-        </h2>
-        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.9rem', fontFamily: 'var(--font-body)', marginBottom: 32, lineHeight: 1.7 }}>
-          Let us handle the details. We'll confirm availability, walk you through options, and get you booked — all at no extra cost.
+      <div style={{ background: '#f8f6f0', borderTop: '1px solid #e8e4dc', padding: 'clamp(32px,4vw,48px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
+        <p style={{ color: 'var(--slate)', fontSize: '0.88rem', fontFamily: 'var(--font-body)', marginBottom: 20, lineHeight: 1.7, maxWidth: 560, margin: '0 auto 20px' }}>
+          Questions? Our rail specialists are ready to help you lock in this trip — no fees, ever.
         </p>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href={quoteUrl} style={{ background: '#C9A84C', color: '#0D1B2A', padding: '15px 40px', textDecoration: 'none', fontWeight: 800, fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-            Book with Crestwell
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link href={quoteUrl} style={{ background: 'var(--navy)', color: 'white', padding: '12px 32px', textDecoration: 'none', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+            Request My Free Quote
           </Link>
-          <a href="tel:8885086893" style={{ border: '2px solid rgba(255,255,255,0.35)', color: 'white', padding: '15px 40px', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', fontFamily: 'var(--font-body)' }}>
+          <a href="tel:8885086893" style={{ border: '2px solid var(--navy)', color: 'var(--navy)', padding: '12px 28px', textDecoration: 'none', fontWeight: 600, fontSize: '0.82rem', fontFamily: 'var(--font-body)' }}>
             888-508-6893
           </a>
         </div>
