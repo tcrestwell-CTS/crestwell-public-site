@@ -188,6 +188,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
+      {/* GetYourGuide Analytics */}
+      <Script
+        src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+        data-gyg-partner-id="IOXL78H"
+        strategy="afterInteractive"
+      />
       </body>
     </html>
   );
