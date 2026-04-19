@@ -37,8 +37,23 @@ serve(async (req) => {
   if (AGENT_SECRET && secret !== AGENT_SECRET)
     return new Response('Unauthorized', { status: 401, headers: CORS });
 
-  const body = await req.json().catch(() => ({}));
-  const { lead_id } = body;
+  // Parse body — handle JSON, form data, or empty body
+  let body: Record<string, string> = {};
+  const contentType = req.headers.get('content-type') || '';
+  try {
+    if (contentType.includes('application/json')) {
+      body = await req.json();
+    } else if (contentType.includes('form')) {
+      const formData = await req.formData();
+      formData.forEach((v, k) => { body[k] = v.toString(); });
+    } else {
+      const text = await req.text();
+      if (text) body = JSON.parse(text);
+    }
+  } catch (_) {}
+
+  // Accept lead_id or id (n8n sends the field as lead_id but value is the UUID)
+  const lead_id = body.lead_id || body.id || new URL(req.url).searchParams.get('lead_id') || '';
   if (!lead_id)
     return new Response(JSON.stringify({ error: 'lead_id required' }), { status: 400, headers: CORS });
 
