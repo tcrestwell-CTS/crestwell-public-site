@@ -69,6 +69,7 @@ export default function Footer() {
                 { label: 'Home', href: '/' },
                 { label: 'Featured Trips', href: '/trips' },
                 { label: 'Excursions', href: '/excursions' },
+                { label: 'Domestic Travel', href: '/domestic-travel' },
                 { label: 'Vacations by Rail', href: '/vacations-by-rail' },
                 { label: 'Destinations', href: '/destinations' },
                 { label: 'Request a Quote', href: '/request-quote' },
