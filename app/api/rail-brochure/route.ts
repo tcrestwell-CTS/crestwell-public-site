@@ -11,11 +11,11 @@ const CORS = {
 };
 
 const BROCHURES: Record<string, { label: string; url: string }> = {
-  usa:    { label: "Best of USA by Rail 2026",    url: "https://www.vacationsbyrail.com/ebrochure/vbrusa26/inc/pdf/VBR_Best_of_USA_2026.pdf" },
-  canada: { label: "Best of Canada by Rail 2026", url: "https://www.vacationsbyrail.com/ebrochure/vbrcanada26/inc/pdf/VBR_Best_of_Canada_2026.pdf" },
-  europe: { label: "Best of Europe by Rail 2026", url: "https://www.vacationsbyrail.com/ebrochure/vbreurope26/inc/pdf/VBR_Best_of_Europe_2026.pdf" },
-  river:  { label: "Best of River Cruise 2026",   url: "https://www.vacationsbyrail.com/ebrochure/vbrcruise26/inc/pdf/VBR_Best_of_River_Cruise_2026.pdf" },
-  scand:  { label: "Scandinavia by Rail 2026",    url: "https://www.vacationsbyrail.com/ebrochure/vbrscan26/inc/pdf/VBR_Scandinavia_2026.pdf" },
+  usa:    { label: "Best of USA by Rail 2026",    url: "https://crestwellgetaways.com/guides/VBR_Best_of_USA_2026.pdf" },
+  canada: { label: "Best of Canada by Rail 2026", url: "https://crestwellgetaways.com/guides/VBR_Best_of_Canada_2026.pdf" },
+  europe: { label: "Best of Europe by Rail 2026", url: "https://crestwellgetaways.com/guides/VBR_Best_of_Europe_2026.pdf" },
+  river:  { label: "Best of River Cruise 2026",   url: "https://crestwellgetaways.com/guides/VBR_Best_of_River_Cruise_2026.pdf" },
+  scand:  { label: "Scandinavia by Rail 2026",    url: "https://crestwellgetaways.com/guides/VBR_Scandinavia_2026.pdf" },
 };
 
 export async function OPTIONS() {
