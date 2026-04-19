@@ -21,7 +21,6 @@ const CRUISES = [
 ];
 
 const navItems = [
-  { label: 'Home', href: '/' },
   { label: 'Featured Trips', href: '/trips' },
   { label: 'Vacations by Rail', href: '/vacations-by-rail' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
@@ -119,7 +118,7 @@ export default function Navbar() {
       backdropFilter: scrolled ? 'blur(12px)' : 'none',
       borderBottom: scrolled ? '1px solid rgba(201, 168, 76, 0.15)' : 'none',
     }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
 
           {/* Logo */}
@@ -129,10 +128,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 28 }} className="desktop-nav">
-
-            {/* Home */}
-            <Link href="/" className="nav-link">Home</Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }} className="desktop-nav">
 
             {/* ── Cruises dropdown ── */}
             <div ref={cruiseRef} style={{ position: 'relative' }}>
