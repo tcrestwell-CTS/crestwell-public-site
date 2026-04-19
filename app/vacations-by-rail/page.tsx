@@ -122,6 +122,7 @@ export default function VacationsByRailPage() {
   }
 
   return (
+    <>
     <div style={{ background: 'var(--cream)', minHeight: '100vh', WebkitFontSmoothing: 'antialiased' }}>
 
       {/* HERO */}
@@ -375,6 +376,6 @@ export default function VacationsByRailPage() {
           </div>
         </div>
       )}
-
+    </>
   );
 }
