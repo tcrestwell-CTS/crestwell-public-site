@@ -23,21 +23,21 @@ const ISLANDS = [
     tagline: 'Swimming Pigs & Turquoise Sandbars',
     image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=85',
     description: 'The Exumas are 365 islands and cays — one for every day of the year. The famous swimming pigs of Big Major Cay are a bucket-list encounter. Compass Cay has nurse sharks you can hand-feed. The sandbars shift with the tides, creating ever-changing beaches of impossible turquoise.',
-    mustDo: ['Swimming pigs at Big Major Cay', 'Nurse shark feeding at Compass Cay', 'Thunderball Grotto snorkeling (James Bond film site)', 'Staniel Cay Yacht Club lunch", "Iguana feeding at Allen's Cay", "Sandbar picnic by boat'],
+    mustDo: ['Swimming pigs at Big Major Cay', 'Nurse shark feeding at Compass Cay', 'Thunderball Grotto snorkeling', 'Staniel Cay Yacht Club lunch', "Iguana feeding at Allen's Cay", 'Sandbar picnic by boat'],
   },
   {
     name: 'Harbour Island',
     tagline: 'Pink Sand Beach & Barefoot Luxury',
     image: 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&q=85',
     description: "Harbour Island is one of the Caribbean's most exclusive and beloved retreats. The 3-mile Pink Sand Beach gets its color from crushed coral and pink foraminifera. Golf carts are the primary mode of transportation. The tiny settlement of Dunmore Town has New England-style clapboard houses and excellent restaurants.",
-    mustDo: ['Pink Sand Beach stroll (sunrise is magical)', 'Golf cart tour of Dunmore Town', 'Rock House & The Landing restaurants', 'Snorkeling the protected reef', 'Ferry crossing from North Eleuthera', 'Juice Bar at Pink Sands Resort'],
+    mustDo: ['Pink Sand Beach stroll at sunrise', 'Golf cart tour of Dunmore Town', 'Rock House dining', 'Sip Sip lunch', 'Snorkel the reef', 'Sugar Mill ruins'],
   },
   {
     name: 'Freeport & Grand Bahama',
     tagline: 'Diving, Dolphins & Duty-Free Shopping',
     image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=85',
     description: "Grand Bahama's second city offers a different pace — the famous UNEXSO dive operation, wild dolphin interactions, and lush Lucayan National Park. The Grand Bahama Island's protected waters make for some of the best diving and snorkeling in the Bahamas, with clear visibility up to 100 feet.",
-    mustDo: ['UNEXSO Dolphin Experience (swim with wild dolphins)", "Ben's Cave at Lucayan National Park", "Gold Rock Beach', 'Port Lucaya Marketplace & Marina', 'Shark and stingray dive', 'Glass-bottom boat tour'],
+    mustDo: ['UNEXSO Dolphin Experience', "Ben's Cave at Lucayan National Park", 'Gold Rock Beach', 'Port Lucaya Marketplace & Marina', 'Shark and stingray dive', 'Glass-bottom boat tour'],
   },
 ];
 
@@ -50,7 +50,7 @@ const SEASONS = [
     crowd: 'Peak',
     color: '#60a5fa',
     highlight: 'Perfect weather, peak season',
-    description: 'The Bahamas\' busiest and most expensive season — and the best weather. Dry, sunny, and breezy. Escape the cold from Georgia, Tennessee, and Alabama in just 2 hours by air or overnight by cruise ship.',
+    description: "The Bahamas' busiest and most expensive season — and the best weather. Dry, sunny, and breezy. Escape the cold from Georgia, Tennessee, and Alabama in just 2 hours by air or overnight by cruise ship.",
     events: [
       { name: 'Junkanoo Parade', location: 'Nassau', when: 'Dec 26 & Jan 1' },
       { name: "New Year's Celebrations", location: 'All islands', when: 'December 31' },
