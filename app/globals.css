@@ -112,7 +112,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   padding: 14px 32px;
   transition: all 0.3s ease;
   border: 2px solid var(--gold);
@@ -129,7 +129,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   padding: 14px 32px;
   border: 2px solid rgba(255,255,255,0.6);
   transition: all 0.3s ease;
@@ -147,7 +147,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   padding: 14px 32px;
   border: 2px solid var(--navy);
   transition: all 0.3s ease;
@@ -179,7 +179,7 @@ body {
 
 .form-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
