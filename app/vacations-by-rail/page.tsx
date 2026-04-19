@@ -23,6 +23,7 @@ const experiences = [
     description: `Ride the California Zephyr across the Rockies, the Empire Builder through the Northern Prairies, or the Southwest Chief through canyon country. With 500+ Amtrak stations, your journey starts close to home.`,
     highlights: ['Grand Canyon', 'Glacier National Park', 'New England Fall Foliage', 'Pacific Coast', 'Route 66 by Rail', 'National Parks Loop', 'Chicago to New Orleans', 'Rocky Mountains'],
     color: '#0D9FD8',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrusa26/inc/pdf/VBR_Best_of_USA_2026.pdf',
   },
   {
     name: 'Canada by Rail',
@@ -31,6 +32,7 @@ const experiences = [
     description: `Board the legendary Rocky Mountaineer for a daylight journey through British Columbia and Alberta, or ride VIA Rail across the country. Jasper, Banff, Lake Louise, and Vancouver make Canada a world-class rail destination.`,
     highlights: ['Rocky Mountaineer', 'Jasper National Park', 'Banff & Lake Louise', 'Vancouver', 'Canadian Rockies', 'VIA Rail Canadian', 'Quebec City'],
     color: '#CC2936',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrcanada26/inc/pdf/VBR_Best_of_Canada_2026.pdf',
   },
   {
     name: 'Europe by Rail',
@@ -39,6 +41,7 @@ const experiences = [
     description: `Ride the Glacier Express through the Swiss Alps, the Jacobite Steam Train across the Scottish Highlands, or explore Ireland, France, Italy, and Spain at your own pace. Europe by rail is the classic independent travel experience.`,
     highlights: ['Glacier Express', 'Swiss Alps', 'Scottish Highlands & Jacobite', 'Ireland & Britain', 'Italy Rail Journey', 'France & Paris', 'Spain & Portugal', 'Scandinavia'],
     color: '#C9A84C',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbreurope26/inc/pdf/VBR_Best_of_Europe_2026.pdf',
   },
   {
     name: 'Scenic Rail Adventures',
@@ -200,14 +203,13 @@ export default function VacationsByRailPage() {
                     </span>
                   ))}
                 </div>
-                {e.name === 'USA by Rail' ? (
+                {(e as any).brochurePdf ? (
                   <a
-                    href="https://www.vacationsbyrail.com/ebrochure/vbrusa26/inc/pdf/VBR_Best_of_USA_2026.pdf"
+                    href={(e as any).brochurePdf}
                     target="_blank"
                     rel="noopener noreferrer"
-                    download="VBR_Best_of_USA_2026.pdf"
                     style={{ display: 'inline-block', background: '#C9A84C', color: '#0D1B2A', padding: '11px 28px', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', alignSelf: 'flex-start' }}>
-                    Download 2026 USA Brochure (PDF) ↓
+                    Download 2026 Brochure (PDF) ↓
                   </a>
                 ) : (
                   <Link href={'/request-quote?type=rail-vacation&region=' + encodeURIComponent(e.name)}
