@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import GYGWidget from '@/components/GYGWidget';
 import RailDeals from '@/components/RailDeals';
 
 export const metadata: Metadata = {
@@ -296,6 +297,8 @@ export default function VacationsByRailPage() {
           </div>
         </div>
       </section>
+      <GYGWidget query="scenic train tours" title="Tours & Experiences" />
+
       {/* FINAL CTA */}
       <section style={{ background: 'var(--navy)', padding: 'clamp(56px,7vw,80px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
