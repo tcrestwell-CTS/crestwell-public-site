@@ -34,7 +34,7 @@ const VACATION_PARTNERS = [
   {
     name: 'Plum Guide',
     logo: '🏡',
-    tagline: 'The world's most exceptional vacation homes',
+    tagline: "The world's most exceptional vacation homes",
     description: "Plum Guide vets the top 3% of vacation rental homes worldwide — luxury beach houses, mountain retreats, lake cabins, and city penthouses. Every property passes a 150-point inspection. Crestwell books these as curated domestic escapes for couples, families, and groups.",
     highlights: ['Top 3% of homes worldwide', '150-point vetting process', 'Domestic & international', 'Luxury beach houses', 'Mountain & lake retreats', 'City penthouses'],
     color: '#2D6A4F',
@@ -194,7 +194,7 @@ export default function DomesticTravelPage() {
               { icon: '🏷️', title: 'No Booking Fees', text: 'Planning is always free. You only pay for your trip, never our time.' },
               { icon: '🤝', title: 'Preferred Access', text: 'We access negotiated hotel rates and partner pricing not available to the public.' },
               { icon: '📞', title: 'Personal Service', text: 'Every booking comes with a real advisor based in Chattanooga, TN.' },
-              { icon: '🛡️', title: 'ASTA & CLIA Certified', text: 'Fully accredited with the industry's top professional organizations.' },
+              { icon: '🛡️', title: 'ASTA & CLIA Certified', text: "Fully accredited with the industry's top professional organizations." },
             ].map((item) => (
               <div key={item.title}>
                 <div style={{ fontSize: '1.8rem', marginBottom: 12 }}>{item.icon}</div>
