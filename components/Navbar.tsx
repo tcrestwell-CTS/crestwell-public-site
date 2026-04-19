@@ -24,6 +24,7 @@ const navItems = [
   { label: 'Featured Trips', href: '/trips' },
   { label: 'Excursions', href: '/excursions' },
   { label: 'Vacations by Rail', href: '/vacations-by-rail' },
+  { label: 'Domestic Travel', href: '/domestic-travel' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Group Travel', href: '/group-travel' },
   { label: 'Travel Tips', href: '/blog' },
