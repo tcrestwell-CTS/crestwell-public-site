@@ -67,6 +67,8 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
                 { label: 'Home', href: '/' },
+                { label: 'Featured Trips', href: '/trips' },
+                { label: 'Vacations by Rail', href: '/vacations-by-rail' },
                 { label: 'Destinations', href: '/destinations' },
                 { label: 'Request a Quote', href: '/request-quote' },
                 { label: 'About Us', href: '/about' },
