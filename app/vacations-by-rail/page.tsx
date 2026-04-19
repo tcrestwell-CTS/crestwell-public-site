@@ -51,6 +51,24 @@ const experiences = [
     highlights: ['Durango & Silverton', 'Grand Canyon Railway', 'Georgetown Loop', 'Rovos Rail (Africa)', 'Rocky Mountain Explorer', 'Denali Star (Alaska)', 'Colorado Rockies Loop'],
     color: '#2E7D5B',
   },
+  {
+    name: 'European River Cruises',
+    img: 'https://images.unsplash.com/photo-1467189386127-c4e5e31ee213?w=800&q=80',
+    tagline: "Sail Europe's legendary waterways",
+    description: "Combine the romance of rail with a luxury river cruise through Europe's most storied destinations. Float along the Rhine, Danube, and Moselle past castles, vineyards, and medieval towns — then step ashore to explore at your own pace.",
+    highlights: ['Rhine River', 'Danube River', 'Moselle Valley', 'Amsterdam', 'Budapest', 'Vienna', 'Prague', 'Christmas Markets'],
+    color: '#0D9FD8',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrcruise26/inc/pdf/VBR_Best_of_River_Cruise_2026.pdf',
+  },
+  {
+    name: 'Scandinavia by Rail',
+    img: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
+    tagline: "Fjords, northern lights & Arctic wonder",
+    description: "Journey through Norway's dramatic fjords, Sweden's vast forests, and Finland's Arctic landscapes. Experience the iconic Bergen Railway, sail with Hurtigruten, and chase the Northern Lights on one of Europe's most breathtaking rail adventures.",
+    highlights: ['Bergen Railway', 'Norway Fjords', 'Northern Lights', 'Hurtigruten Cruise', 'Stockholm', 'Copenhagen', 'Helsinki', 'Arctic Circle'],
+    color: '#534AB7',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrscan26/inc/pdf/VBR_Scandinavia_2026.pdf',
+  },
 ];
 
 const types = [
