@@ -174,22 +174,10 @@ export default function Navbar() {
             </div>
 
             {/* ── Featured Trips ── */}
-            <Link
-              href="/trips"
-              onClick={() => { setDestOpen(false); setCruiseOpen(false); }}
-              style={{ ...navLink, color: pathname === '/trips' ? 'var(--gold)' : undefined }}
-            >
-              Featured Trips
-            </Link>
+            <Link href="/trips" className="nav-link" style={{ color: pathname === '/trips' ? 'var(--gold)' : undefined }}>Featured Trips</Link>
 
             {/* ── Vacations by Rail ── */}
-            <Link
-              href="/vacations-by-rail"
-              onClick={() => { setDestOpen(false); setCruiseOpen(false); }}
-              style={{ ...navLink, color: pathname === '/vacations-by-rail' ? 'var(--gold)' : undefined }}
-            >
-              Rail Vacations
-            </Link>
+            <Link href="/vacations-by-rail" className="nav-link" style={{ color: pathname === '/vacations-by-rail' ? 'var(--gold)' : undefined }}>Rail Vacations</Link>
 
             {/* ── Destinations dropdown ── */}
             <div ref={destRef} style={{ position: 'relative' }}>
