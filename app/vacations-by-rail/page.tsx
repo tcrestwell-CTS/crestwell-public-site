@@ -200,10 +200,17 @@ export default function VacationsByRailPage() {
                     </span>
                   ))}
                 </div>
-                <Link href={`/request-quote?type=rail-vacation&region=${encodeURIComponent(e.name)}`}
-                  style={{ display: 'inline-block', background: 'var(--navy)', color: 'white', padding: '11px 28px', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', alignSelf: 'flex-start' }}>
-                  Plan My {e.name} Trip →
-                </Link>
+                {e.name === 'USA by Rail' ? (
+                  <Link href="/vacations-by-rail/usa-brochure"
+                    style={{ display: 'inline-block', background: '#C9A84C', color: '#0D1B2A', padding: '11px 28px', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', alignSelf: 'flex-start' }}>
+                    Browse 2026 USA Brochure →
+                  </Link>
+                ) : (
+                  <Link href={'/request-quote?type=rail-vacation&region=' + encodeURIComponent(e.name)}
+                    style={{ display: 'inline-block', background: 'var(--navy)', color: 'white', padding: '11px 28px', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', alignSelf: 'flex-start' }}>
+                    Plan My {e.name} Trip →
+                  </Link>
+                )}
               </div>
             </div>
           ))}
