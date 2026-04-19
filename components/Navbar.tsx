@@ -176,7 +176,7 @@ export default function Navbar() {
             {/* ── Featured Trips ── */}
             <Link
               href="/trips"
-              onClick={closeAll}
+              onClick={() => { setDestOpen(false); setCruiseOpen(false); }}
               style={{ ...navLink, color: pathname === '/trips' ? 'var(--gold)' : undefined }}
             >
               Featured Trips
@@ -185,7 +185,7 @@ export default function Navbar() {
             {/* ── Vacations by Rail ── */}
             <Link
               href="/vacations-by-rail"
-              onClick={closeAll}
+              onClick={() => { setDestOpen(false); setCruiseOpen(false); }}
               style={{ ...navLink, color: pathname === '/vacations-by-rail' ? 'var(--gold)' : undefined }}
             >
               Rail Vacations
