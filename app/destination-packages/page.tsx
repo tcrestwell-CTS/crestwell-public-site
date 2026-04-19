@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const regions = [
   {
     name: 'Europe',
-    img: 'https://images.unsplash.com/photo-1499856871958-5b9357976b82?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80',
     tagline: 'From the Eiffel Tower to the Amalfi Coast',
     description: 'Explore centuries of history, world-class cuisine, and stunning landscapes. Whether you want a self-drive through Tuscany, a rail journey across Scandinavia, or a castle stay in Ireland — we build it around you.',
     highlights: ['France', 'Italy', 'Spain', 'Greece', 'Portugal', 'Ireland', 'Germany', 'Croatia', 'Iceland', 'Switzerland', 'Austria', 'Czech Republic', 'Norway', 'Scotland', 'Netherlands'],
