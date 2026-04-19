@@ -23,7 +23,7 @@ const ISLANDS = [
     tagline: 'Swimming Pigs & Turquoise Sandbars',
     image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=85',
     description: 'The Exumas are 365 islands and cays — one for every day of the year. The famous swimming pigs of Big Major Cay are a bucket-list encounter. Compass Cay has nurse sharks you can hand-feed. The sandbars shift with the tides, creating ever-changing beaches of impossible turquoise.',
-    mustDo: ['Swimming pigs at Big Major Cay', 'Nurse shark feeding at Compass Cay', 'Thunderball Grotto snorkeling', 'Staniel Cay Yacht Club lunch', "Iguana feeding at Allen's Cay", 'Sandbar picnic by boat'],
+    mustDo: ['Swimming pigs at Big Major Cay', 'Nurse shark feeding at Compass Cay', 'Thunderball Grotto snorkeling', 'Staniel Cay Yacht Club lunch', 'Iguana feeding at Allens Cay', 'Sandbar picnic by boat'],
   },
   {
     name: 'Harbour Island',
@@ -37,7 +37,7 @@ const ISLANDS = [
     tagline: 'Diving, Dolphins & Duty-Free Shopping',
     image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=85',
     description: "Grand Bahama's second city offers a different pace — the famous UNEXSO dive operation, wild dolphin interactions, and lush Lucayan National Park. The Grand Bahama Island's protected waters make for some of the best diving and snorkeling in the Bahamas, with clear visibility up to 100 feet.",
-    mustDo: ['UNEXSO Dolphin Experience', "Ben's Cave at Lucayan National Park", 'Gold Rock Beach', 'Port Lucaya Marketplace & Marina', 'Shark and stingray dive', 'Glass-bottom boat tour'],
+    mustDo: ['UNEXSO Dolphin Experience', 'Bens Cave at Lucayan National Park', 'Gold Rock Beach', 'Port Lucaya Marketplace and Marina', 'Shark and stingray dive', 'Glass-bottom boat tour'],
   },
 ];
 
@@ -53,7 +53,7 @@ const SEASONS = [
     description: "The Bahamas' busiest and most expensive season — and the best weather. Dry, sunny, and breezy. Escape the cold from Georgia, Tennessee, and Alabama in just 2 hours by air or overnight by cruise ship.",
     events: [
       { name: 'Junkanoo Parade', location: 'Nassau', when: 'Dec 26 & Jan 1' },
-      { name: "New Year's Celebrations", location: 'All islands', when: 'December 31' },
+      { name: 'New Years Celebrations', location: 'All islands', when: 'December 31' },
       { name: 'Miami-Nassau Race Week', location: 'Nassau Harbour', when: 'February' },
     ],
     activities: ['Beach & water sports', 'CocoCay visits', 'Whale watching (humpbacks pass through)', 'Snorkeling in clear, calm water', 'Nassau nightlife & dining'],
@@ -100,7 +100,7 @@ const SEASONS = [
     highlight: 'Best prices of the year',
     description: 'Hurricane season peaks in September–October. While weather can be unpredictable, the Bahamas often emerges unscathed. Prices hit their annual low, and the islands are at their least crowded. November is particularly pleasant.',
     events: [
-      { name: "McLean's Town Conch Cracking", location: 'Grand Bahama', when: 'October' },
+      { name: 'McLeans Town Conch Cracking', location: 'Grand Bahama', when: 'October' },
       { name: 'Annual Cat Island Regatta', location: 'Cat Island', when: 'September' },
       { name: 'Thanksgiving in the Bahamas', location: 'All islands', when: 'November' },
     ],
