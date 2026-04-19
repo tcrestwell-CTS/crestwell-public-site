@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
 
@@ -117,9 +117,9 @@ const GALLERY = [
 ];
 
 export default function BahamasDestinationPage() {
-  const [activeSeason, setActiveSeason] = React.useState(0);
-  const [activeIsland, setActiveIsland] = React.useState(0);
-  const [galleryOpen, setGalleryOpen] = React.useState(null);
+  const [activeSeason, setActiveSeason] = useState(0);
+  const [activeIsland, setActiveIsland] = useState(0);
+  const [galleryOpen, setGalleryOpen] = useState<number | null>(null);
   const season = SEASONS[activeSeason];
   const island = ISLANDS[activeIsland];
   return (
