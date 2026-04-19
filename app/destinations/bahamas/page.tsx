@@ -137,7 +137,7 @@ export default function BahamasDestinationPage() {
   const season = SEASONS[activeSeason];
   const island = ISLANDS[activeIsland];
 
-    return (
+  return (
     <>
       <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Destinations', href: '/destinations' }, { name: 'Bahamas' }]} />
       {/* Hero */}
