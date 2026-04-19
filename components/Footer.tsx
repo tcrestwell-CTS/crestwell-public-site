@@ -221,28 +221,26 @@ export default function Footer() {
       </div>
 
       {/* GetYourGuide Partner Banner */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '24px 32px' }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '20px 32px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-            Book Tours & Experiences
+          <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+            Tours &amp; Experiences powered by
           </span>
           <a
             href={GYG_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '8px 16px', borderRadius: 6, transition: 'background 0.2s' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '8px 18px', borderRadius: 6 }}
           >
-            <img
-              src="https://cdn.getyourguide.com/tf/assets/static/partners/gyg-logo-white.svg"
-              alt="GetYourGuide"
-              width={120}
-              height={22}
-              style={{ display: 'block' }}
-            />
+            <svg width="16" height="16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="16" fill="#FF5533"/>
+              <path d="M16 8C11.6 8 8 11.6 8 16s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 13c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z" fill="white"/>
+              <circle cx="16" cy="16" r="2.5" fill="white"/>
+            </svg>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'white', fontFamily: 'var(--font-body)', letterSpacing: '0.04em' }}>
+              GetYourGuide
+            </span>
           </a>
-          <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
-            via Crestwell Travel
-          </span>
         </div>
       </div>
 
