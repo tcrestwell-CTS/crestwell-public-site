@@ -50,7 +50,7 @@ export default function RailDeals() {
         {deals.map((deal, i) => (
           <a
             key={i}
-            href={`/vacations-by-rail/${encodeURIComponent(deal.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}?vbr=${encodeURIComponent(deal.url.replace('https://www.vacationsbyrail.com', ''))}&source=rail-deals`}
+            href={'/vacations-by-rail/' + (deal.url.match(/\/tours\/([^/]+)/) || ['','unknown'])[1] + '?vbr=' + encodeURIComponent(deal.url.replace('https://www.vacationsbyrail.com', '')) + '&source=rail-deals'}
             style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: 'white', overflow: 'hidden', boxShadow: '0 2px 12px rgba(13,27,42,0.08)', transition: 'transform 0.2s', cursor: 'pointer' }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-3px)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
