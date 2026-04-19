@@ -6,6 +6,96 @@ import GYGWidget from '@/components/GYGWidget';
 import RailDeals from '@/components/RailDeals';
 
 
+const experiences = [
+  {
+    name: 'USA by Rail',
+    img: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=800&q=80',
+    tagline: `America's most iconic rail journeys`,
+    description: `Ride the California Zephyr across the Rockies, the Empire Builder through the Northern Prairies, or the Southwest Chief through canyon country. With 500+ Amtrak stations, your journey starts close to home.`,
+    highlights: ['Grand Canyon', 'Glacier National Park', 'New England Fall Foliage', 'Pacific Coast', 'Route 66 by Rail', 'National Parks Loop', 'Chicago to New Orleans', 'Rocky Mountains'],
+    color: '#0D9FD8',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrusa26/inc/pdf/VBR_Best_of_USA_2026.pdf',
+  },
+  {
+    name: 'Canada by Rail',
+    img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    tagline: 'Canadian Rockies & beyond',
+    description: `Board the legendary Rocky Mountaineer for a daylight journey through British Columbia and Alberta, or ride VIA Rail across the country. Jasper, Banff, Lake Louise, and Vancouver make Canada a world-class rail destination.`,
+    highlights: ['Rocky Mountaineer', 'Jasper National Park', 'Banff & Lake Louise', 'Vancouver', 'Canadian Rockies', 'VIA Rail Canadian', 'Quebec City'],
+    color: '#CC2936',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrcanada26/inc/pdf/VBR_Best_of_Canada_2026.pdf',
+  },
+  {
+    name: 'Europe by Rail',
+    img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80',
+    tagline: 'Iconic trains across the continent',
+    description: `Ride the Glacier Express through the Swiss Alps, the Jacobite Steam Train across the Scottish Highlands, or explore Ireland, France, Italy, and Spain at your own pace. Europe by rail is the classic independent travel experience.`,
+    highlights: ['Glacier Express', 'Swiss Alps', 'Scottish Highlands & Jacobite', 'Ireland & Britain', 'Italy Rail Journey', 'France & Paris', 'Spain & Portugal', 'Scandinavia'],
+    color: '#C9A84C',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbreurope26/inc/pdf/VBR_Best_of_Europe_2026.pdf',
+  },
+  {
+    name: 'Scenic Rail Adventures',
+    img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80',
+    tagline: 'Historic & legendary train routes',
+    description: `Some trains are the destination themselves. Ride the Durango & Silverton Narrow Gauge through Colorado, the Grand Canyon Railway, the Georgetown Loop, or Africa on Rovos Rail. These bucket-list journeys belong on every traveler's list.`,
+    highlights: ['Durango & Silverton', 'Grand Canyon Railway', 'Georgetown Loop', 'Rovos Rail (Africa)', 'Rocky Mountain Explorer', 'Denali Star (Alaska)', 'Colorado Rockies Loop'],
+    color: '#2E7D5B',
+  },
+  {
+    name: 'European River Cruises',
+    img: 'https://images.unsplash.com/photo-1467189386127-c4e5e31ee213?w=800&q=80',
+    tagline: "Sail Europe's legendary waterways",
+    description: "Combine the romance of rail with a luxury river cruise through Europe's most storied destinations. Float along the Rhine, Danube, and Moselle past castles, vineyards, and medieval towns — then step ashore to explore at your own pace.",
+    highlights: ['Rhine River', 'Danube River', 'Moselle Valley', 'Amsterdam', 'Budapest', 'Vienna', 'Prague', 'Christmas Markets'],
+    color: '#0D9FD8',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrcruise26/inc/pdf/VBR_Best_of_River_Cruise_2026.pdf',
+  },
+  {
+    name: 'Scandinavia by Rail',
+    img: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
+    tagline: "Fjords, northern lights & Arctic wonder",
+    description: "Journey through Norway's dramatic fjords, Sweden's vast forests, and Finland's Arctic landscapes. Experience the iconic Bergen Railway, sail with Hurtigruten, and chase the Northern Lights on one of Europe's most breathtaking rail adventures.",
+    highlights: ['Bergen Railway', 'Norway Fjords', 'Northern Lights', 'Hurtigruten Cruise', 'Stockholm', 'Copenhagen', 'Helsinki', 'Arctic Circle'],
+    color: '#534AB7',
+    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrscan26/inc/pdf/VBR_Scandinavia_2026.pdf',
+  },
+];
+
+const types = [
+  {
+    icon: '🧭',
+    title: 'Independent Rail Journeys',
+    text: `Travel on your own schedule with a fully planned itinerary — hotels, rail tickets, and transfers all arranged. You go where you want, when you want.`,
+  },
+  {
+    icon: '🎒',
+    title: 'Escorted Group Tours',
+    text: `Travel with a small group and expert Tour Manager who handles all the logistics. Ideal for first-time rail travelers or anyone who wants a fully guided experience.`,
+  },
+  {
+    icon: '🚢',
+    title: 'Rail & Cruise Combos',
+    text: `Combine a scenic rail journey with a cruise sailing. Take the train to your departure port, or extend your cruise with a rail adventure on either end.`,
+  },
+  {
+    icon: '🌙',
+    title: 'Overnight Sleeper Trains',
+    text: `Wake up in a new city without losing a day to travel. Private roomettes and sleeper cars on Amtrak and international routes offer a uniquely romantic way to travel.`,
+  },
+  {
+    icon: '🏔️',
+    title: 'Scenic Train Rides',
+    text: `Some rail journeys exist purely for the view — through mountain passes, along coastal cliffs, and across open prairies. These are experiences, not just transportation.`,
+  },
+  {
+    icon: '🌍',
+    title: 'International Rail Vacations',
+    text: `From the Trans-Siberian to Japan's Shinkansen, from the Indian Pacific to Rovos Rail across Africa — Vacations By Rail opens up the world by train.`,
+  },
+];
+
+
 export default function VacationsByRailClient() {
   const [modal, setModal] = useState<{ brochure: string; label: string } | null>(null);
   const [form, setForm] = useState({ name: '', email: '' });
