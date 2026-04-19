@@ -189,6 +189,14 @@ export default function AlaskaDestinationPage() {
                 }}>
                   View Alaska Cruises
                 </Link>
+                <Link href="/destination-packages?region=USA%20by%20Rail" style={{
+                  padding: '12px 24px', border: '1px solid var(--gold)',
+                  color: 'var(--gold)', textDecoration: 'none', fontSize: '0.75rem',
+                  letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)',
+                  transition: 'all 0.2s',
+                }}>
+                  Land Packages
+                </Link>
               </div>
             </div>
             {/* Quick facts */}
