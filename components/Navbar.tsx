@@ -172,9 +172,6 @@ export default function Navbar() {
             {/* ── Featured Trips ── */}
             <Link href="/trips" className="nav-link" style={{ color: pathname === '/trips' ? 'var(--gold)' : undefined }}>Featured Trips</Link>
 
-            {/* ── Vacations by Rail ── */}
-            <Link href="/vacations-by-rail" className="nav-link" style={{ color: pathname === '/vacations-by-rail' ? 'var(--gold)' : undefined }}>Rail Vacations</Link>
-
             {/* ── Destinations dropdown ── */}
             <div ref={destRef} style={{ position: 'relative' }}>
               {dropdownTrigger('Destinations', isDestActive, destOpen, () => setDestOpen(o => !o), () => setDestOpen(true))}
