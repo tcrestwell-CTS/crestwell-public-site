@@ -63,8 +63,14 @@ function RequestQuoteForm() {
     const typeParam    = searchParams.get('type') || '';
     const tripParam    = searchParams.get('trip') || '';
     const tripType     = searchParams.get('trip_type') ||
-      (typeParam === 'rail-vacation' ? 'Vacations by Rail' :
-       typeParam === 'destination-package' ? 'Destination Package' : 'Cruise Vacation');
+      (typeParam === 'rail-vacation'       ? 'Vacations by Rail' :
+       typeParam === 'destination-package' ? 'Destination Package' :
+       typeParam === 'domestic'            ? 'Domestic Travel' :
+       typeParam === 'hotel'               ? 'Hotel Stay' :
+       typeParam === 'all-inclusive'       ? 'All-Inclusive Resort' :
+       typeParam === 'vacation-home'       ? 'Vacation Home' :
+       typeParam === 'group'               ? 'Group Travel' :
+       'Cruise Vacation');
 
     const parts: string[] = [];
     if (cruiseName)  parts.push(`Cruise: ${cruiseName}`);
@@ -93,7 +99,8 @@ function RequestQuoteForm() {
       _cruise_ship:     cruiseShip,
       _cruise_duration: cruiseDur,
       _cruise_id:       searchParams.get('cruise_id') || '',
-      notes: railTripName ? `Rail trip of interest: ${railTripName}` : '',
+      notes: railTripName ? `Rail trip of interest: ${railTripName}` :
+             searchParams.get('partner') ? `Partner: ${searchParams.get('partner')}` : '',
       _sailing_date:    sailingDate,
       _resort_name:     resortName,
       _resort_tag:      searchParams.get('resort_tag') || '',
