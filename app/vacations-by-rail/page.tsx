@@ -106,6 +106,21 @@ const types = [
 ];
 
 export default function VacationsByRailPage() {
+  const [modal, setModal] = useState<{ brochure: string; label: string } | null>(null);
+  const [form, setForm] = useState({ name: '', email: '' });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus('loading');
+    const res = await fetch('/api/rail-brochure', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: form.name, email: form.email, brochure: modal?.brochure }),
+    });
+    setStatus(res.ok ? 'success' : 'error');
+  }
+
   return (
     <div style={{ background: 'var(--cream)', minHeight: '100vh', WebkitFontSmoothing: 'antialiased' }}>
 
@@ -325,5 +340,41 @@ export default function VacationsByRailPage() {
       </section>
 
     </div>
+      {/* Brochure Email Capture Modal */}
+      {modal && (
+        <div
+          onClick={() => setModal(null)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(13,27,42,0.85)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ background: 'white', borderRadius: 8, padding: '40px 36px', maxWidth: 440, width: '100%', position: 'relative' }}
+          >
+            <button onClick={() => setModal(null)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#888' }}>✕</button>
+            {status === 'success' ? (
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 16 }}>🚂</div>
+                <h3 style={{ color: 'var(--navy)', fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 300, marginBottom: 12 }}>Check your inbox!</h3>
+                <p style={{ color: 'var(--slate)', fontSize: '0.9rem', lineHeight: 1.6 }}>Your <strong>{modal.label}</strong> brochure is on its way.</p>
+              </div>
+            ) : (
+              <>
+                <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 8 }}>Free 2026 Brochure</div>
+                <h3 style={{ color: 'var(--navy)', fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 300, marginBottom: 8 }}>{modal.label}</h3>
+                <p style={{ color: 'var(--slate)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: 24 }}>Enter your name and email and we&apos;ll send the PDF straight to your inbox — no spam, ever.</p>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <input type="text" placeholder="Your name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={{ padding: '11px 14px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: '0.9rem', fontFamily: 'var(--font-body)' }} />
+                  <input type="email" placeholder="Email address *" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={{ padding: '11px 14px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: '0.9rem', fontFamily: 'var(--font-body)' }} />
+                  <button type="submit" disabled={status === 'loading'} style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '13px', borderRadius: 4, fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: status === 'loading' ? 'wait' : 'pointer', fontFamily: 'var(--font-body)' }}>
+                    {status === 'loading' ? 'Sending...' : 'Send My Brochure →'}
+                  </button>
+                  {status === 'error' && <p style={{ color: '#dc2626', fontSize: '0.8rem', margin: 0 }}>Something went wrong — please try again.</p>}
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
   );
 }
