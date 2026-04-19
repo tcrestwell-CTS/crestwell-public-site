@@ -222,7 +222,7 @@ export default function Footer() {
 
       {/* GetYourGuide Partner Banner */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '20px 32px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
             Tours &amp; Experiences powered by
           </span>
@@ -230,16 +230,12 @@ export default function Footer() {
             href={GYG_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '8px 18px', borderRadius: 6 }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', padding: '7px 16px', borderRadius: 6 }}
           >
-            <svg width="16" height="16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#FF5533"/>
-              <path d="M16 8C11.6 8 8 11.6 8 16s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 13c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z" fill="white"/>
-              <circle cx="16" cy="16" r="2.5" fill="white"/>
-            </svg>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'white', fontFamily: 'var(--font-body)', letterSpacing: '0.04em' }}>
-              GetYourGuide
-            </span>
+            <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#FF5533', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            </div>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'white', fontFamily: 'var(--font-body)', letterSpacing: '0.03em' }}>GetYourGuide</span>
           </a>
         </div>
       </div>
