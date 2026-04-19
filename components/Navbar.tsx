@@ -22,6 +22,7 @@ const CRUISES = [
 
 const navItems = [
   { label: 'Featured Trips', href: '/trips' },
+  { label: 'Excursions', href: '/excursions' },
   { label: 'Vacations by Rail', href: '/vacations-by-rail' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Group Travel', href: '/group-travel' },
@@ -171,6 +172,9 @@ export default function Navbar() {
 
             {/* ── Featured Trips ── */}
             <Link href="/trips" className="nav-link" style={{ color: pathname === '/trips' ? 'var(--gold)' : undefined }}>Featured Trips</Link>
+
+            {/* ── Excursions ── */}
+            <Link href="/excursions" className="nav-link" style={{ color: pathname === '/excursions' ? 'var(--gold)' : undefined }}>Excursions</Link>
 
             {/* ── Destinations dropdown ── */}
             <div ref={destRef} style={{ position: 'relative' }}>
