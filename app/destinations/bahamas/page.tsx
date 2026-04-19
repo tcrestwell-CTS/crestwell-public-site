@@ -131,7 +131,7 @@ export default function BahamasDestinationPage() {
       document.head.appendChild(s);
     }
   }, []);
-  const [galleryOpen, setGalleryOpen] = useState<number | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(null as number | null);
   const season = SEASONS[activeSeason];
   const island = ISLANDS[activeIsland];
 
