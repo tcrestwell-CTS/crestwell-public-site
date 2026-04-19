@@ -129,7 +129,7 @@ export default function BahamasDestinationPage() {
       <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Destinations', href: '/destinations' }, { name: 'Bahamas' }]} />
       {/* Hero */}
       <section style={{ position: 'relative', height: 'clamp(360px, 70vh, 640px)', minHeight: 360, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 50%' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=85)', backgroundSize: 'cover', backgroundPosition: 'center 50%' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(13,27,42,0.15) 0%, rgba(13,27,42,0.75) 100%)' }} />
         <div style={{ position: 'absolute', top: 72, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', opacity: 0.5 }} />
         <div style={{ position: 'absolute', top: 'clamp(80px, 10vw, 92px)', left: 'clamp(16px, 5vw, 32px)', display: 'flex', gap: 8, alignItems: 'center' }}>
