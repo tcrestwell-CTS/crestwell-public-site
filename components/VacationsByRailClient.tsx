@@ -14,7 +14,7 @@ const experiences = [
     description: `Ride the California Zephyr across the Rockies, the Empire Builder through the Northern Prairies, or the Southwest Chief through canyon country. With 500+ Amtrak stations, your journey starts close to home.`,
     highlights: ['Grand Canyon', 'Glacier National Park', 'New England Fall Foliage', 'Pacific Coast', 'Route 66 by Rail', 'National Parks Loop', 'Chicago to New Orleans', 'Rocky Mountains'],
     color: '#0D9FD8',
-    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrusa26/inc/pdf/VBR_Best_of_USA_2026.pdf',
+    brochurePdf: 'https://crestwellgetaways.com/guides/VBR_Best_of_USA_2026.pdf',
   },
   {
     name: 'Canada by Rail',
@@ -23,7 +23,7 @@ const experiences = [
     description: `Board the legendary Rocky Mountaineer for a daylight journey through British Columbia and Alberta, or ride VIA Rail across the country. Jasper, Banff, Lake Louise, and Vancouver make Canada a world-class rail destination.`,
     highlights: ['Rocky Mountaineer', 'Jasper National Park', 'Banff & Lake Louise', 'Vancouver', 'Canadian Rockies', 'VIA Rail Canadian', 'Quebec City'],
     color: '#CC2936',
-    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrcanada26/inc/pdf/VBR_Best_of_Canada_2026.pdf',
+    brochurePdf: 'https://crestwellgetaways.com/guides/VBR_Best_of_Canada_2026.pdf',
   },
   {
     name: 'Europe by Rail',
@@ -32,7 +32,7 @@ const experiences = [
     description: `Ride the Glacier Express through the Swiss Alps, the Jacobite Steam Train across the Scottish Highlands, or explore Ireland, France, Italy, and Spain at your own pace. Europe by rail is the classic independent travel experience.`,
     highlights: ['Glacier Express', 'Swiss Alps', 'Scottish Highlands & Jacobite', 'Ireland & Britain', 'Italy Rail Journey', 'France & Paris', 'Spain & Portugal', 'Scandinavia'],
     color: '#C9A84C',
-    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbreurope26/inc/pdf/VBR_Best_of_Europe_2026.pdf',
+    brochurePdf: 'https://crestwellgetaways.com/guides/VBR_Best_of_Europe_2026.pdf',
   },
   {
     name: 'Scenic Rail Adventures',
@@ -49,7 +49,7 @@ const experiences = [
     description: "Combine the romance of rail with a luxury river cruise through Europe's most storied destinations. Float along the Rhine, Danube, and Moselle past castles, vineyards, and medieval towns — then step ashore to explore at your own pace.",
     highlights: ['Rhine River', 'Danube River', 'Moselle Valley', 'Amsterdam', 'Budapest', 'Vienna', 'Prague', 'Christmas Markets'],
     color: '#0D9FD8',
-    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrcruise26/inc/pdf/VBR_Best_of_River_Cruise_2026.pdf',
+    brochurePdf: 'https://crestwellgetaways.com/guides/VBR_Best_of_River_Cruise_2026.pdf',
   },
   {
     name: 'Scandinavia by Rail',
@@ -58,7 +58,7 @@ const experiences = [
     description: "Journey through Norway's dramatic fjords, Sweden's vast forests, and Finland's Arctic landscapes. Experience the iconic Bergen Railway, sail with Hurtigruten, and chase the Northern Lights on one of Europe's most breathtaking rail adventures.",
     highlights: ['Bergen Railway', 'Norway Fjords', 'Northern Lights', 'Hurtigruten Cruise', 'Stockholm', 'Copenhagen', 'Helsinki', 'Arctic Circle'],
     color: '#534AB7',
-    brochurePdf: 'https://www.vacationsbyrail.com/ebrochure/vbrscan26/inc/pdf/VBR_Scandinavia_2026.pdf',
+    brochurePdf: 'https://crestwellgetaways.com/guides/VBR_Scandinavia_2026.pdf',
   },
 ];
 
