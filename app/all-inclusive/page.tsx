@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import GYGWidget from '@/components/GYGWidget';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
 
