@@ -8,14 +8,14 @@ const ISLANDS = [
     name: 'Nassau & Paradise Island',
     tagline: 'The Capital City with a Resort Next Door',
     image: 'https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=800&q=85',
-    description: 'Nassau is the beating heart of the Bahamas — a colorful colonial city with pastel-painted buildings, straw markets, and an extraordinary resort complex just across the bridge on Paradise Island. Atlantis Resort alone could fill three days, but Nassau\'s history, food, and harbor are equally compelling.',
+    description: 'Nassau is the beating heart of the Bahamas — a colorful colonial city with pastel-painted buildings, straw markets, and an extraordinary resort complex just across the bridge on Paradise Island. Atlantis Resort alone could fill three days, but Nassau's history, food, and harbor are equally compelling.',
     mustDo: ['Atlantis Aquaventure Waterpark', 'Blue Lagoon Island dolphin encounter', 'Fort Charlotte historic site', 'Nassau Straw Market', 'Graycliff Restaurant & Cigar Lounge', 'Junkanoo Beach'],
   },
   {
     name: 'CocoCay (Perfect Day)',
-    tagline: 'Royal Caribbean\'s Private Island Paradise',
+    tagline: 'Royal Caribbean's Private Island Paradise",
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=85',
-    description: 'Royal Caribbean transformed this small island into one of the Caribbean\'s best beach experiences. Thrill Waterpark has the tallest waterslide in the Bahamas. Chill Island offers calm, shallow water. Up, Up & Away balloon ride gives a bird\'s-eye view. Oasis Lagoon is the largest freshwater pool in the Caribbean.',
+    description: 'Royal Caribbean transformed this small island into one of the Caribbean's best beach experiences. Thrill Waterpark has the tallest waterslide in the Bahamas. Chill Island offers calm, shallow water. Up, Up & Away balloon ride gives a bird's-eye view. Oasis Lagoon is the largest freshwater pool in the Caribbean.',
     mustDo: ['Thrill Waterpark (tallest slide in Bahamas)', 'Up, Up & Away Helium Balloon', 'Oasis Lagoon freshwater pool', 'Snorkel Experience', 'Cabana rentals on Chill Island', 'Floating bar at Oasis Lagoon'],
   },
   {
@@ -23,21 +23,21 @@ const ISLANDS = [
     tagline: 'Swimming Pigs & Turquoise Sandbars',
     image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=85',
     description: 'The Exumas are 365 islands and cays — one for every day of the year. The famous swimming pigs of Big Major Cay are a bucket-list encounter. Compass Cay has nurse sharks you can hand-feed. The sandbars shift with the tides, creating ever-changing beaches of impossible turquoise.',
-    mustDo: ['Swimming pigs at Big Major Cay', 'Nurse shark feeding at Compass Cay', 'Thunderball Grotto snorkeling (James Bond film site)', 'Staniel Cay Yacht Club lunch', 'Iguana feeding at Allen\'s Cay', 'Sandbar picnic by boat'],
+    mustDo: ['Swimming pigs at Big Major Cay', 'Nurse shark feeding at Compass Cay', 'Thunderball Grotto snorkeling (James Bond film site)', 'Staniel Cay Yacht Club lunch', 'Iguana feeding at Allen's Cay', 'Sandbar picnic by boat'],
   },
   {
     name: 'Harbour Island',
     tagline: 'Pink Sand Beach & Barefoot Luxury',
     image: 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&q=85',
-    description: 'Harbour Island is one of the Caribbean\'s most exclusive and beloved retreats. The 3-mile Pink Sand Beach gets its color from crushed coral and pink foraminifera. Golf carts are the primary mode of transportation. The tiny settlement of Dunmore Town has New England-style clapboard houses and excellent restaurants.',
+    description: 'Harbour Island is one of the Caribbean's most exclusive and beloved retreats. The 3-mile Pink Sand Beach gets its color from crushed coral and pink foraminifera. Golf carts are the primary mode of transportation. The tiny settlement of Dunmore Town has New England-style clapboard houses and excellent restaurants.',
     mustDo: ['Pink Sand Beach stroll (sunrise is magical)', 'Golf cart tour of Dunmore Town', 'Rock House & The Landing restaurants', 'Snorkeling the protected reef', 'Ferry crossing from North Eleuthera', 'Juice Bar at Pink Sands Resort'],
   },
   {
     name: 'Freeport & Grand Bahama',
     tagline: 'Diving, Dolphins & Duty-Free Shopping',
     image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=85',
-    description: 'Grand Bahama\'s second city offers a different pace — the famous UNEXSO dive operation, wild dolphin interactions, and lush Lucayan National Park. The Grand Bahama Island\'s protected waters make for some of the best diving and snorkeling in the Bahamas, with clear visibility up to 100 feet.',
-    mustDo: ['UNEXSO Dolphin Experience (swim with wild dolphins)', 'Ben\'s Cave at Lucayan National Park', 'Gold Rock Beach', 'Port Lucaya Marketplace & Marina', 'Shark and stingray dive', 'Glass-bottom boat tour'],
+    description: 'Grand Bahama's second city offers a different pace — the famous UNEXSO dive operation, wild dolphin interactions, and lush Lucayan National Park. The Grand Bahama Island's protected waters make for some of the best diving and snorkeling in the Bahamas, with clear visibility up to 100 feet.',
+    mustDo: ['UNEXSO Dolphin Experience (swim with wild dolphins)', 'Ben's Cave at Lucayan National Park', 'Gold Rock Beach', 'Port Lucaya Marketplace & Marina', 'Shark and stingray dive', 'Glass-bottom boat tour'],
   },
 ];
 
@@ -53,7 +53,7 @@ const SEASONS = [
     description: 'The Bahamas\' busiest and most expensive season — and the best weather. Dry, sunny, and breezy. Escape the cold from Georgia, Tennessee, and Alabama in just 2 hours by air or overnight by cruise ship.',
     events: [
       { name: 'Junkanoo Parade', location: 'Nassau', when: 'Dec 26 & Jan 1' },
-      { name: 'New Year\'s Celebrations', location: 'All islands', when: 'December 31' },
+      { name: 'New Year's Celebrations', location: 'All islands', when: 'December 31' },
       { name: 'Miami-Nassau Race Week', location: 'Nassau Harbour', when: 'February' },
     ],
     activities: ['Beach & water sports', 'CocoCay visits', 'Whale watching (humpbacks pass through)', 'Snorkeling in clear, calm water', 'Nassau nightlife & dining'],
@@ -100,7 +100,7 @@ const SEASONS = [
     highlight: 'Best prices of the year',
     description: 'Hurricane season peaks in September–October. While weather can be unpredictable, the Bahamas often emerges unscathed. Prices hit their annual low, and the islands are at their least crowded. November is particularly pleasant.',
     events: [
-      { name: 'McLean\'s Town Conch Cracking', location: 'Grand Bahama', when: 'October' },
+      { name: 'McLean's Town Conch Cracking', location: 'Grand Bahama', when: 'October' },
       { name: 'Annual Cat Island Regatta', location: 'Cat Island', when: 'September' },
       { name: 'Thanksgiving in the Bahamas', location: 'All islands', when: 'November' },
     ],
