@@ -59,6 +59,7 @@ export default function CaribbeanDestinationPage() {
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <Link href="/request-quote?destination=Caribbean&trip_type=Cruise+Vacation" className="btn-primary" style={{ textDecoration: 'none' }}>Plan My Caribbean Trip</Link>
                 <Link href="/cruises?destination=Caribbean" style={{ padding: '12px 24px', border: '1px solid rgba(255,255,255,0.3)', color: 'white', textDecoration: 'none', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>View Cruises</Link>
+                <Link href="/destination-packages?region=Latin America" style={ padding: '12px 24px', border: '1px solid var(--gold)', color: 'var(--gold)', textDecoration: 'none', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }>Land Packages</Link>
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 200 }}>
