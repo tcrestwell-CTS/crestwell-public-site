@@ -13,7 +13,7 @@ const ISLANDS = [
   },
   {
     name: 'CocoCay (Perfect Day)',
-    tagline: 'Royal Caribbean's Private Island Paradise",
+    tagline: "Royal Caribbean's Private Island Paradise",
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=85',
     description: "Royal Caribbean transformed this small island into one of the Caribbean's best beach experiences. Thrill Waterpark has the tallest waterslide in the Bahamas. Chill Island offers calm, shallow water. Up, Up & Away balloon ride gives a bird's-eye view. Oasis Lagoon is the largest freshwater pool in the Caribbean.",
     mustDo: ['Thrill Waterpark (tallest slide in Bahamas)', 'Up, Up & Away Helium Balloon', 'Oasis Lagoon freshwater pool', 'Snorkel Experience', 'Cabana rentals on Chill Island', 'Floating bar at Oasis Lagoon'],
