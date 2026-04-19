@@ -1,9 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
 
-const ISLANDS = [
   {
     name: 'Nassau & Paradise Island',
     tagline: 'The Capital City with a Resort Next Door',
@@ -118,23 +117,11 @@ const GALLERY = [
 ];
 
 export default function BahamasDestinationPage() {
-  const [activeSeason, setActiveSeason] = useState(0);
-  const [activeIsland, setActiveIsland] = useState(0);
-
-  useEffect(() => {
-    if (!document.querySelector('script[data-gyg-partner-id]')) {
-      const s = document.createElement('script');
-      s.src = 'https://widget.getyourguide.com/dist/pa.umd.production.min.js';
-      s.async = true;
-      s.defer = true;
-      s.setAttribute('data-gyg-partner-id', 'IOXL78H');
-      document.head.appendChild(s);
-    }
-  }, []);
-  const [galleryOpen, setGalleryOpen] = useState(null as number | null);
+  const [activeSeason, setActiveSeason] = React.useState(0);
+  const [activeIsland, setActiveIsland] = React.useState(0);
+  const [galleryOpen, setGalleryOpen] = React.useState(null);
   const season = SEASONS[activeSeason];
   const island = ISLANDS[activeIsland];
-
   return (
     <>
       <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Destinations', href: '/destinations' }, { name: 'Bahamas' }]} />
