@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
 
@@ -120,6 +120,17 @@ const GALLERY = [
 export default function BahamasDestinationPage() {
   const [activeSeason, setActiveSeason] = useState(0);
   const [activeIsland, setActiveIsland] = useState(0);
+
+  useEffect(() => {
+    if (!document.querySelector('script[data-gyg-partner-id]')) {
+      const s = document.createElement('script');
+      s.src = 'https://widget.getyourguide.com/dist/pa.umd.production.min.js';
+      s.async = true;
+      s.defer = true;
+      s.setAttribute('data-gyg-partner-id', 'IOXL78H');
+      document.head.appendChild(s);
+    }
+  }, []);
   const [galleryOpen, setGalleryOpen] = useState<number | null>(null);
   const season = SEASONS[activeSeason];
   const island = ISLANDS[activeIsland];
