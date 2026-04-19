@@ -6,8 +6,6 @@ import { usePathname } from 'next/navigation';
 const DESTINATIONS = [
   { label: 'All Destinations', href: '/destinations', icon: '' },
   { label: 'Destination Packages', href: '/destination-packages', icon: '' },
-  { label: 'Vacations by Rail', href: '/vacations-by-rail', icon: '' },
-  { label: 'Featured Trips', href: '/trips', icon: '⭐' },
   { label: 'Bahamas', href: '/destinations/bahamas', icon: '' },
   { label: 'Caribbean', href: '/destinations/caribbean', icon: '' },
   { label: 'Mexico', href: '/destinations/mexico', icon: '' },
@@ -24,6 +22,8 @@ const CRUISES = [
 
 const navItems = [
   { label: 'Home', href: '/' },
+  { label: 'Featured Trips', href: '/trips' },
+  { label: 'Vacations by Rail', href: '/vacations-by-rail' },
   { label: 'All-Inclusive', href: '/all-inclusive' },
   { label: 'Group Travel', href: '/group-travel' },
   { label: 'Travel Tips', href: '/blog' },
@@ -172,6 +172,24 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+
+            {/* ── Featured Trips ── */}
+            <Link
+              href="/trips"
+              onClick={closeAll}
+              style={{ ...navLink, color: pathname === '/trips' ? 'var(--gold)' : undefined }}
+            >
+              Featured Trips
+            </Link>
+
+            {/* ── Vacations by Rail ── */}
+            <Link
+              href="/vacations-by-rail"
+              onClick={closeAll}
+              style={{ ...navLink, color: pathname === '/vacations-by-rail' ? 'var(--gold)' : undefined }}
+            >
+              Rail Vacations
+            </Link>
 
             {/* ── Destinations dropdown ── */}
             <div ref={destRef} style={{ position: 'relative' }}>
