@@ -149,7 +149,7 @@ export default function BahamasDestinationPage() {
           <span style={{ color: 'var(--gold)', fontSize: '0.72rem', letterSpacing: '0.08em' }}>Bahamas</span>
         </div>
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 clamp(16px, 5vw, 32px) clamp(32px, 5vw, 64px)', maxWidth: 1280, margin: '0 auto', width: '100%' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, alignItems: 'flex-start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr minmax(280px,320px)', gap: 32, alignItems: 'flex-end' }}>
             <div>
               <div className="overline" style={{ color: 'var(--gold)', marginBottom: 16 }}>Destination Guide</div>
               <h1 className="font-display" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', fontWeight: 300, color: 'white', lineHeight: 1, marginBottom: 16, letterSpacing: '-0.02em' }}>The Bahamas</h1>
@@ -160,8 +160,33 @@ export default function BahamasDestinationPage() {
                 <Link href="/request-quote?destination=Bahamas&trip_type=Cruise+Vacation" className="btn-primary" style={{ textDecoration: 'none' }}>Plan My Bahamas Trip</Link>
                 <Link href="/cruises?destination=Bahamas" style={{ padding: '12px 24px', border: '1px solid rgba(255,255,255,0.3)', color: 'white', textDecoration: 'none', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>View Cruises</Link>
                 <Link href="/destination-packages?region=Latin%20America" style={{ padding: '12px 24px', border: '1px solid var(--gold)', color: 'var(--gold)', textDecoration: 'none', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>Land Packages</Link>
-                
               </div>
+            </div>
+
+            {/* GetYourGuide Excursions Panel */}
+            <a href="https://www.getyourguide.com/s/?q=Bahamas&partner_id=IOXL78H&cmp=share_to_earn" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', marginBottom: 8, display: 'block' }}>
+              <div style={{ background: 'rgba(13,27,42,0.88)', backdropFilter: 'blur(14px)', border: '1px solid rgba(201,168,76,0.35)', borderRadius: 8, padding: '22px 24px', cursor: 'pointer' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#FF5533', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 2 }}>GetYourGuide</div>
+                    <div style={{ fontSize: '0.92rem', color: 'white', fontFamily: 'var(--font-body)', fontWeight: 500 }}>Bahamas Tours &amp; Excursions</div>
+                  </div>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-body)', lineHeight: 1.6, marginBottom: 14, margin: '0 0 14px' }}>
+                  Swimming pigs, snorkeling, island tours &amp; more — book directly through Crestwell.
+                </p>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
+                  {['Swimming Pigs', 'Snorkeling', 'Atlantis', 'Island Tours'].map(tag => (
+                    <span key={tag} style={{ fontSize: '0.65rem', padding: '3px 8px', background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)', color: 'var(--gold)', borderRadius: 4, fontFamily: 'var(--font-body)' }}>{tag}</span>
+                  ))}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'white', fontFamily: 'var(--font-body)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Browse Experiences →</div>
+              </div>
+            </a>
+
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 200 }}>
               {[{ label: 'Best Season', value: 'Dec – April' }, { label: 'Cruise Length', value: '3–7 nights' }, { label: 'From Southeast US', value: '2 hour flight' }, { label: 'Water Temp', value: '77–84°F year-round' }].map((f, i) => (
