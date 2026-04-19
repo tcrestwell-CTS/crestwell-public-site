@@ -137,7 +137,7 @@ export default function BahamasDestinationPage() {
           <span style={{ color: 'rgba(255,255,255,0.25)' }}>›</span>
           <span style={{ color: 'var(--gold)', fontSize: '0.72rem', letterSpacing: '0.08em' }}>Bahamas</span>
         </div>
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 clamp(16px, 5vw, 32px) clamp(32px, 5vw, 64px)', maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 clamp(16px, 5vw, 32px) clamp(32px, 5vw, 64px)', maxWidth: 1280, margin: '0 auto', width: '100%' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, alignItems: 'flex-start' }}>
             <div>
               <div className="overline" style={{ color: 'var(--gold)', marginBottom: 16 }}>Destination Guide</div>
