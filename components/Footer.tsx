@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+const GYG_LINK = 'https://www.getyourguide.com?partner_id=IOXL78H&cmp=share_to_earn';
+
 const ACCREDITATIONS = [
   {
     src: '/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png',
@@ -213,6 +215,32 @@ export default function Footer() {
               Seller of Travel laws may apply for bookings to CA, FL, HI & WA. Prices subject to availability.
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* GetYourGuide Partner Banner */}
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '24px 32px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+            Book Tours & Experiences
+          </span>
+          <a
+            href={GYG_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '8px 16px', borderRadius: 6, transition: 'background 0.2s' }}
+          >
+            <img
+              src="https://cdn.getyourguide.com/tf/assets/static/partners/gyg-logo-white.svg"
+              alt="GetYourGuide"
+              width={120}
+              height={22}
+              style={{ display: 'block' }}
+            />
+          </a>
+          <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
+            via Crestwell Travel
+          </span>
         </div>
       </div>
 
