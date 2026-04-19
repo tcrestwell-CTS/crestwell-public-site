@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import GYGWidget from '@/components/GYGWidget';
 
 export const metadata: Metadata = {
   title: 'Destination Packages | Customized Vacations | Crestwell Travel Services',
@@ -201,6 +202,8 @@ export default function DestinationPackagesPage() {
           </div>
         </div>
       </section>
+
+      <GYGWidget query="international tours experiences" title="Tours & Experiences" />
 
       {/* FINAL CTA */}
       <section style={{ background: 'var(--navy)', padding: 'clamp(56px,7vw,80px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
