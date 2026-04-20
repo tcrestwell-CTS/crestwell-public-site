@@ -174,6 +174,8 @@ Terrance (Agent 3) - Crestwell AI Draft - ${new Date().toLocaleDateString('en-US
     </div>
     <div style="margin-top:16px">
       <a href="mailto:${lead.email}?subject=Your Travel Quote from Crestwell" style="background:#c9a84c;color:#0d1b2a;padding:10px 20px;text-decoration:none;font-family:sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Reply to ${lead.first_name}</a>
+      &nbsp;&nbsp;
+      <a href="https://crestwellgetaways.com/api/ashley-approve?lead_id=${lead.id}&secret=${AGENT_SECRET.slice(0,16)}" style="background:#2D6A4F;color:white;padding:10px 20px;text-decoration:none;font-family:sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">✅ Approve — Send Quote to ${lead.first_name}</a>
     </div>
   </div>
   <div style="background:#0d1b2a;padding:14px 32px;text-align:center">
