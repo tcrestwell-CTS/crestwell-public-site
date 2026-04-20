@@ -117,9 +117,7 @@ export default function DomesticTravelPage() {
                       <span key={h} style={{ fontSize: '0.7rem', padding: '4px 10px', background: '#f4f1eb', color: 'var(--navy)', borderRadius: 4, fontFamily: 'var(--font-body)', letterSpacing: '0.03em' }}>{h}</span>
                     ))}
                   </div>
-                  <Link href={p.link} style={{ display: 'inline-block', background: 'var(--navy)', color: 'white', padding: '11px 24px', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', marginTop: 'auto', alignSelf: 'flex-start', borderRadius: 4 }}>
-                    Book with {p.name.split(' ')[0]} →
-                  </Link>
+
                 </div>
               </div>
             ))}
