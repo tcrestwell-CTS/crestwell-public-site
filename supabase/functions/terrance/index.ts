@@ -26,6 +26,14 @@ ALL-INCLUSIVE RESORTS:
 - Mid: Excellence, Secrets, Sandals (couples), Beaches (families)
 - Luxury: Finest Resorts, Zoetry, Nizuc
 
+VACATIONS BY RAIL (Crestwell partner — recommend for clients who want scenic train travel, rail journeys, or an alternative to flying):
+- Vacations by Rail is Crestwell's rail travel partner offering fully packaged train vacation experiences across the USA, Canada, Europe, and Scandinavia.
+- Key products: Best of USA by Rail, Best of Canada by Rail, Best of Europe by Rail, European River Cruise by Rail, Best of Scandinavia by Rail.
+- Ideal for: retired travelers, couples, clients who dislike flying, clients wanting a slower scenic travel experience, multi-destination domestic trips.
+- Packages include train tickets, hotel accommodations at each stop, some meals, and guided excursions.
+- Rail Guidance: Lead with USA by Rail for domestic inquiries from GA/TN/AL. Lead with Canada for nature/wilderness seekers. Lead with Europe for first-time international travelers who want convenience. Scandinavia for adventure/luxury travelers.
+- Always note: Vacations by Rail brochures available — clients can request via crestwellgetaways.com/vacations-by-rail.
+
 VACATION RENTALS (Crestwell partner programs — recommend when trip type is vacation home, domestic, group, or client wants a house/villa/cabin/rental):
 - Plum Guide: Top 3% of vacation homes worldwide, 150-point vetting process. Luxury beach houses, mountain retreats, lake cabins, city penthouses. Domestic US and international. Best for couples, families, and groups wanting a private home experience over a hotel.
 - HVN (Haven): Premium vacation rental platform with hotel-grade amenities and concierge service. Strong for high-end domestic and Caribbean vacation home rentals.
@@ -38,7 +46,38 @@ VACATION RENTAL GUIDANCE:
 - Lead with AIC when client wants all-inclusive but prefers a private home over a resort
 - Lead with HVN for premium domestic or Caribbean vacation home requests
 - Rentals can serve as pre/post-cruise accommodation or full trip alternative to resorts
-- Always note: flights and transfers available upon request
+
+PREFERRED HOTEL PARTNERS (Crestwell has access to negotiated rates via ABC Global Services — recommend for hotel-only or hotel-add-on bookings):
+- Hilton Hotels & Resorts: Code ABCHILTON — preferred rates at Hilton properties worldwide
+- Hyatt Hotels: Corporate code 18187 — rates at 500+ participating Hyatt properties
+- Omni Hotels & Resorts: ABC Global preferred rates — 10% off BAR, standard commission
+- IHG Hotels & Resorts (InterContinental, Holiday Inn, Crowne Plaza, etc.): Up to 7% off BAR — corporate number 000670065
+- Choice Hotels (Comfort Inn, Quality Inn, Clarion, etc.): 10% off BAR — accreditation required
+- Radisson Hotels: Up to 10% off BAR — IATA/ARC/CLIA code required
+- Wyndham Hotels & Resorts: Up to 5% off BAR — corporate code 8000000058
+- Melia Hotels International: 10% off BAR, 12% commission city hotels / 16% commission resort properties — code 00600123JLN
+- Virgin Hotels (Nashville, New Orleans, Dallas, Chicago): Up to 10% off BAR — code CONABC
+- Preferred Hotels & Resorts: Up to 10% off BAR at 100+ properties — code ABCCR21
+- MGM Resorts (Bellagio, MGM Grand, Aria, etc.): Travel Elite Access program — commission on bookings
+- Small Luxury Hotels of the World (SLH): Standard commission — IATA agents use accreditation number
+- Accor Hotels (Fairmont, Swissotel, Raffles, Sofitel, Novotel, etc.): Preferential code ABC at travelpros.accor.com
+- Clermont Hotel Group: 10% off BAR + complimentary breakfast + 20% F&B discount
+- Dalata Hotel Group: 10% off BAR + complimentary Wi-Fi + room upgrade when available
+- Extra Holidays: 5% off BAR — vacation ownership resorts
+- Fiesta Americana (Grupo Posadas — Mexico): Up to 10% off — TAID code required
+- Minor Hotels (NH Hotels, NH Collection, Nhow): Up to 10% off BAR — activation required
+- My Place Hotels: Up to 10% off BAR — promo code ABCGLOBAL
+- Noble House Hotels & Resorts: Standard commission — boutique luxury properties
+- Red Roof Inns: Up to 5% off BAR — VP+ code 500139
+
+HOTEL GUIDANCE:
+- For luxury domestic: Lead with Hilton, Hyatt, Omni, or Preferred Hotels & Resorts
+- For Las Vegas: MGM Resorts Travel Elite Access
+- For Mexico: Fiesta Americana (Grupo Posadas)
+- For Nashville or New Orleans: Virgin Hotels (preferred rates)
+- For Europe: Accor (Fairmont/Sofitel) or Minor Hotels (NH Collection)
+- Always note hotel stays can be combined with cruise pre/post or rail packages
+- Crestwell earns standard commission on all hotel bookings at no extra cost to the client
 
 FINANCING: Crestwell offers 3/6/12-month 0% APR and 18/24-month low-APR plans.
 `;
@@ -83,9 +122,13 @@ serve(async (req) => {
   console.log('Terrance generating proposal for:', lead.first_name, lead.last_name);
 
   // Detect if this lead is a strong vacation rental candidate
-  const isRental = ['vacation home', 'vacation rental', 'domestic', 'group travel'].some(
-    t => (lead.trip_type || '').toLowerCase().includes(t)
-  ) || !!(lead.message || '').toLowerCase().match(/house|villa|rental|cabin|home|plum|hvn|aic|ava/);
+  const tripTypeLower = (lead.trip_type || '').toLowerCase();
+  const messageLower  = (lead.message || '').toLowerCase();
+  const isRental = ['vacation home', 'vacation rental', 'domestic', 'group travel'].some(t => tripTypeLower.includes(t))
+    || !!messageLower.match(/house|villa|rental|cabin|home|plum|hvn|aic|ava/);
+  const isRail = tripTypeLower.includes('rail') || tripTypeLower.includes('train')
+    || !!messageLower.match(/rail|train|amtrak|scenic/);
+  const isHotel = tripTypeLower.includes('hotel') || tripTypeLower.includes('hotel stay');
 
   const prompt = `You are a senior travel specialist at Crestwell Travel Services drafting a PROPOSAL SKELETON for Tim Crestwell to edit.
 
@@ -103,7 +146,9 @@ Message: ${lead.message || 'none'}
 AI summary: ${lead.ai_summary || ''}
 Wants financing: ${lead.wants_financing ? 'YES' : 'no'}
 
-${isRental ? `IMPORTANT: This lead is a strong candidate for a VACATION RENTAL recommendation. Lead with the most appropriate Crestwell rental partner (Plum Guide, HVN, AIC, or AVA) based on destination and preferences. Structure Option A, B, C around rental options first, with resort or cruise alternatives as needed.` : ''}
+${isRental ? `IMPORTANT: This lead is a strong vacation rental candidate. Lead with the most appropriate Crestwell rental partner (Plum Guide, HVN, AIC, or AVA) based on destination. Structure options A/B/C around rental options first.` : ''}
+${isRail ? `IMPORTANT: This lead is a strong Vacations by Rail candidate. Lead with the most appropriate rail package (USA, Canada, Europe, or Scandinavia) based on destination. Structure options A/B/C around rail packages first.` : ''}
+${isHotel ? `IMPORTANT: This lead is requesting a hotel stay. Lead with the best ABC Global Services hotel partner for their destination. Recommend 2-3 specific brands with rate codes.` : ''}
 
 Write a proposal skeleton in clean markdown:
 
