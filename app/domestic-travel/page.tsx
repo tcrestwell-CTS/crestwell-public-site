@@ -58,10 +58,10 @@ const HOTEL_BRANDS = [
 ];
 
 const DESTINATIONS = [
-  { name: 'Nashville, TN', img: 'https://images.unsplash.com/photo-1545419913-775e3b49ed7e?w=600&q=80', tags: ['Music City', 'Honky-tonks', 'Culinary scene'] },
-  { name: 'Smoky Mountains', img: 'https://images.unsplash.com/photo-1574120809222-ae70b4a5e2f4?w=600&q=80', tags: ['Gatlinburg', 'Pigeon Forge', 'Hiking & cabins'] },
+  { name: 'Nashville, TN', img: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80', tags: ['Music City', 'Honky-tonks', 'Culinary scene'] },
+  { name: 'Smoky Mountains', img: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80', tags: ['Gatlinburg', 'Pigeon Forge', 'Hiking & cabins'] },
   { name: 'Florida Gulf Coast', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80', tags: ['Destin', '30A', 'Clearwater Beach'] },
-  { name: 'New Orleans, LA', img: 'https://images.unsplash.com/photo-1568347877321-f8935c7dc5f5?w=600&q=80', tags: ['French Quarter', 'Jazz & cuisine', 'Festivals'] },
+  { name: 'New Orleans, LA', img: 'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80', tags: ['French Quarter', 'Jazz & cuisine', 'Festivals'] },
   { name: 'Savannah, GA', img: 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=600&q=80', tags: ['Historic squares', 'Riverfront', 'Southern charm'] },
   { name: 'Charleston, SC', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80', tags: ['Antebellum homes', 'King Street', 'Beaches'] },
 ];
