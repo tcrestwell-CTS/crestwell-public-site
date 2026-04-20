@@ -28,7 +28,7 @@ const VACATION_PARTNERS = [
     tagline: 'Nationwide packages, unbeatable value',
     description: "Through American Vacations, Crestwell books domestic getaways across the US — from Napa Valley wine country to the Florida Keys. Flexible departure cities, curated properties, and Crestwell's personal touch on every booking.",
     highlights: ['Domestic destinations', 'Flexible departure cities', 'Hotel + air bundles', 'National parks trips', 'City escapes', 'Beach vacations'],
-    color: '#CC0000',
+    color: '#8B0000',
     link: '/request-quote?type=domestic&partner=american-vacations',
   },
   {
@@ -108,7 +108,7 @@ export default function DomesticTravelPage() {
                 <div style={{ background: p.color, padding: '28px 28px 24px' }}>
                   <div style={{ fontSize: '2rem', marginBottom: 10 }}>{p.logo}</div>
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'white', margin: '0 0 6px', fontFamily: 'var(--font-body)' }}>{p.name}</h3>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>{p.tagline}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>{p.tagline}</div>
                 </div>
                 <div style={{ padding: '24px 28px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <p style={{ color: 'var(--slate)', fontSize: '0.88rem', lineHeight: 1.75, marginBottom: 20, fontFamily: 'var(--font-body)' }}>{p.description}</p>
