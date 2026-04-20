@@ -26,6 +26,20 @@ ALL-INCLUSIVE RESORTS:
 - Mid: Excellence, Secrets, Sandals (couples), Beaches (families)
 - Luxury: Finest Resorts, Zoetry, Nizuc
 
+VACATION RENTALS (Crestwell partner programs — recommend when trip type is vacation home, domestic, group, or client wants a house/villa/cabin/rental):
+- Plum Guide: Top 3% of vacation homes worldwide, 150-point vetting process. Luxury beach houses, mountain retreats, lake cabins, city penthouses. Domestic US and international. Best for couples, families, and groups wanting a private home experience over a hotel.
+- HVN (Haven): Premium vacation rental platform with hotel-grade amenities and concierge service. Strong for high-end domestic and Caribbean vacation home rentals.
+- AIC (All-Inclusive Collection): Vacation rentals with all-inclusive add-ons — food, drinks, and activities bundled into the stay. Best for groups and families who want the all-inclusive experience in a private home setting.
+- AVA (Aston Vacation Amenities): Hawaii-specialist vacation rental program. Condos, villas, and homes across all major Hawaiian islands (Maui, Oahu, Kauai, Big Island). Best choice for any Hawaii inquiry.
+
+VACATION RENTAL GUIDANCE:
+- Lead with Plum Guide for most domestic US, group, and luxury home requests
+- Lead with AVA for any Hawaii destination
+- Lead with AIC when client wants all-inclusive but prefers a private home over a resort
+- Lead with HVN for premium domestic or Caribbean vacation home requests
+- Rentals can serve as pre/post-cruise accommodation or full trip alternative to resorts
+- Always note: flights and transfers available upon request
+
 FINANCING: Crestwell offers 3/6/12-month 0% APR and 18/24-month low-APR plans.
 `;
 
@@ -68,6 +82,11 @@ serve(async (req) => {
 
   console.log('Terrance generating proposal for:', lead.first_name, lead.last_name);
 
+  // Detect if this lead is a strong vacation rental candidate
+  const isRental = ['vacation home', 'vacation rental', 'domestic', 'group travel'].some(
+    t => (lead.trip_type || '').toLowerCase().includes(t)
+  ) || !!(lead.message || '').toLowerCase().match(/house|villa|rental|cabin|home|plum|hvn|aic|ava/);
+
   const prompt = `You are a senior travel specialist at Crestwell Travel Services drafting a PROPOSAL SKELETON for Tim Crestwell to edit.
 
 ${CRUISE_KNOWLEDGE}
@@ -83,6 +102,8 @@ Budget: ${lead.budget || 'not specified'}
 Message: ${lead.message || 'none'}
 AI summary: ${lead.ai_summary || ''}
 Wants financing: ${lead.wants_financing ? 'YES' : 'no'}
+
+${isRental ? `IMPORTANT: This lead is a strong candidate for a VACATION RENTAL recommendation. Lead with the most appropriate Crestwell rental partner (Plum Guide, HVN, AIC, or AVA) based on destination and preferences. Structure Option A, B, C around rental options first, with resort or cruise alternatives as needed.` : ''}
 
 Write a proposal skeleton in clean markdown:
 
@@ -112,6 +133,12 @@ Travelers: ${lead.travelers_adults || 2} adults | Departure: ${lead.departure_da
 
 ## Key Inclusions
 - [4-6 specific inclusions for this trip]
+
+---
+
+## Also Available
+- Flights from Chattanooga (CHA) or Atlanta (ATL) available upon request
+- Pre/post hotel stays and airport & port transfers available upon request
 
 ---
 
