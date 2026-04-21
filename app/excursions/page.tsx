@@ -102,10 +102,10 @@ export default function ExcursionsPage() {
 
             {/* GetYourGuide Card */}
             <div style={{ background: "white", borderRadius: 8, overflow: "hidden", border: "1px solid rgba(13,27,42,0.08)", display: "flex", flexDirection: "column" }}>
-              <div style={{ background: "#FF5533", padding: "24px 28px 20px" }}>
+              <div style={{ background: "#C0392B", padding: "24px 28px 20px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
                   <div style={{ width: 44, height: 44, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF5533"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#C0392B"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                   </div>
                   <div>
                     <div style={{ color: "white", fontSize: "1.2rem", fontWeight: 700, fontFamily: "var(--font-body)", letterSpacing: "-0.01em" }}>GetYourGuide</div>
@@ -137,7 +137,7 @@ export default function ExcursionsPage() {
                 </div>
               </div>
               <div style={{ padding: "0 28px 22px" }}>
-                <a href={GYG_URL} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#FF5533", color: "white", padding: "10px 24px", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "var(--font-body)", borderRadius: 4 }}>
+                <a href={GYG_URL} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#C0392B", color: "white", padding: "10px 24px", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "var(--font-body)", borderRadius: 4 }}>
                   Browse GetYourGuide →
                 </a>
               </div>
@@ -151,9 +151,9 @@ export default function ExcursionsPage() {
               {[
                 { dest: "Caribbean Cruise Ports", pick: "Viator", color: "#0057b8" },
                 { dest: "Mediterranean Ports", pick: "Either — both excel", color: "#2D6A4F" },
-                { dest: "Rome, Paris, Barcelona", pick: "GetYourGuide", color: "#FF5533" },
+                { dest: "Rome, Paris, Barcelona", pick: "GetYourGuide", color: "#C0392B" },
                 { dest: "Alaska Shore Excursions", pick: "Viator", color: "#0057b8" },
-                { dest: "Landmarks & Museums", pick: "GetYourGuide", color: "#FF5533" },
+                { dest: "Landmarks & Museums", pick: "GetYourGuide", color: "#C0392B" },
                 { dest: "Beach & Water Activities", pick: "Viator", color: "#0057b8" },
               ].map(({ dest, pick, color }) => (
                 <div key={dest} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -183,10 +183,10 @@ export default function ExcursionsPage() {
       </section>
 
       {/* GetYourGuide Section */}
-      <section style={{ background: "#fff8f7", borderTop: "3px solid #FF5533", padding: "56px 32px" }}>
+      <section style={{ background: "#fdf4f3", borderTop: "3px solid #C0392B", padding: "56px 32px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
-            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#FF5533", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#C0392B", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
             </div>
             <div>
@@ -226,7 +226,7 @@ export default function ExcursionsPage() {
                 Skip-the-line tickets, private tours, cooking classes, day trips and more — curated and reviewed by millions of travelers worldwide.
               </p>
             </div>
-            <a href={GYG_URL} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, display: "inline-block", background: "#FF5533", color: "white", padding: "13px 32px", textDecoration: "none", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "var(--font-body)", borderRadius: 4, whiteSpace: "nowrap" }}>
+            <a href={GYG_URL} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, display: "inline-block", background: "#C0392B", color: "white", padding: "13px 32px", textDecoration: "none", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "var(--font-body)", borderRadius: 4, whiteSpace: "nowrap" }}>
               Open GetYourGuide →
             </a>
           </div>
