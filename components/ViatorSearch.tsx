@@ -1,6 +1,14 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 
+// Append Crestwell's Viator affiliate MCID to every product URL for commission tracking
+const VIATOR_MCID = '42383';
+function viatorUrl(productUrl: string): string {
+  if (!productUrl) return productUrl;
+  const sep = productUrl.includes('?') ? '&' : '?';
+  return `${productUrl}${sep}mcid=${VIATOR_MCID}`;
+}
+
 interface ViatorProduct {
   productCode: string;
   title: string;
@@ -180,7 +188,7 @@ function ProductModal({ product, onClose }: { product: ViatorProduct; onClose: (
             )}
           </div>
           <div style={{ display: "flex", gap: 12 }}>
-            <a href={product.productUrl} target="_blank" rel="noopener noreferrer"
+            <a href={viatorUrl(product.productUrl)} target="_blank" rel="noopener noreferrer"
               style={{ flex: 1, background: "var(--navy)", color: "var(--gold)", padding: "13px 20px", textAlign: "center", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "var(--font-body)", display: "block" }}>
               Book on Viator →
             </a>
