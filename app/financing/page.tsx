@@ -263,6 +263,15 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
 
       setApplicationNumber(result.application_number || '');
       setSubmitted(true);
+
+      // Trigger Equifax pre-qual in background — non-blocking
+      if (result.id || result.application_id) {
+        fetch('/api/equifax-prequal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ application_id: result.id || result.application_id }),
+        }).catch(console.error);
+      }
     } catch (err: any) {
       setError(err.message || 'Submission failed. Please try again or call us.');
     } finally {
