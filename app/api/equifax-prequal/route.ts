@@ -5,9 +5,9 @@ const SUPA_URL  = process.env.NEXT_PUBLIC_SUPABASE_URL  ?? 'https://zbtnulzvwreq
 const SUPA_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidG51bHp2d3JlcXpibXh1bHB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MjkzMjksImV4cCI6MjA4NjAwNTMyOX0.0PJACAXw8c8ik3_UBpBEGWXBxfLbMxh3jP1brMCCpGU';
 
 // ── Equifax sandbox credentials ───────────────────────────────────────────
-const EFX_CLIENT_ID     = process.env.EQUIFAX_CLIENT_ID     ?? 'jhTI62qfA6vG8xJdkrJYulOdARvF';
-const EFX_CLIENT_SECRET = process.env.EQUIFAX_CLIENT_SECRET ?? 'jdaapZkOP01ZMrC6V2E79QQOZbsGh4Zd';
-const EFX_SUBSCRIBER_ID = process.env.EQUIFAX_SUBSCRIBER_ID ?? 'qPOl7LC9i7qNycVZ';
+const EFX_CLIENT_ID     = process.env.EQUIFAX_CLIENT_ID     ?? 'jdaapZkOP01ZMrC6V2E79QQOZbsGh4Zd';
+const EFX_CLIENT_SECRET = process.env.EQUIFAX_CLIENT_SECRET ?? 'qPOl7LC9i7qNycVZ';
+const EFX_SUBSCRIBER_ID = process.env.EQUIFAX_SUBSCRIBER_ID ?? 'jhTI62qfA6vG8xJdkrJYulOdARvF';
 const EFX_TOKEN_URL     = 'https://api.sandbox.equifax.com/v2/oauth/token';
 const EFX_PREQUAL_URL   = 'https://api.sandbox.equifax.com/business/prequal-of-one/v1/consumers';
 
