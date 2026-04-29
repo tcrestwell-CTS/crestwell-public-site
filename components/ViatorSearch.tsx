@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 
 // Append Crestwell's Viator affiliate MCID to every product URL for commission tracking
 const VIATOR_MCID = '42383';
-function viatorUrl(productUrl: string): string {
-  if (!productUrl) return productUrl;
+function viatorUrl(productUrl: string | undefined): string {
+  if (!productUrl) return '#';
   const sep = productUrl.includes('?') ? '&' : '?';
   return `${productUrl}${sep}mcid=${VIATOR_MCID}`;
 }
