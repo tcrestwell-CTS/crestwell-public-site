@@ -161,6 +161,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             } catch(e) {}
           })();
         `}</Script>
+      {/* Trustpilot Review Collector */}
+      <script
+        type="text/javascript"
+        src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
+        async
+      />
       </head>
       <body>
         <NavbarFooterWrapper>
