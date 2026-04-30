@@ -24,7 +24,7 @@ export default function TrustpilotWidget() {
       data-businessunit-id="6893e2a02c5573f00e2a1236"
       data-style-height="52px"
       data-style-width="100%"
-      data-token="a187f0e6-f601-4fcd-8806-e63040b80bd9"
+      data-token="9b718354-0461-48f2-b84f-2da7a37cc3b5"
     >
       <a
         href="https://www.trustpilot.com/review/crestwellgetaways.com"
