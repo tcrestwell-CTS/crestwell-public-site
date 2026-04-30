@@ -110,10 +110,10 @@ export default function ExcursionsPage() {
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <div className="overline" style={{ marginBottom: 12 }}>Three Great Platforms</div>
             <h2 className="font-display" style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 300, color: "var(--navy)", marginBottom: 12 }}>
-              Which Platform Is Right for Your Client?
+              Find the Perfect Experience for Your Next Adventure
             </h2>
             <p style={{ color: "var(--slate)", fontSize: "0.92rem", maxWidth: 560, margin: "0 auto", lineHeight: 1.8, fontFamily: "var(--font-body)" }}>
-              Each platform has distinct strengths. Select a provider below to browse their full catalog with search and filters.
+              Each platform has distinct strengths. Choose a provider below to explore their full catalog with search and filters.
             </p>
           </div>
 
