@@ -1,10 +1,16 @@
 "use client";
-
-// Trustpilot Review Collector Widget
-// Template: Review Collector (56278e9abfbbba0bdcd568bc)
-// Business: crestwellgetaways.com
+import { useEffect } from "react";
 
 export default function TrustpilotWidget() {
+  useEffect(() => {
+    // Re-initialize Trustpilot widgets after React hydration
+    if (typeof window !== "undefined" && (window as any).Trustpilot) {
+      (window as any).Trustpilot.loadFromElement(
+        document.querySelector(".trustpilot-widget")
+      );
+    }
+  }, []);
+
   return (
     <div
       className="trustpilot-widget"
