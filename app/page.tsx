@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import FeaturedTrips from '@/components/FeaturedTrips';
+import TrustpilotWidget from '@/components/TrustpilotWidget';
 import NewsletterSection from '@/components/NewsletterSection';
 import PartnerLogos from '@/components/PartnerLogos';
 import TravelHeroSlider from '@/components/TravelHeroSlider';
