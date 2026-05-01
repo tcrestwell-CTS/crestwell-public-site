@@ -62,6 +62,39 @@ export default function ViatorPage() {
             </form>
           </div>
 
+
+          {/* Cruise Ports Band */}
+          <div style={{ marginBottom: 36, background: "var(--navy)", borderRadius: 10, padding: "24px 28px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+              <span style={{ fontSize: "1.2rem" }}>🚢</span>
+              <div>
+                <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#0057b8", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-body)" }}>Cruise Port Excursions</div>
+                <div style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-body)", marginTop: 2 }}>Browse shore excursions at your port of call</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {[
+                { label: "Nassau, Bahamas", url: "https://www.viator.com/Nassau-Bahamas/d628-ttd?mcid=42383" },
+                { label: "Cozumel, Mexico", url: "https://www.viator.com/Cozumel/d629-ttd?mcid=42383" },
+                { label: "St. Thomas, USVI", url: "https://www.viator.com/St-Thomas/d660-ttd?mcid=42383" },
+                { label: "Grand Cayman", url: "https://www.viator.com/Grand-Cayman/d631-ttd?mcid=42383" },
+                { label: "St. Maarten", url: "https://www.viator.com/St-Maarten/d665-ttd?mcid=42383" },
+                { label: "Juneau, Alaska", url: "https://www.viator.com/Juneau/d913-ttd?mcid=42383" },
+                { label: "Skagway, Alaska", url: "https://www.viator.com/Skagway/d4320-ttd?mcid=42383" },
+                { label: "Ketchikan, Alaska", url: "https://www.viator.com/Ketchikan/d911-ttd?mcid=42383" },
+                { label: "Rome (Civitavecchia)", url: "https://www.viator.com/Rome/d511-ttd?mcid=42383" },
+                { label: "Barcelona, Spain", url: "https://www.viator.com/Barcelona/d562-ttd?mcid=42383" },
+                { label: "Athens (Piraeus)", url: "https://www.viator.com/Athens/d496-ttd?mcid=42383" },
+                { label: "Dubrovnik, Croatia", url: "https://www.viator.com/Dubrovnik/d4366-ttd?mcid=42383" },
+              ].map(p => (
+                <a key={p.label} href={p.url} target="_blank" rel="noopener noreferrer"
+                  style={{ display: "inline-block", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(0,87,184,0.5)", borderRadius: 20, padding: "7px 16px", textDecoration: "none", color: "white", fontSize: "0.8rem", fontFamily: "var(--font-body)", fontWeight: 500 }}>
+                  {p.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
           <ViatorSearch defaultDestination="caribbean" showDestinationFilter={true} />
         </div>
       </section>
