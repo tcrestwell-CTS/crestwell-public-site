@@ -91,6 +91,24 @@ export default function CivitatisPage() {
             </a>
           </div>
 
+          {/* Custom City Search */}
+          <div style={{ marginBottom: 48, padding: "24px 28px", background: "#f0faf6", borderRadius: 12, border: "1px solid rgba(26,127,90,0.15)" }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#1a7f5a", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12, fontFamily: "var(--font-body)" }}>Search Any City</div>
+            <p style={{ color: "var(--slate)", fontSize: "0.85rem", fontFamily: "var(--font-body)", marginBottom: 16, lineHeight: 1.6 }}>Don&apos;t see your destination listed? Type any city name below.</p>
+            <form action={`${CIVITATIS_BASE}/s/`} method="get" target="_blank" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <input type="hidden" name="ag_aid" value={AG_AID} />
+              <input
+                type="text"
+                name="q"
+                placeholder="e.g. Seville, Bogota, Playa del Carmen..."
+                style={{ flex: "1 1 240px", padding: "12px 16px", border: "1px solid rgba(26,127,90,0.3)", borderRadius: 6, fontSize: "0.9rem", fontFamily: "var(--font-body)", color: "var(--navy)", outline: "none", background: "white" }}
+              />
+              <button type="submit" style={{ flexShrink: 0, background: "#1a7f5a", color: "white", border: "none", padding: "12px 24px", borderRadius: 6, fontSize: "0.85rem", fontWeight: 700, fontFamily: "var(--font-body)", cursor: "pointer", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                Search →
+              </button>
+            </form>
+          </div>
+
           {/* Cruise Ports */}
           <div style={{ marginBottom: 48 }}>
             <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#1a7f5a", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6, fontFamily: "var(--font-body)" }}>Cruise Ports</div>
