@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
-import GYGWidget from "@/components/GYGWidget";
+import GYGContent from "@/components/GYGContent";
 
 export const metadata: Metadata = {
   title: "GetYourGuide Experiences | Crestwell Travel Services",
@@ -35,7 +35,7 @@ export default function GetYourGuidePage() {
 
       <section style={{ background: "white", padding: "48px 32px 64px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <GYGWidget />
+          <GYGContent />
         </div>
       </section>
 
