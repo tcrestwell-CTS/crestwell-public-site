@@ -203,7 +203,7 @@ export default function DestinationPackagesPage() {
         </div>
       </section>
 
-      <GYGWidget />
+      <GYGWidget query="international tours experiences" title="Tours & Experiences" />
 
       {/* FINAL CTA */}
       <section style={{ background: 'var(--navy)', padding: 'clamp(56px,7vw,80px) clamp(16px,5vw,32px)', textAlign: 'center' }}>
