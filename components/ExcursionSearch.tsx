@@ -220,7 +220,7 @@ export default function ExcursionSearch({
       </div>
 
       {/* Tour Cards Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,260px), 1fr))", gap: 20 }}>
         {filtered.map(tour => (
           <TourCard key={tour.id} tour={tour} accentColor={accentColor} onSelect={setSelected} />
         ))}
