@@ -15,25 +15,25 @@ const FEATURED_TOURS: CuratedTour[] = [
   { id:"gyg-6", title:"Barcelona: Sagrada Família Skip-the-Line Entry", description:"Enter Gaudí's masterpiece without the queues. Marvel at the awe-inspiring interior, colored glass windows, and climb the towers for panoramic city views. Audio guide included.", image:"https://images.unsplash.com/photo-1561501900-3701fa6a0864?w=600&q=80", rating:4.8, reviewCount:15621, price:35, currency:"USD", duration:"1.5h", destination:"Barcelona, Spain", category:"Skip-the-Line", freeCancellation:false, url:gygUrl("/barcelona-l45/sagrada-familia-d234/"), badge:"Most Popular" },
   { id:"gyg-7", title:"Santorini: Caldera Sunset Catamaran Cruise", description:"Sail around the stunning caldera on a private catamaran as the sun sets over the Aegean Sea. Swim at volcanic hot springs, snorkel at Red Beach, and enjoy a BBQ dinner with open bar.", image:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80", rating:4.9, reviewCount:4231, price:115, currency:"USD", duration:"5h", destination:"Santorini, Greece", category:"Boat Tours", freeCancellation:true, url:gygUrl("/santorini-l261/catamaran-d2547/"), badge:"Top Rated" },
   { id:"gyg-8", title:"London: Tower of London & Crown Jewels Guided Tour", description:"Explore 1,000 years of British royal history with an expert guide. See the dazzling Crown Jewels, learn about prisoners and executions, and meet the famous Tower Ravens.", image:"https://images.unsplash.com/photo-1587985064135-0366536eab42?w=600&q=80", rating:4.6, reviewCount:5678, price:32, currency:"USD", duration:"2.5h", destination:"London, England", category:"Culture", freeCancellation:true, url:gygUrl("/london-l25/tower-of-london-d2233/") },
-  { id:"gyg-9", title:"Nassau, Bahamas: Snorkel & Stingray Adventure", description:"Snorkel over colorful coral reefs teeming with tropical fish, then swim with friendly southern stingrays in their natural habitat. Perfect for cruise ship passengers.", image:"https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=80", rating:4.7, reviewCount:3201, price:65, currency:"USD", duration:"3h", destination:"Nassau, Bahamas", category:"Water & Beach", freeCancellation:true, url:gygUrl("/nassau-l4449/snorkel-stingray-d3021/") },
+  { id:"gyg-9", title:"Nassau, Bahamas: Snorkel & Stingray Adventure", description:"Snorkel over colorful coral reefs teeming with tropical fish, then swim with friendly southern stingrays in their natural habitat. Perfect for cruise ship passengers.", image:"https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=80", rating:4.7, reviewCount:3201, price:65, currency:"USD", duration:"3h", destination:"Nassau, Bahamas", category:"Water & Beach", freeCancellation:true, url:gygUrl("/nassau-l326/") },
   { id:"gyg-10", title:"Dubrovnik: Game of Thrones & City Walls Walking Tour", description:"Follow in the footsteps of Cersei and Tyrion on this unforgettable tour of King's Landing. Walk the ancient city walls and hear stories from the show and the city's real history.", image:"https://images.unsplash.com/photo-1555990793-da11153b2473?w=600&q=80", rating:4.8, reviewCount:2987, price:28, currency:"USD", duration:"2h", destination:"Dubrovnik, Croatia", category:"Walking Tours", freeCancellation:true, url:gygUrl("/dubrovnik-l262/game-of-thrones-d2987/") },
   { id:"gyg-11", title:"Florence: Uffizi Gallery Skip-the-Line Tour", description:"See Botticelli's Birth of Venus, da Vinci masterpieces, and Michelangelo's works with an art historian guide. Skip the notoriously long lines at one of the world's finest art museums.", image:"https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&q=80", rating:4.7, reviewCount:8102, price:58, currency:"USD", duration:"2h", destination:"Florence, Italy", category:"Skip-the-Line", freeCancellation:false, url:gygUrl("/florence-l140/uffizi-d456/") },
-  { id:"gyg-12", title:"Cozumel: Tulum Ruins & Cenote Swimming Day Trip", description:"Journey to the ancient Mayan city of Tulum perched on a Caribbean cliff, then cool off in a crystal-clear cenote. Includes round-trip transport, entrance fees, and a local guide.", image:"https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=600&q=80", rating:4.6, reviewCount:4521, price:89, currency:"USD", duration:"8h", destination:"Cozumel, Mexico", category:"Day Trips", freeCancellation:true, url:gygUrl("/cozumel-l22370/tulum-cenote-d5610/") },
+  { id:"gyg-12", title:"Cozumel: Tulum Ruins & Cenote Swimming Day Trip", description:"Journey to the ancient Mayan city of Tulum perched on a Caribbean cliff, then cool off in a crystal-clear cenote. Includes round-trip transport, entrance fees, and a local guide.", image:"https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=600&q=80", rating:4.6, reviewCount:4521, price:89, currency:"USD", duration:"8h", destination:"Cozumel, Mexico", category:"Day Trips", freeCancellation:true, url:gygUrl("/cozumel-l309/tulum-cenote-d5610/") },
 ];
 
 const CRUISE_PORTS = [
-  { label: "Nassau, Bahamas", url: gygUrl("/nassau-l4449/") },
-  { label: "Cozumel, Mexico", url: gygUrl("/cozumel-l22370/") },
-  { label: "St. Thomas", url: gygUrl("/st-thomas-l4499/") },
-  { label: "Grand Cayman", url: gygUrl("/grand-cayman-l4452/") },
-  { label: "St. Maarten", url: gygUrl("/st-maarten-l4456/") },
+  { label: "Nassau, Bahamas", url: gygUrl("/nassau-l326/") },
+  { label: "Cozumel, Mexico", url: gygUrl("/cozumel-l309/") },
+  { label: "St. Thomas", url: gygUrl("/st-thomas-us-virgin-islands-l526/") },
+  { label: "Grand Cayman", url: gygUrl("/grand-cayman-l571/") },
+  { label: "St. Maarten", url: gygUrl("/philipsburg-l2301/") },
   { label: "Rome (Civitavecchia)", url: gygUrl("/rome-l33/") },
   { label: "Barcelona", url: gygUrl("/barcelona-l45/") },
   { label: "Athens (Piraeus)", url: gygUrl("/athens-l91/") },
   { label: "Dubrovnik", url: gygUrl("/dubrovnik-l262/") },
   { label: "Venice", url: gygUrl("/venice-l174/") },
   { label: "Santorini", url: gygUrl("/santorini-l261/") },
-  { label: "Juneau", url: gygUrl("/juneau-l723/") },
+  { label: "Juneau", url: gygUrl("/juneau-alaska-l171160/") },
 ];
 
 const CATEGORIES = [
