@@ -23,7 +23,7 @@ const FEATURED_TOURS: CuratedTour[] = [
 
 const CRUISE_PORTS = [
   { label: "Nassau, Bahamas", url: gygUrl("/nassau-l4449/") },
-  { label: "Cozumel", url: gygUrl("/cozumel-l22370/") },
+  { label: "Cozumel, Mexico", url: gygSearch("Cozumel Mexico shore excursions") },
   { label: "St. Thomas", url: gygUrl("/st-thomas-l4499/") },
   { label: "Grand Cayman", url: gygUrl("/grand-cayman-l4452/") },
   { label: "St. Maarten", url: gygUrl("/st-maarten-l4456/") },
