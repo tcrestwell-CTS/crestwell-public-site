@@ -41,6 +41,27 @@ export default function ViatorPage() {
       {/* Viator Search */}
       <section style={{ background: "white", padding: "48px 32px 64px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+
+          {/* Free-text city search */}
+          <div style={{ marginBottom: 40, padding: "24px 28px", background: "#f8f6f0", borderRadius: 10, border: "1px solid rgba(0,87,184,0.15)" }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#0057b8", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8, fontFamily: "var(--font-body)" }}>Search Any Destination</div>
+            <p style={{ color: "var(--slate)", fontSize: "0.85rem", fontFamily: "var(--font-body)", marginBottom: 14, lineHeight: 1.6 }}>
+              Don&apos;t see your port or city in the selector below? Search any destination worldwide.
+            </p>
+            <form action="https://www.viator.com/search" method="get" target="_blank" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <input type="hidden" name="mcid" value="42383" />
+              <input
+                type="text"
+                name="text"
+                placeholder="e.g. Juneau, Mykonos, Cape Town, Bali..."
+                style={{ flex: "1 1 240px", padding: "12px 16px", border: "1px solid rgba(0,87,184,0.3)", borderRadius: 6, fontSize: "0.9rem", fontFamily: "var(--font-body)", color: "var(--navy)", outline: "none", background: "white" }}
+              />
+              <button type="submit" style={{ flexShrink: 0, background: "#0057b8", color: "white", border: "none", padding: "12px 28px", borderRadius: 6, fontSize: "0.85rem", fontWeight: 700, fontFamily: "var(--font-body)", cursor: "pointer", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                Search →
+              </button>
+            </form>
+          </div>
+
           <ViatorSearch defaultDestination="caribbean" showDestinationFilter={true} />
         </div>
       </section>
