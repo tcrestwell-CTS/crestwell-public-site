@@ -185,13 +185,21 @@ export default function ExcursionSearch({
         </form>
       </div>
 
-      {/* Cruise Ports */}
-      <div style={{ marginBottom: 36 }}>
-        <div style={{ fontSize: "0.72rem", fontWeight: 700, color: accentColor, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14, fontFamily: "var(--font-body)" }}>Quick Port & City Select</div>
+      {/* Cruise Ports — dedicated section */}
+      <div style={{ marginBottom: 36, background: "var(--navy)", borderRadius: 10, padding: "24px 28px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+          <span style={{ fontSize: "1.2rem" }}>🚢</span>
+          <div>
+            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: accentColor, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-body)" }}>Cruise Port Excursions</div>
+            <div style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-body)", marginTop: 2 }}>Browse shore excursions at your port of call</div>
+          </div>
+        </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {cruisePorts.map(p => (
             <a key={p.label} href={p.url} target="_blank" rel="noopener noreferrer"
-              style={{ display: "inline-block", background: "white", border: `1px solid ${accentColor}33`, borderRadius: 20, padding: "6px 16px", textDecoration: "none", color: "var(--navy)", fontSize: "0.8rem", fontFamily: "var(--font-body)", fontWeight: 500 }}>
+              style={{ display: "inline-block", background: "rgba(255,255,255,0.08)", border: `1px solid ${accentColor}66`, borderRadius: 20, padding: "7px 16px", textDecoration: "none", color: "white", fontSize: "0.8rem", fontFamily: "var(--font-body)", fontWeight: 500, transition: "background 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.background = `${accentColor}33`)}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}>
               {p.label}
             </a>
           ))}
