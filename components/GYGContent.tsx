@@ -23,7 +23,7 @@ const FEATURED_TOURS: CuratedTour[] = [
 
 const CRUISE_PORTS = [
   { label: "Nassau, Bahamas", url: gygUrl("/nassau-l4449/") },
-  { label: "Cozumel, Mexico", url: gygSearch("Cozumel Mexico shore excursions") },
+  { label: "Cozumel, Mexico", url: gygUrl("/cozumel-l22370/") },
   { label: "St. Thomas", url: gygUrl("/st-thomas-l4499/") },
   { label: "Grand Cayman", url: gygUrl("/grand-cayman-l4452/") },
   { label: "St. Maarten", url: gygUrl("/st-maarten-l4456/") },
@@ -33,7 +33,7 @@ const CRUISE_PORTS = [
   { label: "Dubrovnik", url: gygUrl("/dubrovnik-l262/") },
   { label: "Venice", url: gygUrl("/venice-l174/") },
   { label: "Santorini", url: gygUrl("/santorini-l261/") },
-  { label: "Juneau", url: gygSearch("juneau alaska") },
+  { label: "Juneau", url: gygUrl("/juneau-l723/") },
 ];
 
 const CATEGORIES = [
