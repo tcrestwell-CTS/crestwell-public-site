@@ -127,7 +127,7 @@ export default function BahamasDestinationPage() {
             </div>
 
             {/* GYG Excursions Panel */}
-            <a href="https://www.getyourguide.com/s/?q=Bahamas&partner_id=IOXL78H&cmp=share_to_earn" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', marginBottom: 8, display: 'block' }}>
+            <a href="https://www.getyourguide.com/nassau-l4449/?partner_id=IOXL78H&cmp=share_to_earn" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', marginBottom: 8, display: 'block' }}>
               <div style={{ background: 'rgba(13,27,42,0.88)', backdropFilter: 'blur(14px)', border: '1px solid rgba(201,168,76,0.35)', borderRadius: 8, padding: '22px 24px', cursor: 'pointer' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                   <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#FF5533', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
