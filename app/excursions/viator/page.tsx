@@ -120,7 +120,7 @@ export default function ViatorPage() {
           </div>
 
           {/* Viator Search — driven by active port selection */}
-          <ViatorSearch defaultDestination={activePort} showDestinationFilter={true} />
+          <ViatorSearch key={activePort} defaultDestination={activePort} showDestinationFilter={true} />
         </div>
       </section>
 
