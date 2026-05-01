@@ -83,6 +83,25 @@ export default function GetYourGuidePage() {
             </div>
           </div>
 
+          {/* Custom City Search */}
+          <div style={{ marginBottom: 40, padding: "24px 28px", background: "#fff5f4", borderRadius: 12, border: "1px solid rgba(192,57,43,0.15)" }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#C0392B", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12, fontFamily: "var(--font-body)" }}>Search Any City</div>
+            <p style={{ color: "var(--slate)", fontSize: "0.85rem", fontFamily: "var(--font-body)", marginBottom: 16, lineHeight: 1.6 }}>Don&apos;t see your destination listed? Type any city name below.</p>
+            <form action={GYG_SEARCH} method="get" target="_blank" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <input type="hidden" name="partner_id" value="IOXL78H" />
+              <input type="hidden" name="cmp" value="share_to_earn" />
+              <input
+                type="text"
+                name="q"
+                placeholder="e.g. Santorini, Dubrovnik, Kyoto..."
+                style={{ flex: "1 1 240px", padding: "12px 16px", border: "1px solid rgba(192,57,43,0.3)", borderRadius: 6, fontSize: "0.9rem", fontFamily: "var(--font-body)", color: "var(--navy)", outline: "none", background: "white" }}
+              />
+              <button type="submit" style={{ flexShrink: 0, background: "#C0392B", color: "white", border: "none", padding: "12px 24px", borderRadius: 6, fontSize: "0.85rem", fontWeight: 700, fontFamily: "var(--font-body)", cursor: "pointer", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                Search →
+              </button>
+            </form>
+          </div>
+
           {/* Cruise Ports */}
           <div style={{ marginBottom: 40 }}>
             <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#C0392B", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16, fontFamily: "var(--font-body)" }}>Cruise Ports</div>
