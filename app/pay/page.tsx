@@ -155,8 +155,12 @@ export default function PublicPayPage() {
           amount_cents: calcStripeTotal(amountCents),
           customer_name: name, customer_email: email,
           customer_phone: phone,
-          booking_ref: bookingRef, trip_name: useGroupTrip && selectedTrip ? selectedTrip.name : tripName,
-          payment_type: 'deposit', notes: useGroupTrip ? `Group deposit: ${persons} persons` : 'Public deposit link',
+          booking_ref: bookingRef,
+          trip_name: useGroupTrip && selectedTrip ? selectedTrip.name : tripName,
+          payment_type: 'deposit',
+          notes: useGroupTrip ? `Group deposit: ${persons} persons` : 'Public deposit link',
+          // Pass trip_id when known so create-payment-intent can match the right installment
+          ...(useGroupTrip && selectedTrip?.id ? { trip_id: selectedTrip.id } : {}),
         }),
       });
       const { clientSecret, error: fnErr } = await res.json();
