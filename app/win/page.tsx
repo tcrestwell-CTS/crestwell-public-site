@@ -1,10 +1,12 @@
 'use client';
+import { EmailField, useEmailValidation } from '@/components/EmailField';
 import { useState } from 'react';
 import Link from 'next/link';
 
 export default function WinPage() {
   const [status, setStatus] = useState<'idle'|'loading'|'success'|'error'>('idle');
   const [error, setError] = useState('');
+  const emailValidation = useEmailValidation();
   const [form, setForm] = useState({
     firstName: '', lastName: '', email: '', phone: '',
     city: '', partySize: '', destination: '', timeline: '', budget: '',
@@ -14,6 +16,7 @@ export default function WinPage() {
     setForm(f => ({ ...f, [k]: e.target.value }));
 
   async function handleSubmit(e: React.FormEvent) {
+    if (emailValidation.state === 'invalid') { setError('Please enter a valid email address.'); return; }
     e.preventDefault();
     setStatus('loading');
     setError('');
@@ -127,7 +130,7 @@ export default function WinPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div style={groupStyle}>
               <label style={labelStyle}>Email *</label>
-              <input required type="email" style={inputStyle} value={form.email} onChange={set('email')} placeholder="jane@example.com" />
+              <EmailField value={form.email} onChange={v => { setForm(f => ({...f, email: v})); emailValidation.validate(v); }} required label="Email Address *" />
             </div>
             <div style={groupStyle}>
               <label style={labelStyle}>Phone</label>
