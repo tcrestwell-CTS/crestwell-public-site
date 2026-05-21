@@ -276,10 +276,17 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount_cents: calcStripeTotal(amountCents), customer_name: customerName, customer_email: customerEmail,
-          customer_phone: customerPhone, booking_ref: bookingRef,
+          amount_cents: calcStripeTotal(amountCents),
+          customer_name: customerName,
+          customer_email: customerEmail,
+          customer_phone: customerPhone,
+          booking_ref: bookingRef,
           trip_name: paymentType === 'package' ? PACKAGES.find(p => p.id === selectedPackage)?.name : tripName,
-          payment_type: paymentType, notes,
+          payment_type: paymentType,
+          notes,
+          // Pass CRM IDs from URL params if deep-linked from agent portal
+          ...(searchParams.get('trip_payment_id') ? { trip_payment_id: searchParams.get('trip_payment_id') } : {}),
+          ...(searchParams.get('trip_id') ? { trip_id: searchParams.get('trip_id') } : {}),
         }),
       });
       const { clientSecret, error: fnError } = await res.json();
