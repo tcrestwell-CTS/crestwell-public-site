@@ -1,13 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { EmailField, useEmailValidation } from '@/components/EmailField'
 
 export function ContactForm({ tripName, tripId }: { tripName?: string; tripId?: string }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', groupSize: '2', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const emailValidation = useEmailValidation()
 
   const handleSubmit = async () => {
     if (!form.name || !form.email) return
+    if (emailValidation.state === 'invalid') return
     setStatus('sending')
     try {
       const res = await fetch('/api/contact', {
@@ -47,10 +50,13 @@ export function ContactForm({ tripName, tripId }: { tripName?: string; tripId?: 
         <label style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '4px' }}>Full Name *</label>
         <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Your name" style={inputStyle} />
       </div>
-      <div>
-        <label style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '4px' }}>Email *</label>
-        <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="your@email.com" style={inputStyle} />
-      </div>
+      <EmailField
+        value={form.email}
+        onChange={v => setForm(f => ({ ...f, email: v }))}
+        required
+        inputStyle={{ width: '100%', padding: '10px 40px 10px 14px', borderRadius: '10px', fontSize: '14px', color: '#1e293b', background: '#f8fafc', boxSizing: 'border-box' as const }}
+        labelStyle={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}
+      />
       <div>
         <label style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '4px' }}>Phone</label>
         <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 000-0000" style={inputStyle} />
