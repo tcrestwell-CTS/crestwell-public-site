@@ -68,6 +68,7 @@ export default function PublicPayPage() {
   const [tab, setTab] = useState<Tab>('stripe');
   const [amount, setAmount] = useState('');
   const [tripId, setTripId] = useState('');
+  const [tripPaymentId, setTripPaymentId] = useState(''); // CRM trip_payment.id from agent deep link
   const [persons, setPersons] = useState(1);
   const [useGroupTrip, setUseGroupTrip] = useState(false);
   const [name, setName] = useState('');
@@ -94,6 +95,25 @@ export default function PublicPayPage() {
   const amountDisplay = useGroupTrip && selectedTrip
     ? `${selectedTrip.name} — ${persons} person${persons > 1 ? 's' : ''}`
     : (tripName || 'Travel Deposit');
+
+  // ── Read URL params into state after ?d= decode ──────────────────────────────
+  // The ?d= decode effect reloads the page with expanded params.
+  // This effect reads them back into state on the reloaded page.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const p = new URLSearchParams(window.location.search);
+    if (p.get('client_name'))     setName(p.get('client_name')!);
+    if (p.get('client_email'))    setEmail(p.get('client_email')!);
+    if (p.get('trip_name'))       setTripName(p.get('trip_name')!);
+    if (p.get('booking_ref'))     setBookingRef(p.get('booking_ref')!);
+    if (p.get('trip_payment_id')) setTripPaymentId(p.get('trip_payment_id')!);
+    if (p.get('amount')) {
+      // amount is in cents from agent deep link
+      const cents = parseInt(p.get('amount')!, 10);
+      if (!isNaN(cents) && cents > 0) setAmount((cents / 100).toFixed(2));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Mount Stripe
   const mountStripe = () => {
@@ -157,10 +177,11 @@ export default function PublicPayPage() {
           customer_phone: phone,
           booking_ref: bookingRef,
           trip_name: useGroupTrip && selectedTrip ? selectedTrip.name : tripName,
-          payment_type: 'deposit',
+          payment_type: tripPaymentId ? 'trip_installment' : 'deposit',
           notes: useGroupTrip ? `Group deposit: ${persons} persons` : 'Public deposit link',
-          // Pass trip_id when known so create-payment-intent can match the right installment
-          ...(useGroupTrip && selectedTrip?.id ? { trip_id: selectedTrip.id } : {}),
+          // CRM IDs — from agent deep link or group trip selector
+          ...(tripPaymentId ? { trip_payment_id: tripPaymentId } : {}),
+          ...(tripPaymentId ? { trip_id: tripId } : (useGroupTrip && selectedTrip?.id ? { trip_id: selectedTrip.id } : {})),
         }),
       });
       const { clientSecret, error: fnErr } = await res.json();
@@ -233,6 +254,8 @@ export default function PublicPayPage() {
       },
     });
   };
+
+  const isAgentLink = !!tripPaymentId;
 
   if (status === 'success') {
     return (
