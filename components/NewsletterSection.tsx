@@ -1,14 +1,17 @@
 "use client";
 import { useState } from "react";
+import { EmailField, useEmailValidation } from "@/components/EmailField";
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const emailValidation = useEmailValidation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (emailValidation.state === 'invalid') { setErrorMsg('Please enter a valid email address.'); return; }
     setStatus("loading");
     setErrorMsg("");
     try {
@@ -64,14 +67,7 @@ export default function NewsletterSection() {
               style={{ padding: "12px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "white", fontSize: "0.9rem", outline: "none" }}
             />
             <div style={{ display: "flex", gap: 10 }}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="your@email.com"
-                style={{ flex: 1, padding: "12px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "white", fontSize: "0.9rem", outline: "none" }}
-              />
+              <EmailField value={email} onChange={v => { setEmail(v); emailValidation.validate(v); }} required placeholder="your@email.com" label="" />
               <button
                 type="submit"
                 disabled={status === "loading"}
