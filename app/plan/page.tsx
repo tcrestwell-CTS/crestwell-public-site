@@ -1,4 +1,5 @@
 'use client';
+import { EmailField, useEmailValidation } from '@/components/EmailField';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -125,6 +126,7 @@ function RadioGroup({ options, value, onChange }: { options: string[]; value: st
 
 export default function PlanPage() {
   const [step, setStep] = useState(1);
+  const emailValidation = useEmailValidation();
   const [form, setForm] = useState<Form>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -312,7 +314,7 @@ export default function PlanPage() {
                 </div>
                 <div style={field}>
                   <label style={label}>Email Address <span style={{ color: '#dc2626' }}>*</span></label>
-                  <input style={input} type="email" placeholder="jane@example.com" value={form.email} onChange={e => set('email', e.target.value)} />
+                  <EmailField value={form.email} onChange={v => { setForm(f => ({...f, email: v})); emailValidation.validate(v); }} required label="Email Address *" />
                 </div>
                 <div style={field}>
                   <label style={label}>Phone Number <span style={{ color: '#dc2626' }}>*</span></label>
