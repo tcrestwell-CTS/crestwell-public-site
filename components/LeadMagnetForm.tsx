@@ -1,14 +1,17 @@
 'use client';
 import { useState } from 'react';
+import { EmailField, useEmailValidation } from '@/components/EmailField';
 
 export default function LeadMagnetForm({ city, cityName }: { city: string; cityName: string }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
+  const emailValidation = useEmailValidation();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (emailValidation.state === 'invalid') { setError('Please enter a valid email address.'); return; }
     setStatus('loading');
     setError('');
 
@@ -59,14 +62,13 @@ export default function LeadMagnetForm({ city, cityName }: { city: string; cityN
         className="w-full px-4 py-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
       />
       <div className="flex flex-col sm:flex-row gap-3">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="your@email.com"
-          className="flex-1 px-4 py-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
-        />
+        <EmailField
+            value={email}
+            onChange={v => { setEmail(v); emailValidation.validate(v); }}
+            required
+            placeholder="your@email.com"
+            label="Email Address"
+          />
         <button
           type="submit"
           disabled={status === 'loading'}
