@@ -32,13 +32,17 @@ export default function TokenGate({ linkType, children }: Props) {
     const d = params.get('d');
     if (d) {
       try {
-        const json = atob(d.replace(/-/g, '+').replace(/_/g, '/'));
-        const data = JSON.parse(json);
+        const jsonStr = atob(d.replace(/-/g, '+').replace(/_/g, '/'));
+        const data = JSON.parse(jsonStr);
+
+        // Store decoded payload in sessionStorage — never expand PII into URL params
+        sessionStorage.setItem('cw_link_payload', jsonStr);
+
+        // Clean URL — keep only ?token= if present, remove ?d= and all PII params
         const url = new URL(window.location.href);
         url.searchParams.delete('d');
-        Object.entries(data).forEach(([key, value]) => {
-          url.searchParams.set(key, String(value));
-        });
+        // If payload contains a token field, promote it to ?token=
+        if (data.token) url.searchParams.set('token', data.token);
         window.history.replaceState({}, '', url.toString());
       } catch (e) {
         console.error('Failed to decode invite link data:', e);
