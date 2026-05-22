@@ -123,10 +123,6 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
     email: tokenData.client_email || '',
     trip_description: (tokenData as any).trip_name || '',
     loan_amount_requested: (tokenData as any).loan_amount ? String((tokenData as any).loan_amount) : '',
-    trip_description: (tokenData as any).trip_name || '',
-    loan_amount_requested: (tokenData as any).loan_amount
-      ? String((tokenData as any).loan_amount)
-      : '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [stripeReady, setStripeReady] = useState(false);
