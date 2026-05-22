@@ -300,13 +300,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
           // Non-fatal — show generic pending message
         }
         setEfxLoading(false);
-      }ient';
-import { Suspense, useRef, useEffect } from 'react';
-import { useState } from 'react';
-import Link from 'next/link';
-import Script from 'next/script';
-import TokenGate, { type TokenData } from '@/components/TokenGate';
-
+      }
 // ─── Constants ───────────────────────────────────────────────────────────────
 const STRIPE_PK = 'pk_live_51RrgVIPJljF0WNcYMZK3XH5QGmffC4LsV0e8EdSglGdrD8SlY9akQwJhBO8N2d87i574E3ONKvbsabfgKc3SDSq500gJ96MghZ';
 
