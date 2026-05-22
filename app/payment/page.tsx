@@ -1,6 +1,7 @@
 'use client';
 import { Suspense } from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
 import TokenGate, { type TokenData } from '@/components/TokenGate';
@@ -113,6 +114,7 @@ function SuccessScreen({ amount, method, name, bookingRef }: {
 }
 
 function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: string }) {
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<PaymentTab>('stripe');
   const [paymentType, setPaymentType] = useState<PaymentType>(
 (tokenData.payment_type && ['custom','deposit','balance','package'].includes(tokenData.payment_type) ? tokenData.payment_type as PaymentType : 'custom')
