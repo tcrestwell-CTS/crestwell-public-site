@@ -118,7 +118,14 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<FormData>({
     ...initialForm,
-    first_name: tokenData.client_name?.split(' ')[0] || '',
+    first_name: (() => {
+      // Try sessionStorage payload for pre-fill (PII-safe)
+      try {
+        const s = sessionStorage.getItem('cw_financing_payload');
+        if (s) { const d = JSON.parse(s); return d.first_name || tokenData.client_name?.split(' ')[0] || ''; }
+      } catch {}
+      return tokenData.client_name?.split(' ')[0] || '';
+    })(),
     last_name: tokenData.client_name?.split(' ').slice(1).join(' ') || '',
     email: tokenData.client_email || '',
     trip_description: (tokenData as any).trip_name || '',
