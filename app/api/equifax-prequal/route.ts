@@ -4,12 +4,32 @@ import { NextRequest, NextResponse } from 'next/server';
 const SUPA_URL  = process.env.NEXT_PUBLIC_SUPABASE_URL  ?? 'https://zbtnulzvwreqzbmxulpv.supabase.co';
 const SUPA_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidG51bHp2d3JlcXpibXh1bHB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MjkzMjksImV4cCI6MjA4NjAwNTMyOX0.0PJACAXw8c8ik3_UBpBEGWXBxfLbMxh3jP1brMCCpGU';
 
-// ── Equifax sandbox credentials ───────────────────────────────────────────
-const EFX_CLIENT_ID     = process.env.EQUIFAX_CLIENT_ID     ?? 'jdaapZkOP01ZMrC6V2E79QQOZbsGh4Zd';
-const EFX_CLIENT_SECRET = process.env.EQUIFAX_CLIENT_SECRET ?? 'qPOl7LC9i7qNycVZ';
-const EFX_SUBSCRIBER_ID = process.env.EQUIFAX_SUBSCRIBER_ID ?? 'jhTI62qfA6vG8xJdkrJYulOdARvF';
-const EFX_TOKEN_URL     = 'https://api.sandbox.equifax.com/v2/oauth/token';
-const EFX_PREQUAL_URL   = 'https://api.sandbox.equifax.com/business/prequal-of-one/v1/consumers';
+// ── Equifax credentials ───────────────────────────────────────────────────
+// Set EQUIFAX_ENV=production in Vercel to switch from sandbox to production.
+// Production also requires EQUIFAX_PROD_CLIENT_ID, EQUIFAX_PROD_CLIENT_SECRET,
+// EQUIFAX_PROD_SUBSCRIBER_ID, and Equifax IP whitelist approval.
+const IS_PRODUCTION = process.env.EQUIFAX_ENV === 'production';
+
+// Sandbox credentials (default — safe for development and testing)
+const EFX_CLIENT_ID = IS_PRODUCTION
+  ? (process.env.EQUIFAX_PROD_CLIENT_ID     ?? '')
+  : (process.env.EQUIFAX_CLIENT_ID          ?? 'jdaapZkOP01ZMrC6V2E79QQOZbsGh4Zd');
+
+const EFX_CLIENT_SECRET = IS_PRODUCTION
+  ? (process.env.EQUIFAX_PROD_CLIENT_SECRET ?? '')
+  : (process.env.EQUIFAX_CLIENT_SECRET      ?? 'qPOl7LC9i7qNycVZ');
+
+const EFX_SUBSCRIBER_ID = IS_PRODUCTION
+  ? (process.env.EQUIFAX_PROD_SUBSCRIBER_ID ?? '')
+  : (process.env.EQUIFAX_SUBSCRIBER_ID      ?? 'jhTI62qfA6vG8xJdkrJYulOdARvF');
+
+const EFX_TOKEN_URL = IS_PRODUCTION
+  ? 'https://api.equifax.com/v2/oauth/token'
+  : 'https://api.sandbox.equifax.com/v2/oauth/token';
+
+const EFX_PREQUAL_URL = IS_PRODUCTION
+  ? 'https://api.equifax.com/business/prequal-of-one/v1/consumers'
+  : 'https://api.sandbox.equifax.com/business/prequal-of-one/v1/consumers';
 
 const RESEND_KEY = process.env.RESEND_API_KEY ?? '';
 
@@ -40,6 +60,9 @@ async function supabasePatch(table: string, id: string, data: Record<string, unk
 }
 
 async function getEquifaxToken(): Promise<string> {
+  if (IS_PRODUCTION && (!EFX_CLIENT_ID || !EFX_CLIENT_SECRET || !EFX_SUBSCRIBER_ID)) {
+    throw new Error('Equifax production credentials not configured. Set EQUIFAX_PROD_CLIENT_ID, EQUIFAX_PROD_CLIENT_SECRET, EQUIFAX_PROD_SUBSCRIBER_ID in Vercel.');
+  }
   const creds = Buffer.from(`${EFX_CLIENT_ID}:${EFX_CLIENT_SECRET}`).toString('base64');
   const res = await fetch(EFX_TOKEN_URL, {
     method: 'POST',
