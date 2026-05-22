@@ -341,6 +341,8 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
               <p style={{ color: 'var(--slate)', fontSize: '0.9rem', marginBottom: 0, lineHeight: 1.7 }}>
                 Thank you, {form.first_name}. We've received your pre-qualification request and will be in touch within 1–2 business days.
               </p>
+            </div>
+          )}
           <div style={{ background: 'var(--cream)', padding: '20px', marginBottom: 32, textAlign: 'left' }}>
             {[
               { label: 'Pre-Qualification #', value: applicationNumber },
