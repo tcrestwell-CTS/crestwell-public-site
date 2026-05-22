@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// ── Supabase (anon key + direct REST — no service role needed) ────────────
-const SUPA_URL  = process.env.NEXT_PUBLIC_SUPABASE_URL  ?? 'https://zbtnulzvwreqzbmxulpv.supabase.co';
-const SUPA_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidG51bHp2d3JlcXpibXh1bHB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MjkzMjksImV4cCI6MjA4NjAwNTMyOX0.0PJACAXw8c8ik3_UBpBEGWXBxfLbMxh3jP1brMCCpGU';
+// ── Supabase ──────────────────────────────────────────────────────────────
+const SUPA_URL          = process.env.NEXT_PUBLIC_SUPABASE_URL  ?? 'https://zbtnulzvwreqzbmxulpv.supabase.co';
+const SUPA_ANON         = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidG51bHp2d3JlcXpibXh1bHB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MjkzMjksImV4cCI6MjA4NjAwNTMyOX0.0PJACAXw8c8ik3_UBpBEGWXBxfLbMxh3jP1brMCCpGU';
+// Service role key — used server-side only, never exposed to client
+// Required to bypass RLS when reading/writing loan_applications from this API route
+const SUPA_SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY ?? SUPA_ANON;
 
 // ── Equifax credentials ───────────────────────────────────────────────────
 // Set EQUIFAX_ENV=production in Vercel to switch from sandbox to production.
@@ -37,7 +40,7 @@ const RESEND_KEY = process.env.RESEND_API_KEY ?? '';
 async function supabaseGet(table: string, id: string) {
   const res = await fetch(
     `${SUPA_URL}/rest/v1/${table}?id=eq.${id}&limit=1`,
-    { headers: { apikey: SUPA_ANON, Authorization: `Bearer ${SUPA_ANON}`, Accept: 'application/json' } }
+    { headers: { apikey: SUPA_SERVICE_KEY, Authorization: `Bearer ${SUPA_SERVICE_KEY}`, Accept: 'application/json' } }
   );
   const rows = await res.json();
   return Array.isArray(rows) && rows.length ? rows[0] : null;
@@ -49,8 +52,8 @@ async function supabasePatch(table: string, id: string, data: Record<string, unk
     {
       method: 'PATCH',
       headers: {
-        apikey: SUPA_ANON,
-        Authorization: `Bearer ${SUPA_ANON}`,
+        apikey: SUPA_SERVICE_KEY,
+        Authorization: `Bearer ${SUPA_SERVICE_KEY}`,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },
