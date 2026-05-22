@@ -96,20 +96,40 @@ export default function PublicPayPage() {
     ? `${selectedTrip.name} — ${persons} person${persons > 1 ? 's' : ''}`
     : (tripName || 'Travel Deposit');
 
-  // ── Read URL params into state after ?d= decode ──────────────────────────────
-  // The ?d= decode effect reloads the page with expanded params.
-  // This effect reads them back into state on the reloaded page.
+  // ── Read link payload into state ─────────────────────────────────────────────
+  // Payload comes from either:
+  //   1. sessionStorage (set by TokenGate after decoding ?d= — PII-safe)
+  //   2. URL search params (legacy fallback for direct links)
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // Try sessionStorage first (PII-safe path)
+    let data: Record<string, string> = {};
+    try {
+      const stored = sessionStorage.getItem('cw_link_payload');
+      if (stored) {
+        data = JSON.parse(stored);
+        sessionStorage.removeItem('cw_link_payload'); // consume once
+      }
+    } catch {}
+
+    // Fall back to URL params
     const p = new URLSearchParams(window.location.search);
-    if (p.get('client_name'))     setName(p.get('client_name')!);
-    if (p.get('client_email'))    setEmail(p.get('client_email')!);
-    if (p.get('trip_name'))       setTripName(p.get('trip_name')!);
-    if (p.get('booking_ref'))     setBookingRef(p.get('booking_ref')!);
-    if (p.get('trip_payment_id')) setTripPaymentId(p.get('trip_payment_id')!);
-    if (p.get('amount')) {
-      // amount is in cents from agent deep link
-      const cents = parseInt(p.get('amount')!, 10);
+
+    const clientName     = data.client_name     || p.get('client_name')     || '';
+    const clientEmail    = data.client_email    || p.get('client_email')    || '';
+    const tripNameVal    = data.trip_name       || p.get('trip_name')       || '';
+    const bookingRefVal  = data.booking_ref     || p.get('booking_ref')     || '';
+    const tripPaymentVal = data.trip_payment_id || p.get('trip_payment_id') || '';
+    const amountVal      = data.amount          || p.get('amount')          || '';
+
+    if (clientName)     setName(clientName);
+    if (clientEmail)    setEmail(clientEmail);
+    if (tripNameVal)    setTripName(tripNameVal);
+    if (bookingRefVal)  setBookingRef(bookingRefVal);
+    if (tripPaymentVal) setTripPaymentId(tripPaymentVal);
+    if (amountVal) {
+      const cents = parseInt(amountVal, 10);
       if (!isNaN(cents) && cents > 0) setAmount((cents / 100).toFixed(2));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
