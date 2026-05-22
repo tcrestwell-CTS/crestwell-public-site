@@ -121,6 +121,10 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
     first_name: tokenData.client_name?.split(' ')[0] || '',
     last_name: tokenData.client_name?.split(' ').slice(1).join(' ') || '',
     email: tokenData.client_email || '',
+    trip_description: (tokenData as any).trip_name || '',
+    loan_amount_requested: (tokenData as any).loan_amount
+      ? String((tokenData as any).loan_amount)
+      : '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [stripeReady, setStripeReady] = useState(false);
