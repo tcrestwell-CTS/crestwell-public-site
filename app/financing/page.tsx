@@ -298,8 +298,14 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
             }),
           });
           const efxData = await efxRes.json();
-          if (efxRes.ok && efxData.decision) {
-            setEfxResult(efxData);
+          // Set result if we have any decision — includes 'review' from null Equifax score
+          if (efxData.decision) {
+            setEfxResult({
+              decision:       efxData.decision,
+              client_message: efxData.client_message || 'A Crestwell team member will contact you within 1–2 business days.',
+              badge_color:    efxData.badge_color    || 'amber',
+              environment:    efxData.environment    || 'sandbox',
+            });
           }
         } catch (efxErr) {
           console.error('Equifax call failed:', efxErr);
