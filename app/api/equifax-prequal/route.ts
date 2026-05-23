@@ -122,6 +122,9 @@ export async function POST(req: NextRequest) {
   }
   if (!app) return NextResponse.json({ error: 'No applicant data provided' }, { status: 400 });
 
+  // Cast to any for clean field access — data is validated at submission time
+  const a = app as any;
+
   let efxScore: number | null = null;
   let efxReasons: string[]    = [];
   let efxRaw: unknown         = null;
@@ -135,20 +138,20 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         subscribers: [{ subscriberCode: EFX_SUBSCRIBER_ID, memberCode: EFX_SUBSCRIBER_ID }],
         consumers: [{
-          name: { firstName: app.first_name, lastName: app.last_name },
+          name: { firstName: a.first_name, lastName: a.last_name },
           addresses: [{
-            houseNumber: app.address_line1?.split(' ')[0] || '',
-            streetName:  app.address_line1?.split(' ').slice(1).join(' ') || '',
-            city: app.city || '', state: app.state || '',
-            zip:  (app.zip_code || '').replace(/\D/g, '').substring(0, 5),
+            houseNumber: a.address_line1?.split(' ')[0] || '',
+            streetName:  a.address_line1?.split(' ').slice(1).join(' ') || '',
+            city: a.city || '', state: a.state || '',
+            zip:  (a.zip_code || '').replace(/\D/g, '').substring(0, 5),
           }],
-          dateOfBirth: app.date_of_birth ? app.date_of_birth.replace(/-/g, '') : undefined,
-          socialNum:   app.ssn_last_four ? `XXX-XX-${app.ssn_last_four}` : undefined,
+          dateOfBirth: a.date_of_birth ? a.date_of_birth.replace(/-/g, '') : undefined,
+          socialNum:   a.ssn_last_four ? `XXX-XX-${a.ssn_last_four}` : undefined,
         }],
         prequalification: {
-          loanAmount:  Math.round((app.loan_amount_requested || 0) * 100),
+          loanAmount:  Math.round((a.loan_amount_requested || 0) * 100),
           loanType:    'PERSONAL',
-          downPayment: Math.round((app.down_payment || 0) * 100),
+          downPayment: Math.round((a.down_payment || 0) * 100),
         },
       }),
     });
@@ -176,7 +179,7 @@ export async function POST(req: NextRequest) {
   const emoji         = decision === 'approved' ? '\u2705' : decision === 'review' ? '\u26a0\ufe0f' : '\u274c';
   const borderColor   = decision === 'approved' ? '#16a34a' : decision === 'review' ? '#ca8a04' : '#dc2626';
   const bgColor       = decision === 'approved' ? '#dcfce7'  : decision === 'review' ? '#fef9c3'  : '#fee2e2';
-  const monthlyDebts  = (app.monthly_rent_mortgage || 0) + (app.monthly_car_payment || 0) + (app.monthly_other_debt || 0);
+  const monthlyDebts  = (a.monthly_rent_mortgage || 0) + (a.monthly_car_payment || 0) + (a.monthly_other_debt || 0);
 
   // Update DB
   await supabasePatch('loan_applications', application_id, {
@@ -221,9 +224,9 @@ export async function POST(req: NextRequest) {
   );
 
   // Email client
-  if (app.email) {
+  if (a.email) {
     await sendEmail(
-      app.email,
+      a.email,
       'Your Crestwell Financing Application \u2014 Update',
       `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
         <div style="background:#0D1B2A;padding:28px 36px;"><div style="font-family:Georgia,serif;font-size:28px;color:white;">Crestwell</div><div style="font-size:11px;color:#C9A84C;letter-spacing:0.2em;text-transform:uppercase;margin-top:4px;">Travel Services</div></div>
@@ -251,7 +254,7 @@ export async function POST(req: NextRequest) {
     badge_color,
     client_message,
     environment:    IS_PRODUCTION ? 'production' : 'sandbox',
-    client_notified: !!(app as any).email,
+    client_notified: !!a.email,
     error:          efxError ?? undefined,
   });
 }
