@@ -365,7 +365,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
               { label: 'Pre-Qualification #', value: applicationNumber },
               { label: 'Consumer', value: `${form.first_name} ${form.last_name}` },
               { label: 'Amount Requested', value: `$${parseFloat(form.loan_amount_requested).toLocaleString()}` },
-              { label: 'Status', value: 'Pre-Qualification Under Review' },
+              { label: 'Status', value: efxResult?.decision === 'approved' ? 'Pre-Qualified ✓' : efxResult?.decision === 'declined' ? 'Not Approved' : 'Pre-Qualification Under Review' },
               { label: 'Next Step', value: 'A specialist will contact you within 1–2 business days' },
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 4 ? '1px solid rgba(13,27,42,0.06)' : 'none', flexWrap: 'wrap', gap: 8 }}>
