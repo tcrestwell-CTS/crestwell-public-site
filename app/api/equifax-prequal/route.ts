@@ -243,9 +243,14 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({
-    success: true, application_id,
-    equifax_score: efxScore, decision, badge_color,
-    client_notified: !!app.email,
-    error: efxError ?? undefined,
+    success:        true,
+    application_id,
+    equifax_score:  efxScore,
+    decision,
+    badge_color,
+    client_message,
+    environment:    IS_PRODUCTION ? 'production' : 'sandbox',
+    client_notified: !!(app as any).email,
+    error:          efxError ?? undefined,
   });
 }
