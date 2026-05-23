@@ -366,7 +366,13 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
               { label: 'Consumer', value: `${form.first_name} ${form.last_name}` },
               { label: 'Amount Requested', value: `$${parseFloat(form.loan_amount_requested).toLocaleString()}` },
               { label: 'Status', value: efxResult?.decision === 'approved' ? 'Pre-Qualified ✓' : efxResult?.decision === 'declined' ? 'Not Approved' : 'Pre-Qualification Under Review' },
-              { label: 'Next Step', value: 'A specialist will contact you within 1–2 business days' },
+              { label: 'Next Step', value:
+            efxResult?.decision === 'approved'
+              ? 'A Crestwell advisor will contact you within 1 business day to finalize your terms.'
+              : efxResult?.decision === 'declined'
+              ? 'You may reapply in 90 days or contact us to discuss alternative options.'
+              : 'A specialist will contact you within 1–2 business days.'
+          },
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 4 ? '1px solid rgba(13,27,42,0.06)' : 'none', flexWrap: 'wrap', gap: 8 }}>
                 <span style={{ fontSize: '0.78rem', color: 'var(--slate)' }}>{item.label}</span>
