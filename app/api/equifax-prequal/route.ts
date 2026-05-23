@@ -106,11 +106,20 @@ async function sendEmail(to: string, subject: string, html: string, from_ = 'Tim
 
 // ── Main handler ──────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
-  const { application_id } = await req.json().catch(() => ({}));
-  if (!application_id) return NextResponse.json({ error: 'application_id required' }, { status: 400 });
+  const body = await req.json().catch(() => ({}));
+  const { application_id, applicant } = body;
 
-  const app = await supabaseGet('loan_applications', application_id);
-  if (!app) return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+  if (!application_id && !applicant) {
+    return NextResponse.json({ error: 'application_id or applicant data required' }, { status: 400 });
+  }
+
+  // Use applicant data directly if provided (avoids service role key requirement)
+  // Fall back to DB lookup if only application_id is provided
+  let app: Record<string, unknown> | null = applicant || null;
+  if (!app && application_id) {
+    app = await supabaseGet('loan_applications', application_id);
+    if (!app) return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+  }
 
   let efxScore: number | null = null;
   let efxReasons: string[]    = [];
