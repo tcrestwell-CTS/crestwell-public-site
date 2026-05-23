@@ -280,7 +280,22 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
           const efxRes = await fetch('/api/equifax-prequal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ application_id: result.id || result.application_id }),
+            body: JSON.stringify({
+              // Pass both ID and applicant data directly
+              // Direct data avoids service role key requirement for DB lookup
+              application_id: result.id || result.application_id,
+              applicant: {
+                first_name:            form.first_name,
+                last_name:             form.last_name,
+                date_of_birth:         form.date_of_birth,
+                ssn_last_four:         form.ssn_last_four,
+                address_line1:         form.address_line1,
+                city:                  form.city,
+                state:                 form.state,
+                zip_code:              form.zip_code,
+                loan_amount_requested: form.loan_amount_requested,
+              },
+            }),
           });
           const efxData = await efxRes.json();
           if (efxRes.ok && efxData.decision) {
