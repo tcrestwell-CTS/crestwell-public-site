@@ -196,22 +196,22 @@ export async function POST(req: NextRequest) {
   // Email Tim
   await sendEmail(
     'info@crestwellgetaways.com',
-    `${emoji} Equifax Pre-Qual: ${app.first_name} ${app.last_name} \u2014 ${decision.toUpperCase()} (${scoreDisplay})`,
+    `${emoji} Equifax Pre-Qual: ${a.first_name} ${a.last_name} \u2014 ${decision.toUpperCase()} (${scoreDisplay})`,
     `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;">
       <div style="background:#0D1B2A;padding:24px 32px;"><span style="color:#C9A84C;font-family:Georgia,serif;font-size:1rem;">Crestwell</span><span style="color:rgba(255,255,255,0.5);font-size:0.8rem;"> &mdash; Equifax Pre-Qual Result</span></div>
       <div style="padding:32px;background:#faf8f3;">
-        <h2 style="margin:0 0 4px;color:#0D1B2A;">${app.first_name} ${app.last_name}</h2>
-        <p style="color:#64748b;font-size:0.85rem;margin:0 0 24px;">App #${app.application_number || application_id.substring(0,8).toUpperCase()} &middot; Loan: $${(app.loan_amount_requested||0).toLocaleString()}</p>
+        <h2 style="margin:0 0 4px;color:#0D1B2A;">${a.first_name} ${a.last_name}</h2>
+        <p style="color:#64748b;font-size:0.85rem;margin:0 0 24px;">App #${a.application_number || application_id.substring(0,8).toUpperCase()} &middot; Loan: $${(a.loan_amount_requested||0).toLocaleString()}</p>
         <div style="background:${bgColor};border-left:4px solid ${borderColor};padding:16px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;">
           <div style="font-size:1.1rem;font-weight:700;color:#0D1B2A;">${emoji} ${decision.toUpperCase()}</div>
           <div style="font-size:0.9rem;color:#374151;">${scoreDisplay}${efxReasons.length ? ` &middot; Reasons: ${efxReasons.slice(0,3).join(', ')}` : ''}</div>
         </div>
         <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-          <tr style="background:#f1f5f9;"><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;width:40%;">Loan Requested</td><td style="padding:8px 12px;">$${(app.loan_amount_requested||0).toLocaleString()}</td></tr>
-          <tr><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Down Payment</td><td style="padding:8px 12px;">$${(app.down_payment||0).toLocaleString()}</td></tr>
-          <tr style="background:#f1f5f9;"><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Monthly Income</td><td style="padding:8px 12px;">$${(app.monthly_income||0).toLocaleString()}</td></tr>
+          <tr style="background:#f1f5f9;"><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;width:40%;">Loan Requested</td><td style="padding:8px 12px;">$${(a.loan_amount_requested||0).toLocaleString()}</td></tr>
+          <tr><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Down Payment</td><td style="padding:8px 12px;">$${(a.down_payment||0).toLocaleString()}</td></tr>
+          <tr style="background:#f1f5f9;"><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Monthly Income</td><td style="padding:8px 12px;">$${(a.monthly_income||0).toLocaleString()}</td></tr>
           <tr><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Monthly Debts</td><td style="padding:8px 12px;">$${monthlyDebts.toLocaleString()}</td></tr>
-          <tr style="background:#f1f5f9;"><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Employment</td><td style="padding:8px 12px;">${app.employment_status||'\u2014'} \u2014 ${app.employer_name||'\u2014'}</td></tr>
+          <tr style="background:#f1f5f9;"><td style="padding:8px 12px;font-weight:600;color:#0D1B2A;">Employment</td><td style="padding:8px 12px;">${a.employment_status||'\u2014'} \u2014 ${a.employer_name||'\u2014'}</td></tr>
         </table>
         <div style="margin-top:20px;padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;">
           <p style="font-size:0.8rem;color:#1e40af;margin:0;"><strong>Client message:</strong> "${client_message}"</p>
@@ -231,7 +231,7 @@ export async function POST(req: NextRequest) {
       `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
         <div style="background:#0D1B2A;padding:28px 36px;"><div style="font-family:Georgia,serif;font-size:28px;color:white;">Crestwell</div><div style="font-size:11px;color:#C9A84C;letter-spacing:0.2em;text-transform:uppercase;margin-top:4px;">Travel Services</div></div>
         <div style="padding:36px;background:white;">
-          <p style="font-family:Georgia,serif;font-size:22px;color:#0D1B2A;margin:0 0 16px;">Hi ${app.first_name},</p>
+          <p style="font-family:Georgia,serif;font-size:22px;color:#0D1B2A;margin:0 0 16px;">Hi ${a.first_name},</p>
           <p style="font-size:14px;color:#4A5568;line-height:1.8;margin:0 0 20px;">Thank you for submitting your financing application. We have completed an initial review of your credit profile.</p>
           <div style="background:${bgColor};border-left:4px solid ${borderColor};padding:18px 22px;margin-bottom:24px;border-radius:0 6px 6px 0;">
             <p style="font-size:14px;color:#1f2937;line-height:1.8;margin:0;">${client_message}</p>
