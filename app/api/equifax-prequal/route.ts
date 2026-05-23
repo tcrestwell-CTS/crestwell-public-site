@@ -120,6 +120,7 @@ export async function POST(req: NextRequest) {
     app = await supabaseGet('loan_applications', application_id);
     if (!app) return NextResponse.json({ error: 'Application not found' }, { status: 404 });
   }
+  if (!app) return NextResponse.json({ error: 'No applicant data provided' }, { status: 400 });
 
   let efxScore: number | null = null;
   let efxReasons: string[]    = [];
