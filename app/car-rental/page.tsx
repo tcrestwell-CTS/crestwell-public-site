@@ -48,7 +48,7 @@ const DRIVER_AGE_RANGES = [
   '65+ (senior rate)',
 ];
 
-const STEP_LABELS = ['Trip Details', 'Vehicle & Provider', 'Driver Info', 'Payment Auth'];
+const STEP_LABELS = ['Trip Details', 'Vehicle & Provider', 'Driver Info'];
 
 type FormState = {
   tripType: string;
@@ -70,10 +70,6 @@ type FormState = {
   flightNumber: string;
   notes: string;
   loyaltyNumber: string;
-  ccCardholderName: string;
-  ccLastFour: string;
-  ccExpiry: string;
-  ccBillingZip: string;
 };
 
 const INITIAL_FORM: FormState = {
@@ -96,10 +92,6 @@ const INITIAL_FORM: FormState = {
   flightNumber: '',
   notes: '',
   loyaltyNumber: '',
-  ccCardholderName: '',
-  ccLastFour: '',
-  ccExpiry: '',
-  ccBillingZip: '',
 };
 
 export default function CarRentalPage() {
@@ -152,13 +144,7 @@ export default function CarRentalPage() {
       .finally(() => setSubmitting(false));
   };
 
-  const skipCC = () => {
-    set('ccCardholderName', '');
-    set('ccLastFour', '');
-    set('ccExpiry', '');
-    set('ccBillingZip', '');
-    doSubmit();
-  };
+
 
   const inputSt: React.CSSProperties = {
     width: '100%', padding: '12px 16px', borderRadius: 8,
@@ -238,11 +224,11 @@ export default function CarRentalPage() {
       {/* Progress bar */}
       <div style={{ background: 'var(--cream)', borderBottom: '1px solid rgba(13,27,42,0.08)', padding: '0 24px' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
-          {[1, 2, 3, 4].map((s, i) => {
+          {[1, 2, 3].map((s, i) => {
             const active = step === s;
             const done = step > s;
             return (
-              <div key={s} style={{ display: 'flex', alignItems: 'center', flex: i < 3 ? 1 : 'none' }}>
+              <div key={s} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? 1 : 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0', cursor: done ? 'pointer' : 'default' }}
                   onClick={() => { if (done) setStep(s); }}>
                   <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'var(--font-body)', background: done ? 'var(--gold)' : active ? 'var(--navy)' : 'rgba(13,27,42,0.1)', color: done ? 'var(--navy)' : active ? 'white' : 'var(--slate)' }}>
@@ -252,7 +238,7 @@ export default function CarRentalPage() {
                     {STEP_LABELS[i]}
                   </span>
                 </div>
-                {i < 3 && <div style={{ flex: 1, height: 1, background: done ? 'var(--gold)' : 'rgba(13,27,42,0.1)', margin: '0 8px' }} />}
+                {i < 2 && <div style={{ flex: 1, height: 1, background: done ? 'var(--gold)' : 'rgba(13,27,42,0.1)', margin: '0 8px' }} />}
               </div>
             );
           })}
@@ -452,66 +438,7 @@ export default function CarRentalPage() {
 
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setStep(2)} style={btnBk}>&#x2190; Back</button>
-              <button onClick={() => { if (step3Valid) setStep(4); }} disabled={!step3Valid} style={btnNav(step3Valid)}>Continue &#x2192;</button>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 4 */}
-        {step === 4 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <div>
-              <h2 className="font-display" style={{ fontSize: '1.6rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 4 }}>Payment Authorization</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)', lineHeight: 1.7 }}>
-                Optional but recommended. <strong>Your card will not be charged now</strong> — rental providers charge at pickup. You can also provide this over the phone.
-              </p>
-            </div>
-
-            <div style={{ background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 8, padding: '12px 16px', fontSize: '0.82rem', color: '#854d0e', fontFamily: 'var(--font-body)', lineHeight: 1.6 }}>
-              Card information is transmitted securely. We store only the last 4 digits and expiry — never your full card number.
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label style={lblSt}>Cardholder Name</label>
-                <input type="text" placeholder="Name as it appears on card" style={inputSt} value={form.ccCardholderName} onChange={e => set('ccCardholderName', e.target.value)} />
-              </div>
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label style={lblSt}>Card Number — Last 4 Digits Only</label>
-                <input type="text" placeholder="e.g. 4242" maxLength={4} style={inputSt} value={form.ccLastFour}
-                  onChange={e => set('ccLastFour', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} />
-              </div>
-              <div>
-                <label style={lblSt}>Expiration (MM/YY)</label>
-                <input type="text" placeholder="MM/YY" maxLength={5} style={inputSt} value={form.ccExpiry}
-                  onChange={e => {
-                    const raw = e.target.value.replace(/[^0-9]/g, '');
-                    const formatted = raw.length > 2 ? raw.slice(0, 2) + '/' + raw.slice(2, 4) : raw;
-                    set('ccExpiry', formatted);
-                  }} />
-              </div>
-              <div>
-                <label style={lblSt}>Billing ZIP</label>
-                <input type="text" placeholder="30301" maxLength={10} style={inputSt} value={form.ccBillingZip} onChange={e => set('ccBillingZip', e.target.value)} />
-              </div>
-            </div>
-
-            {error && (
-              <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 8, padding: '12px 16px', fontSize: '0.85rem', color: '#991b1b', fontFamily: 'var(--font-body)' }}>
-                {error}
-              </div>
-            )}
-
-            <p style={{ fontSize: '0.75rem', color: 'var(--slate)', lineHeight: 1.6, fontFamily: 'var(--font-body)' }}>
-              By submitting you authorize Crestwell Travel Services to share this information with {providerObj?.name ?? 'your chosen provider'} to secure your reservation. No charge will be made until pickup.
-            </p>
-
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <button onClick={() => setStep(3)} style={btnBk}>&#x2190; Back</button>
-              <button onClick={skipCC} style={{ ...btnBk }}>
-                Skip — Provide by Phone
-              </button>
-              <button onClick={doSubmit} disabled={submitting} style={{ ...btnNav(!submitting), flex: 1 }}>
+              <button onClick={doSubmit} disabled={!step3Valid || submitting} style={{ ...btnNav(step3Valid && !submitting), flex: 1 }}>
                 {submitting ? 'Submitting...' : 'Submit Rental Request'}
               </button>
             </div>
