@@ -268,6 +268,30 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* Services accordion — mobile */}
+            <div>
+              <button
+                onClick={() => setServicesOpen(o => !o)}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'none', border: 'none', color: 'rgba(255,255,255,0.75)', cursor: 'pointer', fontSize: '1rem', letterSpacing: '0.05em', fontFamily: 'var(--font-body)' }}
+              >
+                Services
+                <svg width="10" height="7" viewBox="0 0 10 7" fill="none" style={{ transform: servicesOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', opacity: 0.7 }}>
+                  <path d="M1 1.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {servicesOpen && (
+                <div style={{ paddingLeft: 16, paddingTop: 4, paddingBottom: 8 }}>
+                  {SERVICES.map(svc => (
+                    <Link key={svc.href} href={svc.href} className="nav-link"
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.9rem' }}
+                      onClick={() => setMenuOpen(false)}>
+                      <span>{svc.icon}</span>{svc.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Remaining nav items */}
             {navItems.slice(1).map((item) => (
               <Link key={item.href} href={item.href} className="nav-link">{item.label}</Link>
