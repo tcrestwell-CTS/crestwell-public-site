@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     // Send notification to Tim
     await resend.emails.send({
       from: 'Crestwell Travel <noreply@crestwellgetaways.com>',
-      to: 'tim@crestwelltravels.com',
+      to: 'info@crestwellgetaways.com',
       subject: `New Car Rental Request — ${driverName} | ${provider.toUpperCase()}`,
       html: `
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #0d1b2a; color: white; padding: 40px;">
