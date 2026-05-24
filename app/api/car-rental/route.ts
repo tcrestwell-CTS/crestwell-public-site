@@ -100,52 +100,25 @@ export async function POST(req: NextRequest) {
       `,
     });
 
-    // Write directly to Supabase car_rental_requests table
-    // Uses service role key server-side to bypass RLS
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (supabaseUrl && supabaseKey) {
-      try {
-        const record = {
-          trip_type:          body.tripType         || 'round-trip',
-          pickup_location:    body.pickupLocation   || '',
-          dropoff_location:   body.dropoffLocation  || null,
-          pickup_date:        body.pickupDate        || null,
-          pickup_time:        body.pickupTime        || '',
-          return_date:        body.returnDate        || null,
-          return_time:        body.returnTime        || null,
-          flight_number:      body.flightNumber      || null,
-          vehicle_class:      body.vehicleClass      || '',
-          provider:           body.provider          || '',
-          loyalty_number:     body.loyaltyNumber     || null,
-          driver_name:        body.driverName        || '',
-          driver_email:       body.driverEmail       || '',
-          driver_phone:       body.driverPhone       || null,
-          driver_age_range:   body.driverAge         || null,
-          additional_drivers: parseInt(String(body.additionalDrivers || '0'), 10),
-          notes:              body.notes             || null,
-          cc_cardholder_name: body.ccCardholderName  || null,
-          cc_last_four:       body.ccLastFour        || null,
-          cc_expiry:          body.ccExpiry          || null,
-          cc_billing_zip:     body.ccBillingZip      || null,
-          status:             'new',
-          source:             'website',
-        };
-
-        await fetch(`${supabaseUrl}/rest/v1/car_rental_requests`, {
+    // Forward to receive-car-rental edge function (uses service role — bypasses RLS)
+    try {
+      const efResp = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/receive-car-rental`,
+        {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Prefer': 'return=minimal',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
           },
-          body: JSON.stringify(record),
-        });
-      } catch (dbErr) {
-        console.error('DB insert failed (non-fatal):', dbErr);
+          body: JSON.stringify(body),
+        }
+      );
+      if (!efResp.ok) {
+        const efErr = await efResp.text();
+        console.error('Edge function error (non-fatal):', efErr);
       }
+    } catch (efErr) {
+      console.error('Edge function call failed (non-fatal):', efErr);
     }
 
     return NextResponse.json({ success: true });
