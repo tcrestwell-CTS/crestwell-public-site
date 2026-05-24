@@ -25,8 +25,8 @@ const OG_IMAGE = 'https://crestwellgetaways.com/images/ASTAHorizontalCMYK0247817
 // Fix: Title trimmed to under 60 chars
 export const metadata: Metadata = {
   title: {
-    template: '%s | Crestwell Travel Services',
-    default: 'Crestwell Travel Services | Cruises & Resorts',
+    template: '%s',
+    default: 'Crestwell Travel Services | Cruises, Resorts & Group Travel',
   },
   description: 'Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations across GA, TN & AL.',
   keywords: ['travel agency', 'cruises', 'all-inclusive', 'family vacations', 'Georgia', 'Tennessee', 'Alabama', 'Chattanooga'],
