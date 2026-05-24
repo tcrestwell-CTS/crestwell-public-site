@@ -13,7 +13,7 @@ async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Navbar />
-      <main>{children}</main>
+      <main style={{ paddingBottom: 0 }}>{children}</main>
       <Footer />
     </>
   );
