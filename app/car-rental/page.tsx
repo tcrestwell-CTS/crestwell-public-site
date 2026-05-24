@@ -48,7 +48,7 @@ const DRIVER_AGE_RANGES = [
   '65+ (senior rate)',
 ];
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4;
 
 export default function CarRentalPage() {
   const emailValidation = useEmailValidation();
@@ -76,6 +76,11 @@ export default function CarRentalPage() {
     additionalDrivers:     '0',
     flightNumber:          '',
     notes:                 '',
+    loyaltyNumber:         '',
+    ccCardholderName:      '',
+    ccLastFour:            '',
+    ccExpiry:              '',
+    ccBillingZip:          '',
   });
 
   const set = (f: string, v: string) => setForm(p => ({ ...p, [f]: v }));
@@ -96,6 +101,8 @@ export default function CarRentalPage() {
 
   const step3Valid = !!(form.driverName && form.driverEmail && form.driverAge &&
     emailValidation.state !== 'invalid');
+  // Step 4 is optional — always passable
+  const step4Valid = true;
 
   async function handleSubmit() {
     if (!step3Valid) return;
@@ -201,8 +208,8 @@ export default function CarRentalPage() {
       {/* Progress */}
       <div style={{ background: 'var(--cream)', borderBottom: '1px solid rgba(13,27,42,0.08)', padding: '0 24px' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
-          {([1, 2, 3] as Step[]).map((s, i) => {
-            const labels = ['Trip Details', 'Vehicle & Provider', 'Driver Info'];
+          {([1, 2, 3, 4] as Step[]).map((s, i) => {
+            const labels = ['Trip Details', 'Vehicle & Provider', 'Driver Info', 'Payment Auth'];
             const active = step === s;
             const done = step > s;
             return (
@@ -216,7 +223,7 @@ export default function CarRentalPage() {
                     {labels[i]}
                   </span>
                 </div>
-                {i < 2 && <div style={{ flex: 1, height: 1, background: done ? 'var(--gold)' : 'rgba(13,27,42,0.1)', margin: '0 12px' }} />}
+                {i < 3 && <div style={{ flex: 1, height: 1, background: done ? 'var(--gold)' : 'rgba(13,27,42,0.1)', margin: '0 12px' }} />}
               </div>
             );
           })}
@@ -407,6 +414,15 @@ export default function CarRentalPage() {
             </div>
 
             <div>
+              <label style={labelStyle}>
+                {PROVIDERS.find(p => p.id === form.provider)?.name ?? 'Provider'} Loyalty / Rewards Number
+                <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '0.7rem', marginLeft: 6 }}>(optional — for points credit)</span>
+              </label>
+              <input type="text" placeholder="e.g. EE1234567" style={inputStyle} value={form.loyaltyNumber}
+                onChange={e => set('loyaltyNumber', e.target.value)} />
+            </div>
+
+            <div>
               <label style={labelStyle}>Special Requests <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '0.7rem' }}>(optional)</span></label>
               <textarea placeholder="e.g. GPS unit, child seat, accessibility needs, preferred pickup spot within airport…" style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }} value={form.notes} onChange={e => set('notes', e.target.value)} />
             </div>
@@ -423,13 +439,81 @@ export default function CarRentalPage() {
 
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setStep(2)} style={btnBack}>&#x2190; Back</button>
-              <button onClick={handleSubmit} disabled={!step3Valid || submitting}
-                style={{ ...btnPrimary(step3Valid && !submitting), flex: 1 }}>
+              <button onClick={() => { if (step3Valid) setStep(4); }} disabled={!step3Valid}
+                style={btnPrimary(step3Valid)}>
+                Continue &#x2192;
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+        {/* ── STEP 4: Payment Authorization ───────────────────────── */}
+        {step === 4 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+              <h2 className="font-display" style={{ fontSize: '1.6rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 4 }}>Payment Authorization</h2>
+              <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)', lineHeight: 1.7 }}>
+                Optional — securely save a card for your reservation. <strong>Your card will not be charged now.</strong> Rental providers charge at pickup. You can also provide this over the phone.
+              </p>
+            </div>
+
+            <div style={{ background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 8, padding: '12px 16px', fontSize: '0.82rem', color: '#854d0e', fontFamily: 'var(--font-body)', lineHeight: 1.6 }}>
+              &#x1F512; Card information is transmitted securely. We store only the last 4 digits and expiry — never your full card number.
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={labelStyle}>Cardholder Name</label>
+                <input type="text" placeholder="Name as it appears on card" style={inputStyle}
+                  value={form.ccCardholderName} onChange={e => set('ccCardholderName', e.target.value)} />
+              </div>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={labelStyle}>Card Number — Last 4 Digits Only</label>
+                <input type="text" placeholder="e.g. 4242" maxLength={4} style={inputStyle}
+                  value={form.ccLastFour} onChange={e => set('ccLastFour', e.target.value.replace(/\D/g, '').slice(0,4))} />
+              </div>
+              <div>
+                <label style={labelStyle}>Expiration (MM/YY)</label>
+                <input type="text" placeholder="MM/YY" maxLength={5} style={inputStyle}
+                  value={form.ccExpiry}
+                  onChange={e => {
+                    let v = e.target.value.replace(/\D/g,'');
+                    if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2,4);
+                    set('ccExpiry', v);
+                  }} />
+              </div>
+              <div>
+                <label style={labelStyle}>Billing ZIP</label>
+                <input type="text" placeholder="30301" maxLength={10} style={inputStyle}
+                  value={form.ccBillingZip} onChange={e => set('ccBillingZip', e.target.value)} />
+              </div>
+            </div>
+
+            {error && (
+              <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 8, padding: '12px 16px', fontSize: '0.85rem', color: '#991b1b', fontFamily: 'var(--font-body)' }}>
+                {error}
+              </div>
+            )}
+
+            <p style={{ fontSize: '0.75rem', color: 'var(--slate)', lineHeight: 1.6, fontFamily: 'var(--font-body)' }}>
+              By submitting you authorize Crestwell Travel Services to share this information with {PROVIDERS.find(p => p.id === form.provider)?.name ?? 'your chosen provider'} to secure your reservation.
+            </p>
+
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button onClick={() => setStep(3)} style={btnBack}>&#x2190; Back</button>
+              <button onClick={() => { set('ccCardholderName',''); set('ccLastFour',''); set('ccExpiry',''); set('ccBillingZip',''); handleSubmit(); }}
+                style={{ ...btnBack, color: 'var(--slate)' }}>
+                Skip — Provide by Phone
+              </button>
+              <button onClick={handleSubmit} disabled={submitting}
+                style={{ ...btnPrimary(!submitting), flex: 1 }}>
                 {submitting ? 'Submitting…' : 'Submit Rental Request'}
               </button>
             </div>
           </div>
         )}
+
       </div>
     </main>
   );
