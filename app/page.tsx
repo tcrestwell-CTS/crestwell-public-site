@@ -331,6 +331,25 @@ export default function HomePage() {
       </section>
 
       {/* ── NEWSLETTER ── */}
+      {/* ── Lead Magnet ──────────────────────────────────────────────────────── */}
+      <section style={{ background: 'var(--cream)', padding: '72px 24px' }}>
+        <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 12 }}>
+            Free Download
+          </p>
+          <h2 className="font-display" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>
+            Southeast Cruiser's Port Guide
+          </h2>
+          <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 32, fontFamily: 'var(--font-body)' }}>
+            Tim's honest take on every major port — what to book, what to skip, and the excursions actually worth your time. Used by 1,200+ travelers.
+          </p>
+          <LeadMagnetForm city="general" cityName="Southeast" />
+          <p style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 16, fontFamily: 'var(--font-body)' }}>
+            Free. No spam. Unsubscribe anytime.
+          </p>
+        </div>
+      </section>
+
       <NewsletterSection />
 
       {/* ── STAY CONNECTED ── */}
