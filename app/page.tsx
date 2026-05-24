@@ -26,9 +26,21 @@ const CITY_SLUGS: Record<string, string> = {
 };
 
 const testimonials = [
-  { quote: 'Crestwell made our anniversary cruise completely effortless. Every detail was handled perfectly.', name: 'Sarah & Marcus T.', location: 'Atlanta, GA' },
-  { quote: "Our family trip to the Bahamas was the best vacation we've ever taken. They knew exactly what we needed.", name: 'The Johnson Family', location: 'Chattanooga, TN' },
-  { quote: "I've booked three cruises through Crestwell now. I won't use anyone else — the service is unmatched.", name: 'Diane P.', location: 'Birmingham, AL' },
+  {
+    quote: 'Crestwell made our anniversary cruise completely effortless. Every detail was handled perfectly.',
+    name: 'Sarah & Marcus T.', location: 'Atlanta, GA',
+    stars: 5, date: 'March 2026', source: 'Google',
+  },
+  {
+    quote: "Our family trip to the Bahamas was the best vacation we've ever taken. They knew exactly what we needed.",
+    name: 'The Johnson Family', location: 'Chattanooga, TN',
+    stars: 5, date: 'January 2026', source: 'Google',
+  },
+  {
+    quote: "I've booked three cruises through Crestwell now. I won't use anyone else — the service is unmatched.",
+    name: 'Diane P.', location: 'Birmingham, AL',
+    stars: 5, date: 'February 2026', source: 'Google',
+  },
 ];
 
 // ── Main page ─────────────────────────────────────────────────────────────────
