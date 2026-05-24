@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
       tripType, pickupLocation, dropoffLocation, pickupDate, pickupTime,
       returnDate, returnTime, vehicleClass, provider, driverName, driverEmail,
       driverPhone, driverAge, additionalDrivers, flightNumber, notes,
+      loyaltyNumber, ccCardholderName, ccLastFour, ccExpiry, ccBillingZip,
     } = body;
 
     if (!driverName || !driverEmail || !pickupLocation || !pickupDate || !provider) {
@@ -53,6 +54,8 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding: 8px 0; color: rgba(255,255,255,0.5);">Driver Age</td><td style="color: white;">${driverAge}</td></tr>
             <tr><td style="padding: 8px 0; color: rgba(255,255,255,0.5);">Additional Drivers</td><td style="color: white;">${additionalDrivers || '0'}</td></tr>
             ${flightNumber ? `<tr><td style="padding: 8px 0; color: rgba(255,255,255,0.5);">Flight #</td><td style="color: white;">${flightNumber}</td></tr>` : ''}
+            ${loyaltyNumber ? `<tr><td style="padding: 8px 0; color: rgba(255,255,255,0.5);">Loyalty #</td><td style="color: white;">${loyaltyNumber}</td></tr>` : ''}
+            ${ccLastFour ? `<tr><td style="padding: 8px 0; color: rgba(255,255,255,0.5);">CC Auth</td><td style="color: white;">****${ccLastFour} (${ccExpiry}) — ${ccCardholderName}</td></tr>` : ''}
             ${notes ? `<tr><td style="padding: 8px 0; color: rgba(255,255,255,0.5);">Notes</td><td style="color: white;">${notes}</td></tr>` : ''}
           </table>
           <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem; color: rgba(255,255,255,0.3);">
@@ -96,6 +99,20 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     });
+
+    // Forward to CRM via Supabase edge function
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/receive-car-rental`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (efErr) {
+      console.error('CRM forward failed (non-fatal):', efErr);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
