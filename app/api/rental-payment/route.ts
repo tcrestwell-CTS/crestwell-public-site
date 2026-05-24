@@ -3,14 +3,17 @@ import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { Resend } from "resend";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {});
-const resend = new Resend(process.env.RESEND_API_KEY!);
+// Clients instantiated lazily inside POST handler to avoid build-time errors
 
 export async function POST(req: Request) {
+  // Lazy instantiation — avoids build-time "no apiKey" error
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '');
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   try {
     const { token, paymentMethodId, last4, expMonth, expYear, cardholderName, billingZip } = await req.json();
     if (!token || !paymentMethodId) {
