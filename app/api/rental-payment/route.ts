@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     try {
       const notifyEmail = rental?.assigned_agent
         ? await supabase.from("profiles").select("email").eq("user_id", rental.assigned_agent).maybeSingle()
-            .then(({ data }) => data?.email ?? "info@crestwellgetaways.com")
+            .then(({ data }: { data: { email?: string } | null }) => data?.email ?? "info@crestwellgetaways.com")
         : "info@crestwellgetaways.com";
 
       await resend.emails.send({
