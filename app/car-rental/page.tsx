@@ -3,28 +3,27 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { EmailField, useEmailValidation } from '@/components/EmailField';
 
-// ── Partner providers ──────────────────────────────────────────────────
 const PROVIDERS = [
-  { id: 'enterprise', name: 'Enterprise',  logo: '🔴', color: '#006747', tagline: 'Best loyalty program' },
-  { id: 'national',   name: 'National',    logo: '🟢', color: '#CC0000', tagline: 'Emerald Aisle — skip the counter' },
-  { id: 'alamo',      name: 'Alamo',       logo: '🔵', color: '#003087', tagline: 'Best value for families' },
-  { id: 'hertz',      name: 'Hertz',       logo: '⚡', color: '#FFD700', tagline: 'Gold status perks' },
-  { id: 'thrifty',    name: 'Thrifty',     logo: '💙', color: '#0047AB', tagline: 'Budget-friendly rates' },
-  { id: 'dollar',     name: 'Dollar',      logo: '🟡', color: '#DC143C', tagline: 'Great one-way deals' },
-  { id: 'sixt',       name: 'Sixt',        logo: '🟠', color: '#FF6600', tagline: 'Premium & luxury fleet' },
+  { id: 'enterprise', name: 'Enterprise',  logo: '🔴', tagline: 'Best loyalty program' },
+  { id: 'national',   name: 'National',    logo: '🟢', tagline: 'Emerald Aisle — skip the counter' },
+  { id: 'alamo',      name: 'Alamo',       logo: '🔵', tagline: 'Best value for families' },
+  { id: 'hertz',      name: 'Hertz',       logo: '⚡', tagline: 'Gold status perks' },
+  { id: 'thrifty',    name: 'Thrifty',     logo: '💙', tagline: 'Budget-friendly rates' },
+  { id: 'dollar',     name: 'Dollar',      logo: '🟡', tagline: 'Great one-way deals' },
+  { id: 'sixt',       name: 'Sixt',        logo: '🟠', tagline: 'Premium & luxury fleet' },
 ];
 
 const VEHICLE_CLASSES = [
-  { id: 'economy',    label: 'Economy',         icon: '🚗', desc: 'Best fuel economy' },
-  { id: 'compact',    label: 'Compact',          icon: '🚙', desc: 'City-friendly' },
-  { id: 'midsize',    label: 'Mid-size Sedan',   icon: '🚘', desc: 'Comfortable for 4' },
-  { id: 'fullsize',   label: 'Full-size Sedan',  icon: '🚖', desc: 'Extra legroom' },
-  { id: 'suv-mid',    label: 'Mid-size SUV',     icon: '🚐', desc: 'Popular choice' },
-  { id: 'suv-full',   label: 'Full-size SUV',    icon: '🚌', desc: 'Seats up to 7' },
-  { id: 'minivan',    label: 'Minivan',          icon: '🚐', desc: 'Seats up to 8' },
-  { id: 'luxury',     label: 'Luxury / Premium', icon: '🏎️', desc: 'Top-tier vehicles' },
-  { id: 'truck',      label: 'Pickup Truck',     icon: '🛻', desc: 'Work & adventure' },
-  { id: 'convertible',label: 'Convertible',      icon: '🚗', desc: 'Open-top driving' },
+  { id: 'economy',     label: 'Economy',          icon: '🚗', desc: 'Best fuel economy' },
+  { id: 'compact',     label: 'Compact',           icon: '🚙', desc: 'City-friendly' },
+  { id: 'midsize',     label: 'Mid-size Sedan',    icon: '🚘', desc: 'Comfortable for 4' },
+  { id: 'fullsize',    label: 'Full-size Sedan',   icon: '🚖', desc: 'Extra legroom' },
+  { id: 'suv-mid',     label: 'Mid-size SUV',      icon: '🚐', desc: 'Popular choice' },
+  { id: 'suv-full',    label: 'Full-size SUV',     icon: '🚌', desc: 'Seats up to 7' },
+  { id: 'minivan',     label: 'Minivan',           icon: '🚐', desc: 'Seats up to 8' },
+  { id: 'luxury',      label: 'Luxury / Premium',  icon: '🏎️', desc: 'Top-tier vehicles' },
+  { id: 'truck',       label: 'Pickup Truck',      icon: '🛻', desc: 'Work & adventure' },
+  { id: 'convertible', label: 'Convertible',       icon: '🚗', desc: 'Open-top driving' },
 ];
 
 const POPULAR_LOCATIONS = [
@@ -59,44 +58,44 @@ export default function CarRentalPage() {
   const [error, setError] = useState('');
 
   const [form, setForm] = useState({
-    tripType:           'round-trip',
-    pickupLocation:     '',
-    pickupLocationCustom: '',
-    dropoffLocation:    '',
+    tripType:              'round-trip',
+    pickupLocation:        '',
+    pickupLocationCustom:  '',
+    dropoffLocation:       '',
     dropoffLocationCustom: '',
-    pickupDate:         '',
-    pickupTime:         '10:00',
-    returnDate:         '',
-    returnTime:         '10:00',
-    vehicleClass:       '',
-    provider:           '',
-    driverName:         '',
-    driverEmail:        '',
-    driverPhone:        '',
-    driverAge:          '',
-    additionalDrivers:  '0',
-    flightNumber:       '',
-    notes:              '',
+    pickupDate:            '',
+    pickupTime:            '10:00',
+    returnDate:            '',
+    returnTime:            '10:00',
+    vehicleClass:          '',
+    provider:              '',
+    driverName:            '',
+    driverEmail:           '',
+    driverPhone:           '',
+    driverAge:             '',
+    additionalDrivers:     '0',
+    flightNumber:          '',
+    notes:                 '',
   });
 
   const set = (f: string, v: string) => setForm(p => ({ ...p, [f]: v }));
-
   const isOneWay = form.tripType === 'one-way';
-  const pickupDisplay = form.pickupLocation === 'other' ? form.pickupLocationCustom : form.pickupLocation;
+
+  const pickupDisplay  = form.pickupLocation  === 'other' ? form.pickupLocationCustom  : form.pickupLocation;
   const dropoffDisplay = isOneWay
     ? (form.dropoffLocation === 'other' ? form.dropoffLocationCustom : form.dropoffLocation)
     : pickupDisplay;
 
-  const step1Valid = form.tripType && form.pickupLocation &&
+  const step1Valid = !!(form.tripType && form.pickupLocation &&
     (form.pickupLocation !== 'other' || form.pickupLocationCustom) &&
     (!isOneWay || (form.dropoffLocation && (form.dropoffLocation !== 'other' || form.dropoffLocationCustom))) &&
     form.pickupDate && form.pickupTime &&
-    (!isOneWay ? (form.returnDate && form.returnTime) : true);
+    (isOneWay || (form.returnDate && form.returnTime)));
 
-  const step2Valid = form.vehicleClass && form.provider;
+  const step2Valid = !!(form.vehicleClass && form.provider);
 
-  const step3Valid = form.driverName && form.driverEmail && form.driverAge &&
-    emailValidation.state !== 'invalid';
+  const step3Valid = !!(form.driverName && form.driverEmail && form.driverAge &&
+    emailValidation.state !== 'invalid');
 
   async function handleSubmit() {
     if (!step3Valid) return;
@@ -106,11 +105,7 @@ export default function CarRentalPage() {
       const res = await fetch('/api/car-rental', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          pickupLocation:  pickupDisplay,
-          dropoffLocation: dropoffDisplay,
-        }),
+        body: JSON.stringify({ ...form, pickupLocation: pickupDisplay, dropoffLocation: dropoffDisplay }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -121,20 +116,35 @@ export default function CarRentalPage() {
     setSubmitting(false);
   }
 
-  // ── Shared input style ───────────────────────────────────────────────
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '12px 16px', borderRadius: 8,
-    border: '1.5px solid rgba(13,27,42,0.15)',
-    fontSize: '0.9rem', color: 'var(--navy)',
-    background: '#fff', boxSizing: 'border-box' as const,
+    border: '1.5px solid rgba(13,27,42,0.15)', fontSize: '0.9rem',
+    color: 'var(--navy)', background: '#fff', boxSizing: 'border-box',
     outline: 'none', fontFamily: 'var(--font-body)',
   };
-  const selectStyle = { ...inputStyle, appearance: 'none' as const, cursor: 'pointer' };
+  const selectStyle: React.CSSProperties = { ...inputStyle, cursor: 'pointer' };
   const labelStyle: React.CSSProperties = {
     display: 'block', fontSize: '0.72rem', fontWeight: 700,
-    letterSpacing: '0.1em', textTransform: 'uppercase' as const,
+    letterSpacing: '0.1em', textTransform: 'uppercase',
     color: 'var(--slate)', marginBottom: 6, fontFamily: 'var(--font-body)',
   };
+  const btnPrimary = (enabled: boolean): React.CSSProperties => ({
+    padding: '14px 36px', border: 'none', cursor: enabled ? 'pointer' : 'not-allowed',
+    background: enabled ? 'var(--navy)' : '#cbd5e1',
+    color: enabled ? 'var(--gold)' : '#94a3b8',
+    fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.1em',
+    textTransform: 'uppercase', fontFamily: 'var(--font-body)', transition: 'background 0.15s',
+  });
+  const btnBack: React.CSSProperties = {
+    padding: '14px 24px', background: 'transparent',
+    border: '1.5px solid rgba(13,27,42,0.2)', cursor: 'pointer',
+    fontSize: '0.78rem', fontWeight: 600, color: 'var(--slate)',
+    letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)',
+  };
+
+  const providerName = PROVIDERS.find(p => p.id === form.provider)?.name ?? '';
+  const vehicleLabel = VEHICLE_CLASSES.find(v => v.id === form.vehicleClass)?.label ?? '';
+  const firstName = form.driverName.split(' ')[0];
 
   if (submitted) {
     return (
@@ -143,13 +153,13 @@ export default function CarRentalPage() {
           <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: '2rem' }}>✓</div>
           <h2 className="font-display" style={{ fontSize: '2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>Request Received</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 8, fontFamily: 'var(--font-body)' }}>
-            Thank you, {form.driverName.split(' ')[0]}. We'll confirm your <strong>{PROVIDERS.find(p => p.id === form.provider)?.name}</strong> reservation within a few hours.
+            Thank you, {firstName}. We will confirm your <strong>{providerName}</strong> reservation within a few hours.
           </p>
           <div style={{ background: '#f1f5f9', borderRadius: 10, padding: '20px 24px', margin: '24px 0', textAlign: 'left' }}>
             <p style={{ margin: '0 0 6px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate)' }}>Summary</p>
             <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--navy)', lineHeight: 1.8 }}>
-              {isOneWay ? 'One-Way' : 'Round Trip'} · {VEHICLE_CLASSES.find(v => v.id === form.vehicleClass)?.label}<br/>
-              {pickupDisplay}{isOneWay ? \` → ${dropoffDisplay}\` : ''}<br/>
+              {isOneWay ? 'One-Way' : 'Round Trip'} &middot; {vehicleLabel}<br />
+              {pickupDisplay}{isOneWay && dropoffDisplay ? (' \u2192 ' + dropoffDisplay) : ''}<br />
               {form.pickupDate} at {form.pickupTime}
             </p>
           </div>
@@ -176,10 +186,9 @@ export default function CarRentalPage() {
             Car Rental Request
           </h1>
           <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--font-body)', lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
-            We work with all seven major providers. Tell us what you need and we'll handle the booking.
+            We work with all seven major providers. Tell us what you need and we will handle the booking.
           </p>
-          {/* Provider logos row */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
             {PROVIDERS.map(p => (
               <span key={p.id} style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: 20, background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
                 {p.name}
@@ -189,10 +198,10 @@ export default function CarRentalPage() {
         </div>
       </section>
 
-      {/* Progress bar */}
+      {/* Progress */}
       <div style={{ background: 'var(--cream)', borderBottom: '1px solid rgba(13,27,42,0.08)', padding: '0 24px' }}>
         <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center' }}>
-          {([1,2,3] as Step[]).map((s, i) => {
+          {([1, 2, 3] as Step[]).map((s, i) => {
             const labels = ['Trip Details', 'Vehicle & Provider', 'Driver Info'];
             const active = step === s;
             const done = step > s;
@@ -200,14 +209,10 @@ export default function CarRentalPage() {
               <div key={s} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? 1 : 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0', cursor: done ? 'pointer' : 'default' }}
                   onClick={() => { if (done) setStep(s); }}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'var(--font-body)',
-                    background: done ? 'var(--gold)' : active ? 'var(--navy)' : 'rgba(13,27,42,0.1)',
-                    color: done ? 'var(--navy)' : active ? 'white' : 'var(--slate)',
-                  }}>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'var(--font-body)', background: done ? 'var(--gold)' : active ? 'var(--navy)' : 'rgba(13,27,42,0.1)', color: done ? 'var(--navy)' : active ? 'white' : 'var(--slate)' }}>
                     {done ? '✓' : s}
                   </div>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)',
-                    color: active ? 'var(--navy)' : done ? 'var(--gold)' : 'var(--slate)' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', color: active ? 'var(--navy)' : done ? 'var(--gold)' : 'var(--slate)' }}>
                     {labels[i]}
                   </span>
                 </div>
@@ -218,35 +223,29 @@ export default function CarRentalPage() {
         </div>
       </div>
 
-      {/* Form */}
+      {/* Form body */}
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '48px 24px 80px' }}>
 
-        {/* ── STEP 1: Trip Details ─────────────────────────────────────── */}
+        {/* ── STEP 1 ─────────────────────────────────────────────────── */}
         {step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
             <div>
               <h2 className="font-display" style={{ fontSize: '1.6rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 4 }}>Trip Details</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)' }}>Tell us where you're going and when.</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)' }}>Tell us where you are going and when.</p>
             </div>
 
-            {/* Trip type toggle */}
             <div>
               <label style={labelStyle}>Trip Type</label>
-              <div style={{ display: 'flex', gap: 0, borderRadius: 10, overflow: 'hidden', border: '1.5px solid rgba(13,27,42,0.15)', width: 'fit-content' }}>
-                {[{v:'round-trip', label:'Round Trip', icon:'↔'}, {v:'one-way', label:'One Way', icon:'→'}].map(opt => (
+              <div style={{ display: 'flex', borderRadius: 10, overflow: 'hidden', border: '1.5px solid rgba(13,27,42,0.15)', width: 'fit-content' }}>
+                {[{ v: 'round-trip', label: '↔ Round Trip' }, { v: 'one-way', label: '→ One Way' }].map(opt => (
                   <button key={opt.v} onClick={() => set('tripType', opt.v)}
-                    style={{ padding: '10px 28px', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.04em',
-                      background: form.tripType === opt.v ? 'var(--navy)' : 'white',
-                      color: form.tripType === opt.v ? 'var(--gold)' : 'var(--slate)',
-                      transition: 'all 0.15s',
-                    }}>
-                    {opt.icon} {opt.label}
+                    style={{ padding: '10px 28px', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.04em', background: form.tripType === opt.v ? 'var(--navy)' : 'white', color: form.tripType === opt.v ? 'var(--gold)' : 'var(--slate)', transition: 'all 0.15s' }}>
+                    {opt.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Pickup location */}
             <div>
               <label style={labelStyle}>Pickup Location *</label>
               <select style={selectStyle} value={form.pickupLocation} onChange={e => set('pickupLocation', e.target.value)}>
@@ -255,13 +254,10 @@ export default function CarRentalPage() {
                 <option value="other">Other — enter below</option>
               </select>
               {form.pickupLocation === 'other' && (
-                <input type="text" placeholder="Enter city, airport, or address"
-                  style={{ ...inputStyle, marginTop: 8 }} value={form.pickupLocationCustom}
-                  onChange={e => set('pickupLocationCustom', e.target.value)} />
+                <input type="text" placeholder="Enter city, airport, or address" style={{ ...inputStyle, marginTop: 8 }} value={form.pickupLocationCustom} onChange={e => set('pickupLocationCustom', e.target.value)} />
               )}
             </div>
 
-            {/* Drop-off location (one-way only) */}
             {isOneWay && (
               <div>
                 <label style={labelStyle}>Drop-off Location *</label>
@@ -271,82 +267,63 @@ export default function CarRentalPage() {
                   <option value="other">Other — enter below</option>
                 </select>
                 {form.dropoffLocation === 'other' && (
-                  <input type="text" placeholder="Enter city, airport, or address"
-                    style={{ ...inputStyle, marginTop: 8 }} value={form.dropoffLocationCustom}
-                    onChange={e => set('dropoffLocationCustom', e.target.value)} />
+                  <input type="text" placeholder="Enter city, airport, or address" style={{ ...inputStyle, marginTop: 8 }} value={form.dropoffLocationCustom} onChange={e => set('dropoffLocationCustom', e.target.value)} />
                 )}
                 <p style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 6, fontFamily: 'var(--font-body)' }}>
-                  ⚠ One-way drop fees may apply. We'll confirm the total before booking.
+                  &#x26A0; One-way drop fees may apply. We will confirm the total before booking.
                 </p>
               </div>
             )}
 
-            {/* Pickup date + time */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
                 <label style={labelStyle}>Pickup Date *</label>
-                <input type="date" style={inputStyle} value={form.pickupDate}
-                  min={new Date().toISOString().split('T')[0]}
-                  onChange={e => set('pickupDate', e.target.value)} />
+                <input type="date" style={inputStyle} value={form.pickupDate} min={new Date().toISOString().split('T')[0]} onChange={e => set('pickupDate', e.target.value)} />
               </div>
               <div>
                 <label style={labelStyle}>Pickup Time *</label>
-                <input type="time" style={inputStyle} value={form.pickupTime}
-                  onChange={e => set('pickupTime', e.target.value)} />
+                <input type="time" style={inputStyle} value={form.pickupTime} onChange={e => set('pickupTime', e.target.value)} />
               </div>
             </div>
 
-            {/* Return date + time (round trip only) */}
             {!isOneWay && (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <label style={labelStyle}>Return Date *</label>
-                  <input type="date" style={inputStyle} value={form.returnDate}
-                    min={form.pickupDate || new Date().toISOString().split('T')[0]}
-                    onChange={e => set('returnDate', e.target.value)} />
+                  <input type="date" style={inputStyle} value={form.returnDate} min={form.pickupDate || new Date().toISOString().split('T')[0]} onChange={e => set('returnDate', e.target.value)} />
                 </div>
                 <div>
                   <label style={labelStyle}>Return Time *</label>
-                  <input type="time" style={inputStyle} value={form.returnTime}
-                    onChange={e => set('returnTime', e.target.value)} />
+                  <input type="time" style={inputStyle} value={form.returnTime} onChange={e => set('returnTime', e.target.value)} />
                 </div>
               </div>
             )}
 
-            {/* Flight number */}
             <div>
-              <label style={labelStyle}>Flight Number <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '0.7rem' }}>(optional — for airport pickups)</span></label>
-              <input type="text" placeholder="e.g. DL1423" style={inputStyle} value={form.flightNumber}
-                onChange={e => set('flightNumber', e.target.value)} />
+              <label style={labelStyle}>Flight Number <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '0.7rem' }}>(optional)</span></label>
+              <input type="text" placeholder="e.g. DL1423 — for airport pickups" style={inputStyle} value={form.flightNumber} onChange={e => set('flightNumber', e.target.value)} />
             </div>
 
-            <button onClick={() => { if (step1Valid) setStep(2); }}
-              disabled={!step1Valid}
-              style={{ alignSelf: 'flex-start', padding: '14px 36px', background: step1Valid ? 'var(--navy)' : '#cbd5e1', color: step1Valid ? 'var(--gold)' : '#94a3b8', border: 'none', cursor: step1Valid ? 'pointer' : 'not-allowed', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', transition: 'background 0.15s' }}>
-              Continue →
+            <button onClick={() => { if (step1Valid) setStep(2); }} disabled={!step1Valid} style={{ ...btnPrimary(step1Valid), alignSelf: 'flex-start' }}>
+              Continue &#x2192;
             </button>
           </div>
         )}
 
-        {/* ── STEP 2: Vehicle & Provider ───────────────────────────────── */}
+        {/* ── STEP 2 ─────────────────────────────────────────────────── */}
         {step === 2 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             <div>
-              <h2 className="font-display" style={{ fontSize: '1.6rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 4 }}>Vehicle & Provider</h2>
+              <h2 className="font-display" style={{ fontSize: '1.6rem', fontWeight: 400, color: 'var(--navy)', marginBottom: 4 }}>Vehicle &amp; Provider</h2>
               <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)' }}>Choose your vehicle class and preferred provider.</p>
             </div>
 
-            {/* Vehicle class grid */}
             <div>
               <label style={labelStyle}>Vehicle Class *</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))', gap: 10 }}>
                 {VEHICLE_CLASSES.map(v => (
                   <button key={v.id} onClick={() => set('vehicleClass', v.id)}
-                    style={{ padding: '14px 12px', borderRadius: 10, border: '1.5px solid',
-                      borderColor: form.vehicleClass === v.id ? 'var(--navy)' : 'rgba(13,27,42,0.12)',
-                      background: form.vehicleClass === v.id ? 'var(--navy)' : 'white',
-                      cursor: 'pointer', textAlign: 'center' as const, transition: 'all 0.15s',
-                    }}>
+                    style={{ padding: '14px 12px', borderRadius: 10, border: '1.5px solid', borderColor: form.vehicleClass === v.id ? 'var(--navy)' : 'rgba(13,27,42,0.12)', background: form.vehicleClass === v.id ? 'var(--navy)' : 'white', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s' }}>
                     <div style={{ fontSize: '1.5rem', marginBottom: 6 }}>{v.icon}</div>
                     <div style={{ fontSize: '0.8rem', fontWeight: 700, fontFamily: 'var(--font-body)', color: form.vehicleClass === v.id ? 'var(--gold)' : 'var(--navy)' }}>{v.label}</div>
                     <div style={{ fontSize: '0.68rem', color: form.vehicleClass === v.id ? 'rgba(255,255,255,0.6)' : 'var(--slate)', fontFamily: 'var(--font-body)', marginTop: 2 }}>{v.desc}</div>
@@ -355,17 +332,12 @@ export default function CarRentalPage() {
               </div>
             </div>
 
-            {/* Provider cards */}
             <div>
               <label style={labelStyle}>Preferred Provider *</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(175px, 1fr))', gap: 10 }}>
                 {PROVIDERS.map(p => (
                   <button key={p.id} onClick={() => set('provider', p.id)}
-                    style={{ padding: '16px', borderRadius: 10, border: '1.5px solid',
-                      borderColor: form.provider === p.id ? 'var(--navy)' : 'rgba(13,27,42,0.12)',
-                      background: form.provider === p.id ? 'var(--navy)' : 'white',
-                      cursor: 'pointer', textAlign: 'left' as const, transition: 'all 0.15s',
-                    }}>
+                    style={{ padding: '16px', borderRadius: 10, border: '1.5px solid', borderColor: form.provider === p.id ? 'var(--navy)' : 'rgba(13,27,42,0.12)', background: form.provider === p.id ? 'var(--navy)' : 'white', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
                     <div style={{ fontSize: '1.2rem', marginBottom: 8 }}>{p.logo}</div>
                     <div style={{ fontSize: '0.88rem', fontWeight: 700, fontFamily: 'var(--font-body)', color: form.provider === p.id ? 'var(--gold)' : 'var(--navy)', marginBottom: 3 }}>{p.name}</div>
                     <div style={{ fontSize: '0.68rem', color: form.provider === p.id ? 'rgba(255,255,255,0.55)' : 'var(--slate)', fontFamily: 'var(--font-body)' }}>{p.tagline}</div>
@@ -373,23 +345,18 @@ export default function CarRentalPage() {
                 ))}
               </div>
               <p style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 10, fontFamily: 'var(--font-body)' }}>
-                Don't have a preference? Select "National" — they typically offer the best combination of rate and availability.
+                No preference? Select National — they typically offer the best combination of rate and availability.
               </p>
             </div>
 
             <div style={{ display: 'flex', gap: 12 }}>
-              <button onClick={() => setStep(1)} style={{ padding: '14px 24px', background: 'transparent', border: '1.5px solid rgba(13,27,42,0.2)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, color: 'var(--slate)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-                ← Back
-              </button>
-              <button onClick={() => { if (step2Valid) setStep(3); }} disabled={!step2Valid}
-                style={{ padding: '14px 36px', background: step2Valid ? 'var(--navy)' : '#cbd5e1', color: step2Valid ? 'var(--gold)' : '#94a3b8', border: 'none', cursor: step2Valid ? 'pointer' : 'not-allowed', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-                Continue →
-              </button>
+              <button onClick={() => setStep(1)} style={btnBack}>&#x2190; Back</button>
+              <button onClick={() => { if (step2Valid) setStep(3); }} disabled={!step2Valid} style={btnPrimary(step2Valid)}>Continue &#x2192;</button>
             </div>
           </div>
         )}
 
-        {/* ── STEP 3: Driver Info ──────────────────────────────────────── */}
+        {/* ── STEP 3 ─────────────────────────────────────────────────── */}
         {step === 3 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
@@ -397,38 +364,32 @@ export default function CarRentalPage() {
               <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)' }}>Required by the rental provider to process your reservation.</p>
             </div>
 
-            {/* Booking summary card */}
+            {/* Booking summary */}
             <div style={{ background: 'var(--navy)', borderRadius: 12, padding: '20px 24px', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold))' }} />
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--gold), rgba(201,168,76,0.6), var(--gold))' }} />
               <p style={{ fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-body)', marginBottom: 10 }}>Your Request</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px', fontSize: '0.85rem', fontFamily: 'var(--font-body)' }}>
-                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Type</span><br/><span style={{ color: 'white', fontWeight: 600 }}>{isOneWay ? 'One-Way' : 'Round Trip'}</span></div>
-                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Provider</span><br/><span style={{ color: 'var(--gold)', fontWeight: 700 }}>{PROVIDERS.find(p => p.id === form.provider)?.name}</span></div>
-                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Vehicle</span><br/><span style={{ color: 'white' }}>{VEHICLE_CLASSES.find(v => v.id === form.vehicleClass)?.label}</span></div>
-                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Pickup</span><br/><span style={{ color: 'white' }}>{pickupDisplay}</span></div>
-                {isOneWay && <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Drop-off</span><br/><span style={{ color: 'white' }}>{dropoffDisplay}</span></div>}
-                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Date</span><br/><span style={{ color: 'white' }}>{form.pickupDate} · {form.pickupTime}</span></div>
+                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Type</span><br /><span style={{ color: 'white', fontWeight: 600 }}>{isOneWay ? 'One-Way' : 'Round Trip'}</span></div>
+                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Provider</span><br /><span style={{ color: 'var(--gold)', fontWeight: 700 }}>{providerName}</span></div>
+                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Vehicle</span><br /><span style={{ color: 'white' }}>{vehicleLabel}</span></div>
+                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Pickup</span><br /><span style={{ color: 'white' }}>{pickupDisplay}</span></div>
+                {isOneWay && <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Drop-off</span><br /><span style={{ color: 'white' }}>{dropoffDisplay}</span></div>}
+                <div><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>Date</span><br /><span style={{ color: 'white' }}>{form.pickupDate} &middot; {form.pickupTime}</span></div>
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div style={{ gridColumn: '1 / -1' }}>
                 <label style={labelStyle}>Full Name *</label>
-                <input type="text" placeholder="Primary driver name" style={inputStyle} value={form.driverName}
-                  onChange={e => set('driverName', e.target.value)} />
+                <input type="text" placeholder="Primary driver name" style={inputStyle} value={form.driverName} onChange={e => set('driverName', e.target.value)} />
               </div>
               <div style={{ gridColumn: '1 / -1' }}>
                 <label style={labelStyle}>Email Address *</label>
-                <EmailField value={form.driverEmail} onChange={v => set('driverEmail', v)} required
-                  placeholder="your@email.com"
-                  inputStyle={{ ...inputStyle, paddingRight: 40 }}
-                  labelStyle={{ display: 'none' }}
-                />
+                <EmailField value={form.driverEmail} onChange={v => set('driverEmail', v)} required placeholder="your@email.com" inputStyle={{ ...inputStyle, paddingRight: 40 }} labelStyle={{ display: 'none' }} />
               </div>
               <div>
                 <label style={labelStyle}>Phone Number</label>
-                <input type="tel" placeholder="(555) 000-0000" style={inputStyle} value={form.driverPhone}
-                  onChange={e => set('driverPhone', e.target.value)} />
+                <input type="tel" placeholder="(555) 000-0000" style={inputStyle} value={form.driverPhone} onChange={e => set('driverPhone', e.target.value)} />
               </div>
               <div>
                 <label style={labelStyle}>Driver Age Range *</label>
@@ -440,16 +401,14 @@ export default function CarRentalPage() {
               <div>
                 <label style={labelStyle}>Additional Drivers</label>
                 <select style={selectStyle} value={form.additionalDrivers} onChange={e => set('additionalDrivers', e.target.value)}>
-                  {['0','1','2','3'].map(n => <option key={n} value={n}>{n === '0' ? 'None' : n}</option>)}
+                  {['0', '1', '2', '3'].map(n => <option key={n} value={n}>{n === '0' ? 'None' : n}</option>)}
                 </select>
               </div>
             </div>
 
             <div>
-              <label style={labelStyle}>Special Requests or Notes <span style={{ fontWeight: 400, textTransform: 'none' }}>(optional)</span></label>
-              <textarea placeholder="e.g. GPS unit, child seat, accessibility needs, preferred pickup location within airport…"
-                style={{ ...inputStyle, minHeight: 90, resize: 'vertical' as const }} value={form.notes}
-                onChange={e => set('notes', e.target.value)} />
+              <label style={labelStyle}>Special Requests <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '0.7rem' }}>(optional)</span></label>
+              <textarea placeholder="e.g. GPS unit, child seat, accessibility needs, preferred pickup spot within airport…" style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }} value={form.notes} onChange={e => set('notes', e.target.value)} />
             </div>
 
             {error && (
@@ -459,15 +418,13 @@ export default function CarRentalPage() {
             )}
 
             <p style={{ fontSize: '0.75rem', color: 'var(--slate)', lineHeight: 1.6, fontFamily: 'var(--font-body)' }}>
-              By submitting you authorize Crestwell Travel Services to contact you and initiate a rental reservation with your chosen provider. No charges are processed until you confirm the final quote.
+              By submitting you authorize Crestwell Travel Services to contact you and initiate a reservation with your chosen provider. No charges are processed until you confirm the final quote.
             </p>
 
             <div style={{ display: 'flex', gap: 12 }}>
-              <button onClick={() => setStep(2)} style={{ padding: '14px 24px', background: 'transparent', border: '1.5px solid rgba(13,27,42,0.2)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, color: 'var(--slate)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
-                ← Back
-              </button>
+              <button onClick={() => setStep(2)} style={btnBack}>&#x2190; Back</button>
               <button onClick={handleSubmit} disabled={!step3Valid || submitting}
-                style={{ flex: 1, padding: '14px 36px', background: (step3Valid && !submitting) ? 'var(--navy)' : '#cbd5e1', color: (step3Valid && !submitting) ? 'var(--gold)' : '#94a3b8', border: 'none', cursor: (step3Valid && !submitting) ? 'pointer' : 'not-allowed', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+                style={{ ...btnPrimary(step3Valid && !submitting), flex: 1 }}>
                 {submitting ? 'Submitting…' : 'Submit Rental Request'}
               </button>
             </div>
