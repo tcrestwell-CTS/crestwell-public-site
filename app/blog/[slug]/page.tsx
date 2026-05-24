@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 
-const SITE_DOMAIN = 'https://crestwell-public-site.vercel.app';
+const SITE_DOMAIN = 'https://crestwellgetaways.com';
 
 type FaqItem = { question: string; answer: string };
 
@@ -282,7 +282,55 @@ function BlogPostContent() {
         </div>
       </section>
 
-      {/* Related posts */}
+      {/* ── CTA Block ──────────────────────────────────────────────────────── */}
+      <section style={{ margin: '64px auto', maxWidth: 760, padding: '0 24px' }}>
+        <div style={{
+          background: 'var(--navy)', borderRadius: 12, padding: '48px 40px',
+          position: 'relative', overflow: 'hidden',
+          border: '1px solid rgba(201,168,76,0.2)',
+        }}>
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+            background: 'linear-gradient(90deg, transparent, var(--gold), transparent)',
+          }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32, flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: 260 }}>
+              <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 10 }}>
+                Ready to Travel?
+              </p>
+              <h3 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 400, color: 'white', marginBottom: 10, lineHeight: 1.3 }}>
+                Planning a cruise or vacation?
+              </h3>
+              <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, fontFamily: 'var(--font-body)' }}>
+                Get a free personalized quote from a Crestwell advisor — no booking fees, no pressure.
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flexShrink: 0 }}>
+              <a href="/request-quote" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '14px 28px', background: 'var(--gold)', color: 'var(--navy)',
+                textDecoration: 'none', fontSize: '0.78rem', fontWeight: 700,
+                letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)',
+                borderRadius: 4, whiteSpace: 'nowrap',
+              }}>
+                Get a Free Quote →
+              </a>
+              <a href="tel:8885086893" style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                padding: '10px 20px', border: '1px solid rgba(201,168,76,0.4)',
+                color: 'var(--gold)', textDecoration: 'none',
+                fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.08em',
+                textTransform: 'uppercase', fontFamily: 'var(--font-body)',
+                borderRadius: 4, whiteSpace: 'nowrap',
+              }}>
+                📞 888.508.6893
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Related posts */}}
       {related.length > 0 && (
         <section style={{ background: 'var(--cream)', padding: '64px 32px' }}>
           <div style={{ maxWidth: 1280, margin: '0 auto' }}>
