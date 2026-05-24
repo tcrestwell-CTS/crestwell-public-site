@@ -228,6 +228,28 @@ export default function Navbar() {
 
           </div>
 
+          {/* Phone + CTA — desktop only */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }} className="desktop-nav">
+            <a
+              href="tel:8885086893"
+              style={{
+                fontSize: '0.78rem', fontWeight: 600, letterSpacing: '0.04em',
+                color: 'var(--gold)', textDecoration: 'none',
+                display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: 'var(--font-body)',
+              }}
+            >
+              📞 888.508.6893
+            </a>
+            <Link
+              href="/request-quote"
+              className="btn-primary"
+              style={{ fontSize: '0.72rem', padding: '8px 18px', textDecoration: 'none', letterSpacing: '0.08em' }}
+            >
+              Get a Quote
+            </Link>
+          </div>
+
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
