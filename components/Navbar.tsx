@@ -20,17 +20,24 @@ const CRUISES = [
   { label: 'Luxury Collection', href: '/luxury-cruises' },
 ];
 
+// Services grouped under dropdown — reduces top-level nav from 11 to 6 items
+const SERVICES = [
+  { label: 'All-Inclusive Resorts',  href: '/all-inclusive',      icon: '🌴' },
+  { label: 'Group Travel',           href: '/group-travel',        icon: '👥' },
+  { label: 'Vacations by Rail',      href: '/vacations-by-rail',   icon: '🚂' },
+  { label: 'Domestic Travel',        href: '/domestic-travel',     icon: '🗺️' },
+  { label: 'Excursions',             href: '/excursions',          icon: '🤿' },
+  { label: 'Solo Travel',            href: '/solo-travel',         icon: '🧳' },
+  { label: 'Financing',              href: '/financing',           icon: '💳' },
+];
+
+// Top-level nav — 6 items (was 11)
 const navItems = [
   { label: 'Featured Trips', href: '/trips' },
-  { label: 'Excursions', href: '/excursions' },
-  { label: 'Vacations by Rail', href: '/vacations-by-rail' },
-  { label: 'Domestic Travel', href: '/domestic-travel' },
-  { label: 'All-Inclusive', href: '/all-inclusive' },
-  { label: 'Group Travel', href: '/group-travel' },
-  { label: 'Travel Tips', href: '/blog' },
-  { label: 'About Us', href: '/about' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Travel Tips',    href: '/blog' },
+  { label: 'About Us',       href: '/about' },
+  { label: 'FAQ',            href: '/faq' },
+  { label: 'Contact',        href: '/contact' },
 ];
 
 // ─── Shared dropdown styles ───────────────────────────────────────────────────
@@ -59,10 +66,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [cruiseOpen, setCruiseOpen] = useState(false);
   const [mobileDestOpen, setMobileDestOpen] = useState(false);
   const [mobileCruiseOpen, setMobileCruiseOpen] = useState(false);
   const destRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
   const cruiseRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -213,6 +222,44 @@ export default function Navbar() {
                           fontWeight: i === 0 ? 500 : 400,
                         }}>
                           {dest.label}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ── Services dropdown ── */}
+            <div ref={servicesRef} style={{ position: 'relative' }}>
+              {dropdownTrigger('Services', ['/all-inclusive','/group-travel','/vacations-by-rail','/domestic-travel','/excursions','/solo-travel','/financing'].some(h => pathname.startsWith(h)), servicesOpen, () => setServicesOpen(o => !o), () => setServicesOpen(true))}
+              {servicesOpen && (
+                <div onMouseLeave={() => setServicesOpen(false)} style={{ ...dropdownBox, minWidth: 240 }}>
+                  <div style={dropdownArrow} />
+                  <div style={{ padding: '10px 20px 8px', borderBottom: '1px solid rgba(201,168,76,0.12)' }}>
+                    <span style={{ fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
+                      Travel Services
+                    </span>
+                  </div>
+                  <div style={{ padding: '6px 0 8px' }}>
+                    {SERVICES.map((svc) => (
+                      <Link
+                        key={svc.href}
+                        href={svc.href}
+                        onClick={() => setServicesOpen(false)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 12,
+                          padding: '10px 20px', textDecoration: 'none',
+                          borderLeft: pathname === svc.href ? '2px solid var(--gold)' : '2px solid transparent',
+                          background: pathname === svc.href ? 'rgba(201,168,76,0.08)' : 'transparent',
+                          transition: 'background 0.15s, border-color 0.15s',
+                        }}
+                        onMouseEnter={e => { if (pathname !== svc.href) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = pathname === svc.href ? 'rgba(201,168,76,0.08)' : 'transparent'; }}
+                      >
+                        <span style={{ fontSize: '1rem', flexShrink: 0 }}>{svc.icon}</span>
+                        <span style={{ fontSize: '0.84rem', letterSpacing: '0.03em', color: pathname === svc.href ? 'var(--gold)' : 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)' }}>
+                          {svc.label}
                         </span>
                       </Link>
                     ))}
