@@ -469,14 +469,14 @@ export default function CarRentalPage() {
               <div style={{ gridColumn: '1 / -1' }}>
                 <label style={labelStyle}>Card Number — Last 4 Digits Only</label>
                 <input type="text" placeholder="e.g. 4242" maxLength={4} style={inputStyle}
-                  value={form.ccLastFour} onChange={e => set('ccLastFour', e.target.value.replace(/\D/g, '').slice(0,4))} />
+                  value={form.ccLastFour} onChange={e => set('ccLastFour', e.target.value.replace(/[^0-9]/g, '').slice(0,4))} />
               </div>
               <div>
                 <label style={labelStyle}>Expiration (MM/YY)</label>
                 <input type="text" placeholder="MM/YY" maxLength={5} style={inputStyle}
                   value={form.ccExpiry}
                   onChange={e => {
-                    let v = e.target.value.replace(/\D/g,'');
+                    let v = e.target.value.replace(/[^0-9]/g,'');
                     if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2,4);
                     set('ccExpiry', v);
                   }} />
