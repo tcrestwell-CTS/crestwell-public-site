@@ -6,6 +6,7 @@ import TrustpilotWidget from '@/components/TrustpilotWidget';
 import NewsletterSection from '@/components/NewsletterSection';
 import PartnerLogos from '@/components/PartnerLogos';
 import TravelHeroSlider from '@/components/TravelHeroSlider';
+import LeadMagnetForm from '@/components/LeadMagnetForm';
 
 const services = [
   { icon: '⚓', title: 'Cruise Vacations', description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.' },
