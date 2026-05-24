@@ -126,7 +126,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: 4 }}>Service Area</div>
-                  <div style={{ color: 'var(--navy)', fontSize: '0.9rem' }}>Georgia · Tennessee · Alabama</div>
+                  <div style={{ color: 'var(--navy)', fontSize: '0.9rem' }}>Georgia · Tennessee · Alabama · Florida</div>
                 </div>
               </div>
 
