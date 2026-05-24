@@ -5,7 +5,7 @@ import { Resend } from "resend";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-04-30.basil" });
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -13,7 +13,6 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 export async function POST(req: Request) {
   try {
     const { token, paymentMethodId, last4, expMonth, expYear, cardholderName, billingZip } = await req.json();
-
     if (!token || !paymentMethodId) {
       return NextResponse.json({ error: "Missing token or payment method" }, { status: 400 });
     }
@@ -25,9 +24,11 @@ export async function POST(req: Request) {
       .eq("token", token)
       .maybeSingle();
 
-    if (!tok)                             return NextResponse.json({ error: "Invalid token" }, { status: 400 });
-    if (tok.used)                         return NextResponse.json({ error: "Token already used" }, { status: 400 });
-    if (new Date(tok.expires_at) < new Date()) return NextResponse.json({ error: "Token expired" }, { status: 400 });
+    if (!tok) return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+    if (tok.used) return NextResponse.json({ error: "Token already used" }, { status: 400 });
+    if (new Date(tok.expires_at) < new Date()) {
+      return NextResponse.json({ error: "Token expired" }, { status: 400 });
+    }
 
     // Verify PaymentMethod exists in Stripe
     const pm = await stripe.paymentMethods.retrieve(paymentMethodId);
@@ -35,15 +36,17 @@ export async function POST(req: Request) {
 
     const now = new Date().toISOString();
 
-    // Update car_rental_requests with card info
+    // Update rental with card info
     const { data: rental, error: updErr } = await supabase
       .from("car_rental_requests")
       .update({
         cc_stripe_pm_id:      paymentMethodId,
-        cc_last_four:         last4        ? String(last4)     : null,
-        cc_expiry:            expMonth && expYear ? `${String(expMonth).padStart(2,"0")}/${String(expYear).slice(-2)}` : null,
-        cc_cardholder_name:   cardholderName || null,
-        cc_billing_zip:       billingZip    || null,
+        cc_last_four:         last4           ? String(last4)     : null,
+        cc_expiry:            expMonth && expYear
+                                ? String(expMonth).padStart(2, "0") + "/" + String(expYear).slice(-2)
+                                : null,
+        cc_cardholder_name:   cardholderName  || null,
+        cc_billing_zip:       billingZip      || null,
         cc_full_collected:    true,
         cc_collected_at:      now,
         cc_collection_method: "secure_link",
@@ -63,10 +66,15 @@ export async function POST(req: Request) {
 
     // Notify agent (best-effort)
     try {
+      const notifyEmail = rental?.assigned_agent
+        ? await supabase.from("profiles").select("email").eq("user_id", rental.assigned_agent).maybeSingle()
+            .then(({ data }) => data?.email ?? "info@crestwellgetaways.com")
+        : "info@crestwellgetaways.com";
+
       await resend.emails.send({
         from: "Crestwell <noreply@crestwellgetaways.com>",
-        to:   ["info@crestwellgetaways.com"],
-        subject: `Card collected — ${rental?.driver_name} | ${rental?.provider}`,
+        to: [notifyEmail],
+        subject: `Card collected for ${rental?.driver_name} — ${rental?.provider}`,
         html: `
           <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#0d1b2a;color:white;padding:40px;">
             <h2 style="color:#c9a84c;margin:0 0 20px;">Card Collected via Secure Link</h2>
@@ -74,7 +82,7 @@ export async function POST(req: Request) {
               <tr><td style="padding:8px 0;color:rgba(255,255,255,0.5);">Driver</td><td style="color:white;">${rental?.driver_name}</td></tr>
               <tr><td style="padding:8px 0;color:rgba(255,255,255,0.5);">Provider</td><td style="color:#c9a84c;font-weight:700;text-transform:capitalize;">${rental?.provider}</td></tr>
               <tr><td style="padding:8px 0;color:rgba(255,255,255,0.5);">Pickup</td><td style="color:white;">${rental?.pickup_date} at ${rental?.pickup_time}</td></tr>
-              <tr><td style="padding:8px 0;color:rgba(255,255,255,0.5);">Card</td><td style="color:white;">****${last4} expires ${expMonth}/${expYear}</td></tr>
+              <tr><td style="padding:8px 0;color:rgba(255,255,255,0.5);">Card</td><td style="color:white;">••••${last4} exp ${expMonth}/${expYear}</td></tr>
             </table>
             <p style="margin-top:24px;font-size:0.85rem;color:rgba(255,255,255,0.5);">Open the rental in the CRM to submit to the provider.</p>
           </div>`,
