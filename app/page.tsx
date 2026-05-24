@@ -160,6 +160,70 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── ADVISOR BIO ── */}
+      <section style={{ background: 'var(--navy)', padding: '80px 24px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 64, alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <div style={{
+              width: 200, height: 200, borderRadius: '50%',
+              border: '3px solid var(--gold)',
+              background: 'linear-gradient(135deg, rgba(201,168,76,0.15), rgba(13,27,42,0.9))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '5rem', boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
+            }}>
+              👤
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', color: 'white', fontWeight: 400 }}>T. Crestwell</p>
+              <p style={{ fontSize: '0.72rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginTop: 4 }}>
+                Owner & Travel Advisor
+              </p>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+                {['ASTA Member', 'CLIA Certified', 'Cruise Specialist'].map(badge => (
+                  <span key={badge} style={{
+                    fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase',
+                    padding: '3px 10px', borderRadius: 20,
+                    background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)',
+                    color: 'var(--gold)', fontFamily: 'var(--font-body)',
+                  }}>{badge}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div>
+            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 12 }}>
+              Your Advisor
+            </p>
+            <h2 className="font-display" style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 400, color: 'white', marginBottom: 20, lineHeight: 1.3 }}>
+              Travel advice you can actually trust
+            </h2>
+            <div style={{ fontSize: '0.95rem', lineHeight: 1.85, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)' }}>
+              <p style={{ marginBottom: 14 }}>
+                I started Crestwell Travel Services because I was tired of seeing families overpay for travel that didn't live up to the brochure. Every recommendation I make is based on firsthand experience — I've sailed the ships, stayed at the resorts, and walked the ports.
+              </p>
+              <p style={{ marginBottom: 14 }}>
+                Based in Chattanooga, I serve clients across Georgia, Tennessee, and Alabama who want someone in their corner — not a booking engine. When something goes wrong on your trip, you have a real person to call.
+              </p>
+              <p>Whether you're planning your first cruise or your fourteenth, I'll tell you exactly what I would book — and what I'd avoid.</p>
+            </div>
+            <div style={{ display: 'flex', gap: 16, marginTop: 28, flexWrap: 'wrap' }}>
+              <a href="/about" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 24px',
+                background: 'var(--gold)', color: 'var(--navy)', textDecoration: 'none',
+                fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em',
+                textTransform: 'uppercase', fontFamily: 'var(--font-body)',
+              }}>Full Bio →</a>
+              <a href="tel:8885086893" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 24px',
+                border: '1px solid rgba(201,168,76,0.4)', color: 'var(--gold)',
+                textDecoration: 'none', fontSize: '0.72rem', fontWeight: 600,
+                letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-body)',
+              }}>📞 888.508.6893</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── TESTIMONIALS ── */}
       <section className="section-pad" style={{ background: 'var(--cream)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
