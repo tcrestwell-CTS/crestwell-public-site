@@ -201,7 +201,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
   // Mount Stripe element when on step 6
   useEffect(() => {
     if (step !== 6) return;
-    if (!window.Stripe) return;
+    if (!window.StripeInstance) return;
     if (!stripeRef.current) stripeRef.current = window.StripeInstance(STRIPE_PK);
     if (cardRef.current) return;
     const elements = stripeRef.current.elements();
