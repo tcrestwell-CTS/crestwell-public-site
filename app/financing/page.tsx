@@ -202,7 +202,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
   useEffect(() => {
     if (step !== 6) return;
     if (!window.Stripe) return;
-    if (!stripeRef.current) stripeRef.current = window.Stripe(STRIPE_PK);
+    if (!stripeRef.current) stripeRef.current = window.StripeInstance(STRIPE_PK);
     if (cardRef.current) return;
     const elements = stripeRef.current.elements();
     const style = { base: { fontFamily: 'Georgia, serif', fontSize: '15px', color: '#0d1b2a', '::placeholder': { color: '#94a3b8' } } };
@@ -420,7 +420,7 @@ function FinancingApplicationInner({ tokenData }: { tokenData: TokenData; token:
 
   return (
     <>
-      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={() => { if (step === 6 && !stripeRef.current) { stripeRef.current = window.Stripe(STRIPE_PK); } }} />
+      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={() => { if (step === 6 && !stripeRef.current) { stripeRef.current = window.StripeInstance(STRIPE_PK); } }} />
 
       {/* Hero */}
       <section style={{ background: 'var(--navy)', paddingTop: 100, paddingBottom: 48, position: 'relative', overflow: 'hidden' }}>
