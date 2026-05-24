@@ -101,8 +101,6 @@ export default function CarRentalPage() {
 
   const step3Valid = !!(form.driverName && form.driverEmail && form.driverAge &&
     emailValidation.state !== 'invalid');
-  // Step 4 is optional — always passable
-  const step4Valid = true;
 
   async function handleSubmit() {
     if (!step3Valid) return;
