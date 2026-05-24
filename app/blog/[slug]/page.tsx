@@ -330,7 +330,7 @@ function BlogPostContent() {
         </div>
       </section>
 
-      {/* Related posts */}}
+      {/* Related posts */}
       {related.length > 0 && (
         <section style={{ background: 'var(--cream)', padding: '64px 32px' }}>
           <div style={{ maxWidth: 1280, margin: '0 auto' }}>
