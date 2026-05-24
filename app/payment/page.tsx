@@ -170,8 +170,8 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
       if (planCardRef.current) { planCardRef.current.unmount(); planCardRef.current = null; setPlanCardReady(false); }
       return;
     }
-    if (!window.Stripe) return;
-    if (!stripeRef.current) stripeRef.current = window.Stripe(STRIPE_PK);
+    if (!window.StripeInstance) return;
+    if (!stripeRef.current) stripeRef.current = window.StripeInstance(STRIPE_PK);
     if (planCardRef.current) return;
     const elements = stripeRef.current.elements();
     planCardRef.current = elements.create('card', { style: { base: { fontFamily: 'Georgia, serif', fontSize: '16px', color: '#0d1b2a', '::placeholder': { color: '#94a3b8' } }, invalid: { color: '#dc2626' } } });
@@ -180,9 +180,9 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
   }, [tab]);
 
   const mountStripe = () => {
-    if (!window.Stripe) return;
+    if (!window.StripeInstance) return;
     if (!stripeRef.current) {
-      stripeRef.current = window.Stripe(STRIPE_PK);
+      stripeRef.current = window.StripeInstance(STRIPE_PK);
     }
     if (cardRef.current) return; // already created
     const elements = stripeRef.current.elements();
@@ -214,7 +214,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
 
   useEffect(() => {
     if (tab === 'stripe') {
-      if (window.Stripe) {
+      if (window.StripeInstance) {
         mountStripe();
       }
       // If Stripe.js not loaded yet, Script onLoad will call mountStripe
@@ -768,7 +768,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
 }
 
 declare global {
-  interface Window { Stripe: any; affirm: any; _affirm_config: any; }
+  interface Window { StripeInstance: any; affirm: any; _affirm_config: any; }
 }
 
 function PaymentPageWithGate() {
