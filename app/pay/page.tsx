@@ -137,8 +137,8 @@ export default function PublicPayPage() {
 
   // Mount Stripe
   const mountStripe = () => {
-    if (!window.Stripe) return;
-    if (!stripeRef.current) stripeRef.current = window.Stripe(STRIPE_PK);
+    if (!window.StripeInstance) return;
+    if (!stripeRef.current) stripeRef.current = window.StripeInstance(STRIPE_PK);
     if (cardRef.current) return;
     const elements = stripeRef.current.elements();
     cardRef.current = elements.create('card', {
@@ -175,7 +175,7 @@ export default function PublicPayPage() {
   }, []);
 
   useEffect(() => {
-    if (tab === 'stripe') { if (window.Stripe) mountStripe(); }
+    if (tab === 'stripe') { if (window.StripeInstance) mountStripe(); }
     else {
       if (cardRef.current) { cardRef.current.unmount(); cardRef.current = null; setStripeReady(false); }
     }
@@ -600,5 +600,5 @@ export default function PublicPayPage() {
 }
 
 declare global {
-  interface Window { Stripe: any; affirm: any; _affirm_config: any; }
+  interface Window { StripeInstance: any; affirm: any; _affirm_config: any; }
 }
