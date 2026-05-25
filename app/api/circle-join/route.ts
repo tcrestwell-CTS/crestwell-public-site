@@ -75,6 +75,16 @@ export async function POST(req: Request) {
       </table>
     </div>
 
+    <!-- Welcome kit download -->
+    <div style="background:#f0ede6;border-radius:8px;padding:16px 20px;margin:24px 0;text-align:center;">
+      <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7a8aa3;margin:0 0 8px;">Your Welcome Kit</p>
+      <a href="https://crestwellgetaways.com/downloads/crestwell-circle-welcome.pdf"
+         style="display:inline-block;background:#0d1b2a;color:#c9a84c;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:0.85rem;font-weight:700;letter-spacing:0.08em;">
+        Download Welcome PDF &rarr;
+      </a>
+      <p style="font-size:0.75rem;color:#94a3b8;margin:8px 0 0;">Everything you need to know as a Circle member, in one page.</p>
+    </div>
+
     <p style="font-size:0.95rem;color:#475569;line-height:1.8;margin:0 0 16px;">
       <strong>What happens next:</strong> Your first Port Intel Briefing arrives the first Tuesday of next month. In the meantime, watch for a separate email in the next few weeks with the first hosted-trip announcement — Circle members get 48-hour early access before it goes anywhere else.
     </p>
