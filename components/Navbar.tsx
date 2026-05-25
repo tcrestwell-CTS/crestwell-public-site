@@ -29,6 +29,7 @@ const SERVICES = [
   { label: 'Excursions',             href: '/excursions',          icon: '🤿' },
   { label: 'Solo Travel',            href: '/solo-travel',         icon: '🧳' },
   { label: 'Financing',              href: '/financing',           icon: '💳' },
+  { label: 'The Circle',             href: '/the-circle',          icon: '✦' },
 ];
 
 // Top-level nav — 6 items (was 11)
