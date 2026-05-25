@@ -19,12 +19,12 @@ const STEPS = [
 ];
 
 const FAQS = [
-  { q: 'What does it cost?', a: 'Nothing. The Crestwell Circle is free to join and will always be free. I want to do more of the work I love with people I already enjoy planning for.' },
+  { q: "What does it cost?", a: "Nothing. The Crestwell Circle is free to join and will always be free. I want to do more of the work I love with people I already enjoy planning for." },
   { q: "What's the difference between founding members and future members?", a: "Founding members get a permanent $100 onboard credit on every Circle-hosted group trip they book, for as long as they're members. Future members won't have this. Founding status closes at the end of launch month." },
-  { q: 'How often will I hear from you?', a: 'Once a month via the Port Intel Briefing. Occasionally when a hosted trip opens. Never just to fill your inbox.' },
-  { q: "What's a 'hosted trip'?", a: "A small-group cruise or getaway I personally plan and host each year — usually 20–40 people. Members get first access and member pricing. Details on the first trip come out within the next few weeks." },
-  { q: 'Can I invite someone?', a: 'Yes — forward any Circle email to a friend or family member and they can join as a founding member through the end of launch month.' },
-  { q: 'How do I book a trip as a Circle member?', a: 'Same as always — reply to any email, call me at 888.508.6893, or request a quote on the site. Just mention you're a Circle member for priority queue.' },
+  { q: "How often will I hear from you?", a: "Once a month via the Port Intel Briefing. Occasionally when a hosted trip opens. Never just to fill your inbox." },
+  { q: "What's a hosted trip?", a: "A small-group cruise or getaway I personally plan and host each year — usually 20-40 people. Members get first access and member pricing. Details on the first trip come out within the next few weeks." },
+  { q: "Can I invite someone?", a: "Yes — forward any Circle email to a friend or family member and they can join as a founding member through the end of launch month." },
+  { q: "How do I book a trip as a Circle member?", a: "Same as always — reply to any email, call me at 888.508.6893, or request a quote on the site. Just mention you're a Circle member for priority queue." },
 ];
 
 export default function CircleClient() {
@@ -87,7 +87,7 @@ export default function CircleClient() {
           {joined ? (
             <div style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 12, padding: '28px 32px', maxWidth: 480, margin: '0 auto' }}>
               <div style={{ fontSize: '2rem', marginBottom: 12 }}>&#10003;</div>
-              <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'white', marginBottom: 8 }}>You're in.</h3>
+              <h3 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 400, color: 'white', marginBottom: 8 }}>You’re in.</h3>
               <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.65)', fontFamily: 'var(--font-body)', lineHeight: 1.7 }}>
                 Welcome to the Circle. Your welcome kit is on its way to {email}. The first Port Intel Briefing lands the first Tuesday of next month.
               </p>
@@ -217,7 +217,7 @@ export default function CircleClient() {
             Founding member status is open now. It takes 30 seconds and it will always be free.
           </p>
           {joined ? (
-            <p style={{ fontSize: '1rem', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>&#10003; You're in the Circle.</p>
+            <p style={{ fontSize: '1rem', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>&#10003; You’re in the Circle.</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 420, margin: '0 auto' }}>
               <input type="text" placeholder="Your first name" style={inputSt} value={name} onChange={e => setName(e.target.value)} />
