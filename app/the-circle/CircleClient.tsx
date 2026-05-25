@@ -20,7 +20,7 @@ const STEPS = [
 
 const FAQS = [
   { q: 'What does it cost?', a: 'Nothing. The Crestwell Circle is free to join and will always be free. I want to do more of the work I love with people I already enjoy planning for.' },
-  { q: "What's the difference between founding members and future members?", a: 'Founding members get a permanent $100 onboard credit on every Circle-hosted group trip they book, for as long as they're members. Future members won't have this. Founding status closes at the end of launch month.' },
+  { q: "What's the difference between founding members and future members?", a: "Founding members get a permanent $100 onboard credit on every Circle-hosted group trip they book, for as long as they're members. Future members won't have this. Founding status closes at the end of launch month." },
   { q: 'How often will I hear from you?', a: 'Once a month via the Port Intel Briefing. Occasionally when a hosted trip opens. Never just to fill your inbox.' },
   { q: "What's a 'hosted trip'?", a: "A small-group cruise or getaway I personally plan and host each year — usually 20–40 people. Members get first access and member pricing. Details on the first trip come out within the next few weeks." },
   { q: 'Can I invite someone?', a: 'Yes — forward any Circle email to a friend or family member and they can join as a founding member through the end of launch month.' },
