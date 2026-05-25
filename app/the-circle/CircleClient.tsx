@@ -19,7 +19,7 @@ const STEPS = [
 ];
 
 const FAQS = [
-  { q: "What does it cost?", a: "Free for the first 30 days, then always free for the base Circle tier. No credit card required. In the future we may offer optional paid tiers with additional perks — but the core membership will always be free." },
+  { q: "What does it cost?", a: "Free for the first 30 days. No credit card required." },
   { q: "What's the difference between founding members and future members?", a: "Founding members get a permanent $100 onboard credit on every Circle-hosted group trip they book, for as long as they're members. Future members won't have this. Founding status closes at the end of launch month." },
   { q: "How often will I hear from you?", a: "Once a month via the Port Intel Briefing. Occasionally when a hosted trip opens. Never just to fill your inbox." },
   { q: "What's a hosted trip?", a: "A small-group cruise or getaway I personally plan and host each year — usually 20-40 people. Members get first access and member pricing. Details on the first trip come out within the next few weeks." },
@@ -102,7 +102,7 @@ export default function CircleClient() {
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-body)' }}>
-              Free for 30 days, then always free. No credit card required.
+              Free for 30 days. No credit card required.
             </p>
           </div>
 
@@ -238,7 +238,7 @@ export default function CircleClient() {
           </h2>
           <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--font-body)', lineHeight: 1.7, marginBottom: 36 }}>
             {spotsLeft !== null && spotsLeft > 0
-              ? `${spotsLeft} founding member spot${spotsLeft === 1 ? '' : 's'} left. Free for 30 days, then always free.`
+              ? `${spotsLeft} founding member spot${spotsLeft === 1 ? '' : 's'} left. Free for 30 days.`
               : 'Free to join. Takes 30 seconds.'}
           </p>
           {joined ? (
