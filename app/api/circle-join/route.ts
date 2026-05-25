@@ -58,7 +58,7 @@ export async function POST(req: Request) {
 
     <p style="font-size:0.95rem;color:#475569;line-height:1.8;margin:0 0 16px;">
       ${founding_member
-        ? 'You've joined as a <strong>Founding Member</strong> — which means the $100 onboard credit on every Circle-hosted trip is yours permanently. That perk closes at the end of launch month, and future members won't have it.'
+        ? "You've joined as a <strong>Founding Member</strong> — which means the $100 onboard credit on every Circle-hosted trip is yours permanently. That perk closes at the end of launch month, and future members won't have it."
         : 'Your membership is confirmed and active starting today.'}
     </p>
 
