@@ -5,9 +5,22 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   const resendClient = new Resend(process.env.RESEND_API_KEY);
+  const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
   try {
-    const { name, email, source, founding_member } = await req.json();
+    const { name, email, source } = await req.json();
+
+    // Check how many founding members have already joined
+    const countRes = await fetch(
+      `${supabaseUrl}/rest/v1/circle_members?select=id&founding_member=eq.true`,
+      { headers: { apikey: supabaseAnon, Authorization: `Bearer ${supabaseAnon}` } }
+    );
+    const founders: any[] = await countRes.json();
+    const foundingSlotsFilled = founders.length >= 20;
+    const founding_member = !foundingSlotsFilled;
+    const trial_ends_at = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    const spots_remaining = Math.max(0, 20 - founders.length);
 
     if (!name || !email) {
       return NextResponse.json({ error: 'Name and email required' }, { status: 400 });
@@ -124,19 +137,21 @@ export async function POST(req: Request) {
 </html>`,
     });
 
-    // 3. Store in Supabase (best-effort)
+    // 3. Store directly in circle_members table
     try {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/receive-circle-member`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ name, email, source, founding_member }),
-        }
-      );
+      await fetch(`${supabaseUrl}/rest/v1/circle_members`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseAnon,
+          'Authorization': `Bearer ${supabaseAnon}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          name, email, source: source || 'landing_page',
+          founding_member, trial_ends_at, tier: 'circle', status: 'active',
+        }),
+      });
     } catch (dbErr) {
       console.error('Circle member storage failed (non-fatal):', dbErr);
     }
