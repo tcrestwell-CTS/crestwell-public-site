@@ -19,7 +19,7 @@ const STEPS = [
 ];
 
 const FAQS = [
-  { q: "What does it cost?", a: "Nothing. The Crestwell Circle is free to join and will always be free. I want to do more of the work I love with people I already enjoy planning for." },
+  { q: "What does it cost?", a: "Free for the first 30 days, then always free for the base Circle tier. No credit card required. In the future we may offer optional paid tiers with additional perks — but the core membership will always be free." },
   { q: "What's the difference between founding members and future members?", a: "Founding members get a permanent $100 onboard credit on every Circle-hosted group trip they book, for as long as they're members. Future members won't have this. Founding status closes at the end of launch month." },
   { q: "How often will I hear from you?", a: "Once a month via the Port Intel Briefing. Occasionally when a hosted trip opens. Never just to fill your inbox." },
   { q: "What's a hosted trip?", a: "A small-group cruise or getaway I personally plan and host each year — usually 20-40 people. Members get first access and member pricing. Details on the first trip come out within the next few weeks." },
@@ -34,6 +34,20 @@ export default function CircleClient() {
   const [submitting, setSubmitting] = useState(false);
   const [joined, setJoined] = useState(false);
   const [err, setErr] = useState('');
+  const [spotsLeft, setSpotsLeft] = useState<number | null>(null);
+
+  // Fetch remaining founder spots on mount
+  useState(() => {
+    fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/circle_members?select=id&founding_member=eq.true`, {
+      headers: {
+        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}`,
+      },
+    })
+      .then(r => r.json())
+      .then((rows: any[]) => setSpotsLeft(Math.max(0, 20 - rows.length)))
+      .catch(() => setSpotsLeft(null));
+  });
 
   const doJoin = () => {
     if (!name || !email || emailValidation.state === 'invalid') return;
@@ -77,10 +91,19 @@ export default function CircleClient() {
           <p style={{ fontSize: 'clamp(1rem,2vw,1.2rem)', color: 'rgba(255,255,255,0.65)', fontFamily: 'var(--font-body)', lineHeight: 1.75, maxWidth: 580, margin: '0 auto 40px' }}>
             First access to hosted trips. Monthly port intel from Tim. A real person on the other end — not a booking engine. Free to join. Always.
           </p>
-          <div style={{ display: 'inline-flex', gap: 8, background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 24, padding: '6px 16px', marginBottom: 48 }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 600, letterSpacing: '0.08em' }}>
-              ✦ Founding Member status open through end of launch month
-            </span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 48 }}>
+            <div style={{ display: 'inline-flex', gap: 8, background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 24, padding: '6px 16px' }}>
+              <span style={{ fontSize: '0.72rem', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 600, letterSpacing: '0.08em' }}>
+                {spotsLeft !== null && spotsLeft > 0
+                  ? `✦ ${spotsLeft} of 20 founding member spot${spotsLeft === 1 ? '' : 's'} remaining`
+                  : spotsLeft === 0
+                  ? '✦ Founding member spots filled — joining as a standard member'
+                  : '✦ Founding Member status — first 20 to join'}
+              </span>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-body)' }}>
+              Free for 30 days, then always free. No credit card required.
+            </p>
           </div>
 
           {/* Inline signup */}
@@ -139,7 +162,7 @@ export default function CircleClient() {
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <p style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 12 }}>Founding members only</p>
           <h2 className="font-display" style={{ fontSize: 'clamp(1.8rem,3vw,2.4rem)', fontWeight: 400, color: 'white', marginBottom: 20 }}>
-            One extra perk — yours forever.
+            First 20 members. One extra perk — yours forever.
           </h2>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.65)', fontFamily: 'var(--font-body)', lineHeight: 1.8, marginBottom: 8 }}>
             Founding members get a permanent <strong style={{ color: 'var(--gold)' }}>$100 onboard credit</strong> on every Circle-hosted group trip they book — for as long as they're members.
@@ -214,7 +237,9 @@ export default function CircleClient() {
             Ready to join?
           </h2>
           <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--font-body)', lineHeight: 1.7, marginBottom: 36 }}>
-            Founding member status is open now. It takes 30 seconds and it will always be free.
+            {spotsLeft !== null && spotsLeft > 0
+              ? `${spotsLeft} founding member spot${spotsLeft === 1 ? '' : 's'} left. Free for 30 days, then always free.`
+              : 'Free to join. Takes 30 seconds.'}
           </p>
           {joined ? (
             <p style={{ fontSize: '1rem', color: 'var(--gold)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>&#10003; You’re in the Circle.</p>
