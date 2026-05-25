@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     await resendClient.emails.send({
       from: 'Tim Crestwell <tim@crestwellgetaways.com>',
       to: [email],
-      replyTo: 'tim@crestwellgetaways.com',
+      reply_to: 'tim@crestwellgetaways.com',
       subject: "You're in — welcome to the Crestwell Circle",
       html: `<!DOCTYPE html>
 <html>
