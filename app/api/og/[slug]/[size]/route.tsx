@@ -23,7 +23,7 @@ async function toDataUrl(url: string): Promise<string | null> {
     const buf = await r.arrayBuffer();
     const u8  = new Uint8Array(buf);
     let b = "";
-    for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode(...u8.subarray(i, i + 8192));
+    for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode(...Array.from(u8.subarray(i, i + 8192)));
     return `data:${r.headers.get("content-type") ?? "image/jpeg"};base64,${btoa(b)}`;
   } catch { return null; }
 }
