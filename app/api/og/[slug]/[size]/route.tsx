@@ -113,7 +113,7 @@ export async function GET(
         </div>
         <div style={{ position: "absolute", bottom: 48, left: 0, width: W, display: "flex", justifyContent: "center" }}>
           <p style={{ color: "rgba(255,255,255,.45)", fontSize: isV ? 24 : 18, letterSpacing: "0.06em", fontFamily: "Georgia,serif", margin: 0, display: "flex" }}>
-            match.crestwellgetaways.com
+            match.crestwelltravels.com
           </p>
         </div>
         <div style={{ position: "absolute", bottom: 0, left: 0, width: W, height: 6, background: GOLD, opacity: 0.45, display: "flex" }} />
