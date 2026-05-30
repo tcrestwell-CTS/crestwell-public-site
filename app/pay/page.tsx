@@ -210,7 +210,7 @@ export default function PublicPayPage() {
         payment_method: { card: cardRef.current, billing_details: { name, email } },
       });
       if (stripeErr) throw new Error(stripeErr.message);
-      if (paymentIntent.status === 'succeeded') setStatus('success');
+      if (paymentIntent.status === 'succeeded') { logIp('succeeded', { page: 'pay' }); setStatus('success'); }
     } catch (err: any) {
       setError(err.message || 'Payment failed. Please try again.');
       setStatus('error');
