@@ -58,12 +58,55 @@ serve(async (req) => {
 
   if (ANTHROPIC_KEY) {
     try {
-      const prompt = `Lead qualification for Crestwell Travel (SE US: cruises, all-inclusive, group travel).
+      // Pre-compute signals for the prompt
+      const now = new Date();
+      const daysUntilDepart = lead.departure_date
+        ? Math.round((new Date(lead.departure_date).getTime() - now.getTime()) / 86400000)
+        : null;
+      const hasMessage  = !!(lead.message && lead.message.trim().length > 5);
+      const hasBudget   = !!(lead.budget && lead.budget.trim().length > 0);
+      const hasPhone    = !!(lead.phone && lead.phone.trim().length > 6);
+      const emailLocal  = lead.email.split('@')[0].toLowerCase();
+      const nameParts   = `${lead.first_name} ${lead.last_name}`.toLowerCase().replace(/[^a-z ]/g,'').split(' ');
+      // Check if any name part appears in email (name-email match signal)
+      const emailMatchesName = nameParts.some(p => p.length > 2 && emailLocal.includes(p));
+
+      const prompt = \`Lead qualification for Crestwell Travel (SE US: cruises, all-inclusive, group travel, vacation rentals).
 Return ONLY valid JSON: {"score":<1-100>,"stage":"Qualified|Quote Needed|Call Needed","summary":"<one sentence>","tags":["tag1"],"next_action":"<one sentence>","wants_financing":<boolean>}
-Scoring: 80+=ready to quote. 60-79=missing details. 40-59=vague. Call Needed=group10+/luxury/financing.
-Lead: ${lead.first_name} ${lead.last_name} | ${lead.email} | ${lead.phone||'no phone'}
-${lead.trip_type||'?'} to ${lead.destination||'?'} | Depart: ${lead.departure_date||'flexible'} | Adults: ${lead.travelers_adults||'?'} | Budget: ${lead.budget||'?'}
-Message: ${lead.message||'none'}`;
+
+SCORING RULES (apply ALL that match, scores are cumulative):
+Base score: 50
+
+POSITIVE signals (add points):
++20 if message is detailed and specific (>20 words with clear intent)
++15 if budget is provided
++15 if departure date is 14+ days away
++10 if phone number provided
++10 if travelers count is clear
++10 if destination is specific (not just "Caribbean" or "Europe")
++10 if email matches name pattern (emailMatchesName=${emailMatchesName})
++5  if trip type matches Crestwell core portfolio (cruise/all-inclusive/group)
+
+NEGATIVE signals (subtract points):
+-20 if departure date is within 7 days (${daysUntilDepart !== null ? daysUntilDepart + ' days out' : 'no date'}) — not realistic
+-15 if message is empty or less than 5 characters
+-15 if budget is empty
+-10 if email does NOT match name at all (emailMatchesName=${emailMatchesName} — suspicious if false)
+-10 if no phone number
+-10 if destination is vague (London hotel, "somewhere warm", etc.) with no travel context
+-15 if trip type is "Hotel Stay" only — outside Crestwell core portfolio
+-5  if departure is more than 18 months away — speculative
+
+STAGE rules:
+- score>=75: "Qualified" (ready to quote)
+- score 50-74: "Quote Needed" (has enough to work with)
+- score<50: "Call Needed" (too vague or suspicious)
+- Always "Call Needed" if group 10+ or luxury $5k+/person or financing interest
+
+Lead: \${lead.first_name} \${lead.last_name} | \${lead.email} | \${lead.phone||'no phone'}
+\${lead.trip_type||'?'} to \${lead.destination||'?'} | Depart: \${lead.departure_date||'flexible'} (\${daysUntilDepart !== null ? daysUntilDepart+' days away' : 'no date'}) | Adults: \${lead.travelers_adults||'?'} | Budget: \${lead.budget||'?'}
+Has message: \${hasMessage} | Has budget: \${hasBudget} | Has phone: \${hasPhone} | Email matches name: \${emailMatchesName}
+Message: \${lead.message||'none'}\`;
 
       const ai = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
