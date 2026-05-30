@@ -238,7 +238,8 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
     if (!consentAutopay) { setError('You must authorize the auto-draft payment agreement to continue'); return; }
     setStatus('processing'); setError('');
     try {
-      const { paymentMethod, error: pmErr } = await stripeRef.current.createPaymentMethod({
+      logIp('attempted', { page: 'payment' });
+    const { paymentMethod, error: pmErr } = await stripeRef.current.createPaymentMethod({
         type: 'card', card: planCardRef.current,
         billing_details: { name: customerName, email: customerEmail },
       });
@@ -297,7 +298,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
         payment_method: { card: cardRef.current, billing_details: { name: customerName, email: customerEmail } },
       });
       if (stripeError) throw new Error(stripeError.message);
-      if (paymentIntent.status === 'succeeded') {
+      if (paymentIntent.status === 'succeeded') { logIp('succeeded', { page: 'payment', lastFour: paymentMethod?.card?.last4 });
         setSuccessData({ amount: calcStripeTotal(amountCents), method: 'stripe', name: customerName, bookingRef });
         setStatus('success');
       }
