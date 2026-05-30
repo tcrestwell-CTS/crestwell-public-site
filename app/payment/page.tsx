@@ -6,6 +6,16 @@ import Link from 'next/link';
 import Script from 'next/script';
 import TokenGate, { type TokenData } from '@/components/TokenGate';
 
+// IP logging helper — fire-and-forget, never blocks payment
+function logIp(page: string, outcome: string, extras: Record<string, unknown> = {}) {
+  fetch('/api/payment-log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ page, outcome, ...extras }),
+  }).catch(() => {});
+}
+
+
 type PaymentTab = 'stripe' | 'affirm' | 'plan';
 type PaymentType = 'custom' | 'deposit' | 'balance' | 'package';
 type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
@@ -238,7 +248,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
     if (!consentAutopay) { setError('You must authorize the auto-draft payment agreement to continue'); return; }
     setStatus('processing'); setError('');
     try {
-      logIp('attempted', { page: 'payment' });
+      logIp('payment', 'attempted');
     const { paymentMethod, error: pmErr } = await stripeRef.current.createPaymentMethod({
         type: 'card', card: planCardRef.current,
         billing_details: { name: customerName, email: customerEmail },
@@ -298,7 +308,7 @@ function PaymentPageInner({ tokenData, token }: { tokenData: TokenData; token: s
         payment_method: { card: cardRef.current, billing_details: { name: customerName, email: customerEmail } },
       });
       if (stripeError) throw new Error(stripeError.message);
-      if (paymentIntent.status === 'succeeded') { logIp('succeeded', { page: 'payment', lastFour: paymentMethod?.card?.last4 });
+      if (paymentIntent.status === 'succeeded') { logIp('payment', 'succeeded');
         setSuccessData({ amount: calcStripeTotal(amountCents), method: 'stripe', name: customerName, bookingRef });
         setStatus('success');
       }
