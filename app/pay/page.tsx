@@ -3,6 +3,16 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
 
+// IP logging helper — fire-and-forget, never blocks payment
+function logIp(page: string, outcome: string, extras: Record<string, unknown> = {}) {
+  fetch('/api/payment-log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ page, outcome, ...extras }),
+  }).catch(() => {});
+}
+
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const STRIPE_PK = 'pk_live_51RrgVIPJljF0WNcYMZK3XH5QGmffC4LsV0e8EdSglGdrD8SlY9akQwJhBO8N2d87i574E3ONKvbsabfgKc3SDSq500gJ96MghZ';
 const SITE_DOMAIN = 'https://crestwellgetaways.com';
@@ -210,7 +220,7 @@ export default function PublicPayPage() {
         payment_method: { card: cardRef.current, billing_details: { name, email } },
       });
       if (stripeErr) throw new Error(stripeErr.message);
-      if (paymentIntent.status === 'succeeded') { logIp('succeeded', { page: 'pay' }); setStatus('success'); }
+      if (paymentIntent.status === 'succeeded') { logIp('pay', 'succeeded'); setStatus('success'); }
     } catch (err: any) {
       setError(err.message || 'Payment failed. Please try again.');
       setStatus('error');
