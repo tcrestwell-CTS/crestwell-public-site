@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logPaymentIp } from "@/lib/logPaymentIp";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { Resend } from "resend";
@@ -27,7 +28,10 @@ export async function POST(req: Request) {
       .eq("token", token)
       .maybeSingle();
 
-    if (!tok) return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+    if (!tok) {
+      await logPaymentIp({ req, page: "rental-payment", outcome: "blocked", failureReason: "invalid_token" });
+      return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+    }
     if (tok.used) return NextResponse.json({ error: "Token already used" }, { status: 400 });
     if (new Date(tok.expires_at) < new Date()) {
       return NextResponse.json({ error: "Token expired" }, { status: 400 });
@@ -59,7 +63,10 @@ export async function POST(req: Request) {
       .select("*")
       .single();
 
-    if (updErr) return NextResponse.json({ error: updErr.message }, { status: 500 });
+    if (updErr) {
+      await logPaymentIp({ req, page: "rental-payment", outcome: "failed", failureReason: updErr.message });
+      return NextResponse.json({ error: updErr.message }, { status: 500 });
+    }
 
     // Mark token used
     await supabase
@@ -93,6 +100,16 @@ export async function POST(req: Request) {
     } catch (emailErr) {
       console.error("Notification email failed (non-fatal):", emailErr);
     }
+
+    // Log successful payment IP
+    await logPaymentIp({
+      req,
+      page: "rental-payment",
+      outcome: "succeeded",
+      stripePmId: paymentMethodId,
+      lastFour: last4 ? String(last4) : undefined,
+      rentalId: tok.rental_id,
+    });
 
     return NextResponse.json({ success: true });
   } catch (e: any) {
