@@ -8,7 +8,7 @@
 // has EXECUTE on those functions only — no direct table access.
 //
 // Setup:
-//   npm i @supabase/supabase-js react-markdown
+//   npm i @supabase/supabase-js   (likely already installed on the public site)
 //   NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY in env
 //
 // Styling is intentionally plain Tailwind — swap in the Crestwell brand
@@ -16,7 +16,6 @@
 
 import { useEffect, useState, use } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import ReactMarkdown from 'react-markdown';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -149,7 +148,7 @@ export default function ProposalPage({ params }: { params: Promise<{ token: stri
         // Fallback: no structured options yet — render the draft and approve as a whole
         p.proposal_draft && (
           <section className="prose prose-sm max-w-none mb-8">
-            <ReactMarkdown>{p.proposal_draft}</ReactMarkdown>
+            <Markdown text={p.proposal_draft} />
           </section>
         )
       )}
@@ -186,6 +185,59 @@ function travelerLabel(p: Proposal) {
   const parts = [`${a} adult${a === 1 ? '' : 's'}`];
   if (c) parts.push(`${c} child${c === 1 ? '' : 'ren'}`);
   return parts.join(', ');
+}
+
+// Minimal markdown renderer (no dependency). Handles headings, bullet lists,
+// bold, and paragraphs — enough for Terrance's draft format. Used only as the
+// fallback when proposal_options is null.
+function Markdown({ text }: { text: string }) {
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const blocks: React.ReactNode[] = [];
+  let list: string[] = [];
+  const flush = () => {
+    if (list.length) {
+      blocks.push(
+        <ul key={`ul${blocks.length}`} className="list-disc pl-5 space-y-1">
+          {list.map((li, i) => (
+            <li key={i}>{inline(li)}</li>
+          ))}
+        </ul>
+      );
+      list = [];
+    }
+  };
+  lines.forEach((raw, idx) => {
+    const line = raw.trimEnd();
+    const h = /^(#{1,3})\s+(.*)$/.exec(line);
+    const bullet = /^[-*]\s+(.*)$/.exec(line);
+    if (h) {
+      flush();
+      const level = h[1].length;
+      const cls = level === 1 ? 'text-xl font-semibold mt-4 mb-2'
+        : level === 2 ? 'text-lg font-semibold mt-4 mb-2'
+        : 'text-base font-semibold mt-3 mb-1';
+      blocks.push(<p key={idx} className={cls}>{inline(h[2])}</p>);
+    } else if (bullet) {
+      list.push(bullet[1]);
+    } else if (line.trim() === '') {
+      flush();
+    } else {
+      flush();
+      blocks.push(<p key={idx} className="mb-2 leading-relaxed">{inline(line)}</p>);
+    }
+  });
+  flush();
+  return <div>{blocks}</div>;
+
+  // **bold** -> <strong>, everything else literal
+  function inline(s: string): React.ReactNode {
+    const parts = s.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, i) =>
+      /^\*\*[^*]+\*\*$/.test(part)
+        ? <strong key={i}>{part.slice(2, -2)}</strong>
+        : <span key={i}>{part}</span>
+    );
+  }
 }
 
 function Centered({ children }: { children: React.ReactNode }) {
