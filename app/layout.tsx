@@ -111,6 +111,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* Google Tag Manager */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P3HVW4HR');` }} />
+        {/* End Google Tag Manager */}
         <meta charSet="utf-8" />
         <meta name="description" content="Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations across GA, TN & AL." />
         <meta name="robots" content="index, follow" />
@@ -162,23 +165,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           })();
         `}</Script>
 
-      {/* Google Tag Manager */}
-      <Script
-        id="gtm-script"
-        strategy="afterInteractive"
-        src="https://www.googletagmanager.com/gtm.js?id=GTM-P3HVW4HR"
-      />
-      {/* End Google Tag Manager */}
-
       {/* TrustBox script */}
       {/* eslint-disable-next-line @next/next/no-sync-scripts */}
       <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
       {/* End TrustBox script */}
       </head>
       <body>
-      {/* Google Tag Manager (noscript) */}
-      <noscript dangerouslySetInnerHTML={{ __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3HVW4HR" height="0" width="0" style="display:none;visibility:hidden"></iframe>` }} />
-      {/* End Google Tag Manager (noscript) */}
+        {/* Google Tag Manager (noscript) */}
+        <noscript dangerouslySetInnerHTML={{ __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3HVW4HR" height="0" width="0" style="display:none;visibility:hidden"></iframe>` }} />
+        {/* End Google Tag Manager (noscript) */}
         <NavbarFooterWrapper>
           {children}
         </NavbarFooterWrapper>
