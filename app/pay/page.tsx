@@ -185,7 +185,13 @@ export default function PublicPayPage() {
   }, []);
 
   useEffect(() => {
-    if (tab === 'stripe') { if (window.StripeInstance) mountStripe(); }
+    if (tab === 'stripe') {
+      // Poll until Stripe script is loaded and DOM ref is ready
+      const poll = setInterval(() => {
+        if (window.StripeInstance) { clearInterval(poll); mountStripe(); }
+      }, 100);
+      setTimeout(() => clearInterval(poll), 10000); // give up after 10s
+    }
     else {
       if (cardRef.current) { cardRef.current.unmount(); cardRef.current = null; setStripeReady(false); }
     }
@@ -312,7 +318,7 @@ export default function PublicPayPage() {
 
   return (
     <>
-      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={() => { if (tab === 'stripe') mountStripe(); }} />
+      <Script id="stripe-js" src="https://js.stripe.com/v3/" strategy="afterInteractive" onLoad={() => { (window as any).StripeInstance = (window as any).Stripe; mountStripe(); }} />
       <Script id="affirm-js" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
         _affirm_config = { public_api_key: "${process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || ''}", script: "https://cdn1.affirm.com/js/v2/affirm.js" };
         (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,_affirm_config,"affirm","checkout","ui","script","ready");
