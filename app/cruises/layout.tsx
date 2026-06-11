@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Cruise Vacations | Crestwell Travel Services',
     description: 'Search 1,670+ sailings from every major cruise line — expertly matched to you at rates you won\'t find online.',
     url: '/cruises',
+    images: ['/images/og-default.jpg'],
   },
 };
 

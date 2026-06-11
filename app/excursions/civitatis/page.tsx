@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     title: "Civitatis Tours & Activities | Crestwell Travel Services",
     description: "Top-rated tours through Civitatis — Latin America, Spain, Portugal, and free cancellation worldwide.",
     url: '/excursions/civitatis',
+    images: ['/images/og-default.jpg'],
   },
 };
 

@@ -56,6 +56,7 @@ export function cityPageMetadata(slug: string) {
       url,
       siteName: 'Crestwell Travel Services',
       type: 'website' as const,
+      images: ['/images/og-default.jpg'],
     },
   };
 }

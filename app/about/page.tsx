@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: 'Meet Tim Crestwell — Founder & Travel Advisor',
     description: 'A cybersecurity engineer turned travel advisor. ASTA member, CLIA Certified, Carnival Diamond Graduate. Based in Chattanooga, TN.',
     url: '/about',
+    images: ['/images/og-default.jpg'],
   },
 };
 

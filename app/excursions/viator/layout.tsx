@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Viator Tours & Shore Excursions | Crestwell Travel Services',
     description: 'Browse 300,000+ tours and shore excursions through Viator — curated by Crestwell.',
     url: '/excursions/viator',
+    images: ['/images/og-default.jpg'],
   },
 };
 

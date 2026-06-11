@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Request a Free Travel Quote | Crestwell Travel Services',
     description: 'Three hand-picked cruise or resort options within 24 hours. Free planning, exclusive rates, no obligation.',
     url: '/request-quote',
+    images: ['/images/og-default.jpg'],
   },
 };
 

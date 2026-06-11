@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Contact Us | Crestwell Travel Services',
     description: 'Reach your travel advisor by phone, email, or our contact form — a real person, not a call center.',
     url: '/contact',
+    images: ['/images/og-default.jpg'],
   },
 };
 

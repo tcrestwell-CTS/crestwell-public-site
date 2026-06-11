@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     url: 'https://crestwellgetaways.com/vacations-by-rail',
     siteName: 'Crestwell Travel Services',
     type: 'website',
+    images: ['/images/og-default.jpg'],
   },
 };
 

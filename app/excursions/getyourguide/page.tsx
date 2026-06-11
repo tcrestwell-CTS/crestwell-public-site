@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     title: "GetYourGuide Experiences | Crestwell Travel Services",
     description: "Top-rated tours and experiences through GetYourGuide — city tours, skip-the-line access, and more.",
     url: '/excursions/getyourguide',
+    images: ['/images/og-default.jpg'],
   },
 };
 

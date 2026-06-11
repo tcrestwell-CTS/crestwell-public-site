@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: 'Solo & Women\'s Travel | Crestwell Travel Services',
     description: 'Safe, empowering adventures crafted for solo travelers and women\'s groups — explore the world on your terms.',
     url: '/solo-travel',
+    images: ['/images/og-default.jpg'],
   },
 };
 

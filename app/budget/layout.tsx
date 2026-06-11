@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Vacation Budget Calculator | Crestwell Travel Services',
     description: 'See what your dream trip really costs in 60 seconds — and what fits your monthly budget.',
     url: '/budget',
+    images: ['/images/og-default.jpg'],
   },
 };
 

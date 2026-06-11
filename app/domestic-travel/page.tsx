@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: 'Domestic Travel | Crestwell Travel Services',
     description: 'Hotels, vacation homes, and packages across the USA — curated and booked by Crestwell Travel.',
     url: 'https://crestwellgetaways.com/domestic-travel',
+    images: ['/images/og-default.jpg'],
   },
 };
 

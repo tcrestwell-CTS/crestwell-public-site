@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: "Shore Excursions & Tours | Crestwell Travel Services",
     description: "Shore excursions and destination activities through Viator, GetYourGuide, and Civitatis.",
     url: '/excursions',
+    images: ['/images/og-default.jpg'],
   },
 };
 

@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     title: 'All-Inclusive Resorts | Crestwell Travel Services',
     description: 'Sandals, Secrets, Beaches, and more — unlimited dining, drinks, and experiences included.',
     url: '/all-inclusive',
+    images: ['/images/og-default.jpg'],
   },
 };
 

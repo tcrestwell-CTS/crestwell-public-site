@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: 'Destinations | Crestwell Travel Services',
     description: 'Caribbean, Bahamas, Alaska, Europe, Mexico & the Mediterranean — explore where we can take you.',
     url: '/destinations',
+    images: ['/images/og-default.jpg'],
   },
 };
 

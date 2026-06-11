@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Plan Your Trip | Crestwell Travel Services',
     description: 'Tell us your style, dates, and budget — a dedicated advisor builds the options around you.',
     url: '/plan',
+    images: ['/images/og-default.jpg'],
   },
 };
 

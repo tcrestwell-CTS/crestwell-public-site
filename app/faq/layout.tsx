@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Travel Planning FAQ | Crestwell Travel Services',
     description: 'Planning fees, service areas, group travel, cruise quotes, and more — answered honestly.',
     url: '/faq',
+    images: ['/images/og-default.jpg'],
   },
 };
 
