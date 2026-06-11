@@ -21,7 +21,7 @@ type Slide = {
 const slides: Slide[] = [
   {
     id: 1,
-    image: "https://luxurylaunches.com/wp-content/uploads/2024/05/ritz-carlton-ilma-yacht.jpg",
+    image: "/images/luxury-cruise-ship.jpg",
     subtitle: "Escape the ordinary.",
     title: "Luxury Cruise Vacations",
     description: "From Caribbean getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.",
@@ -30,7 +30,7 @@ const slides: Slide[] = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1400&q=85",
+    image: "/images/all-inclusive-resort-pool.jpg",
     subtitle: "See more, stress less.",
     title: "All-Inclusive Resorts",
     description: "Sandals, Secrets, Beaches, and more — unlimited dining, drinks, and experiences included.",
@@ -39,7 +39,7 @@ const slides: Slide[] = [
   },
   {
     id: 3,
-    image: "https://myextraordinaryadventures.com/wp-content/uploads/2022/09/group-cruises-8-700x467.jpg",
+    image: "/images/group-travel-friends.jpg",
     subtitle: "Travel better, together.",
     title: "Cruises & Group Travel",
     description: "Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.",
@@ -48,7 +48,7 @@ const slides: Slide[] = [
   },
   {
     id: 4,
-    image: "https://media.istockphoto.com/id/1128224309/photo/black-woman-relaxing-on-beach-sand.jpg?s=170667a&w=0&k=20&c=7YuOIpi3qyHBKt3E_ZJvRhvjQKKDcclojqG-ZdvGJ2c=",
+    image: "/images/solo-womens-travel-beach.jpg",
     subtitle: "Empowering journeys with every step.",
     title: "Solo & Women's Travel",
     description: "Safe, empowering adventures crafted for solo travelers and women's groups — explore the world on your terms.",
@@ -57,7 +57,7 @@ const slides: Slide[] = [
   },
   {
     id: 5,
-    image: "https://tse3.mm.bing.net/th/id/OIP.rCeQtTRz28SNBX2JlvnoiwHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
+    image: "/images/family-beach-vacation.jpg",
     subtitle: "Adventure meets elegance.",
     title: "Family Vacations",
     description: "Disney, Universal, Aulani — kid-friendly adventures with every detail handled for you.",
@@ -66,7 +66,7 @@ const slides: Slide[] = [
   },
   {
     id: 6,
-    image: "https://images.unsplash.com/photo-1501426026826-31c667bdf23d?w=1400&q=85",
+    image: "/images/custom-travel-planning.jpg",
     subtitle: "Your trip, upgraded.",
     title: "Custom Travel Planning",
     description: "Personalized itineraries crafted around your style, budget, and bucket list.",
