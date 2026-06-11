@@ -131,6 +131,10 @@ export default function Footer() {
             <div className="overline" style={{ marginBottom: 20 }}>Contact</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
+                <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate-light)', marginBottom: 4 }}>Based In</div>
+                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem' }}>Chattanooga, TN</div>
+              </div>
+              <div>
                 <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--slate-light)', marginBottom: 4 }}>Phone</div>
                 <a href="tel:8885086893" style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem', textDecoration: 'none' }}>
                   888.508.6893
@@ -188,24 +192,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* NAP Trust Block — local SEO signals */}
+        {/* Accreditations / legal strip — contact details live in the Contact column above */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '28px 32px', maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, alignItems: 'start' }}>
-          <div>
-            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Contact</div>
-            <address style={{ fontStyle: 'normal', fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8 }}>
-              <div>Chattanooga, TN</div>
-              <a href="tel:+18885086893" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>888.508.6893</a><br />
-              <a href="mailto:info@crestwellgetaways.com" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>info@crestwellgetaways.com</a>
-            </address>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Service Areas</div>
-            <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, margin: 0 }}>
-              Georgia · Tennessee · Alabama · Florida<br />
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>Serving clients nationwide</span>
-            </p>
-          </div>
           <div>
             <div style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8, fontFamily: 'var(--font-body)' }}>Accreditations</div>
             <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, margin: 0 }}>

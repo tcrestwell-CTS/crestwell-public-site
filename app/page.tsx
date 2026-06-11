@@ -1,12 +1,41 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import FeaturedTrips from '@/components/FeaturedTrips';
 import TrustpilotWidget from '@/components/TrustpilotWidget';
 import NewsletterSection from '@/components/NewsletterSection';
 import PartnerLogos from '@/components/PartnerLogos';
 import TravelHeroSlider from '@/components/TravelHeroSlider';
-import LeadMagnetForm from '@/components/LeadMagnetForm';
+
+// Advisor headshot with a graceful initials fallback until the real
+// /images/tim-headshot.jpg is uploaded (or if it ever 404s).
+function AdvisorHeadshot() {
+  const [imgFailed, setImgFailed] = useState(false);
+  if (imgFailed) {
+    return (
+      <div style={{
+        width: 160, height: 160, borderRadius: '50%',
+        border: '3px solid var(--gold)',
+        background: 'linear-gradient(135deg, rgba(201,168,76,0.25), rgba(13,27,42,0.9))',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
+      }}>
+        <span style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', color: 'var(--gold)', letterSpacing: '0.05em' }}>TC</span>
+      </div>
+    );
+  }
+  return (
+    <Image
+      src="/images/tim-headshot.jpg"
+      alt="T. Crestwell, Owner & Travel Advisor"
+      width={160}
+      height={160}
+      style={{ borderRadius: '50%', border: '3px solid var(--gold)', objectFit: 'cover', boxShadow: '0 8px 40px rgba(0,0,0,0.4)' }}
+      onError={() => setImgFailed(true)}
+    />
+  );
+}
 
 const services = [
   { icon: '⚓', title: 'Cruise Vacations', description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.' },
@@ -168,15 +197,7 @@ export default function HomePage() {
       <section style={{ background: 'var(--navy)', padding: '80px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 64, alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-            <div style={{
-              width: 200, height: 200, borderRadius: '50%',
-              border: '3px solid var(--gold)',
-              background: 'linear-gradient(135deg, rgba(201,168,76,0.15), rgba(13,27,42,0.9))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '5rem', boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
-            }}>
-              👤
-            </div>
+            <AdvisorHeadshot />
             <div style={{ textAlign: 'center' }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', color: 'white', fontWeight: 400 }}>T. Crestwell</p>
               <p style={{ fontSize: '0.72rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginTop: 4 }}>
@@ -419,26 +440,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── NEWSLETTER ── */}
-      {/* ── Lead Magnet ──────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--cream)', padding: '72px 24px' }}>
-        <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontFamily: 'var(--font-body)', marginBottom: 12 }}>
-            Free Download
-          </p>
-          <h2 className="font-display" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 400, color: 'var(--navy)', marginBottom: 12 }}>
-            Southeast Cruiser's Port Guide
-          </h2>
-          <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 32, fontFamily: 'var(--font-body)' }}>
-            Tim's honest take on every major port — what to book, what to skip, and the excursions actually worth your time. Used by 1,200+ travelers.
-          </p>
-          <LeadMagnetForm city="general" cityName="Southeast" />
-          <p style={{ fontSize: '0.75rem', color: 'var(--slate)', marginTop: 16, fontFamily: 'var(--font-body)' }}>
-            Free. No spam. Unsubscribe anytime.
-          </p>
-        </div>
-      </section>
-
+      {/* ── LEAD MAGNET / NEWSLETTER (Port Guide download + email capture) ── */}
       <NewsletterSection />
 
       {/* ── STAY CONNECTED ── */}
