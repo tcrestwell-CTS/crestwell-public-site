@@ -21,15 +21,28 @@ async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) 
 
 const SITE_URL = 'https://crestwellgetaways.com';
 const OG_IMAGE = 'https://crestwellgetaways.com/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png';
+const SOCIAL_IMAGE = '/images/og-default.jpg';
 
 // Fix: Title trimmed to under 60 chars
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     template: '%s',
     default: 'Crestwell Travel Services | Cruises, Resorts & Group Travel',
   },
   description: 'Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations across GA, TN & AL.',
-  keywords: ['travel agency', 'cruises', 'all-inclusive', 'family vacations', 'Georgia', 'Tennessee', 'Alabama', 'Chattanooga'],
+  openGraph: {
+    siteName: 'Crestwell Travel Services',
+    type: 'website',
+    locale: 'en_US',
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: 'Crestwell Travel Services — See the World One Port at a Time' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Crestwell Travel Services | Cruises & Resorts',
+    description: 'Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations.',
+    images: [SOCIAL_IMAGE],
+  },
 };
 
 // JSON-LD: Organization + TravelAgency (expanded with LocalBusiness fields)
@@ -115,7 +128,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P3HVW4HR');` }} />
         {/* End Google Tag Manager */}
         <meta charSet="utf-8" />
-        <meta name="description" content="Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations across GA, TN & AL." />
         <meta name="robots" content="index, follow" />
 
         {/* Favicon */}
@@ -126,16 +138,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Google Search Console */}
         <meta name="google-site-verification" content="B9Gt4g3dHtK4WGm22Iv_ucUai4QFAa-eRjlI7tMAuNY" />
 
-        {/* Open Graph — base tags only; page-level layouts override title/description/image/url */}
-        <meta property="og:site_name" content="Crestwell Travel Services" />
-        <meta property="og:type" content="website" />
-        <meta property="og:locale" content="en_US" />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Crestwell Travel Services | Cruises & Resorts" />
-        <meta name="twitter:description" content="Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations." />
-        <meta name="twitter:image" content={OG_IMAGE} />
+        {/* OG / Twitter tags are rendered from the metadata export above */}
 
         {/* JSON-LD Structured Data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrganization) }} />
