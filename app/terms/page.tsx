@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Terms & Conditions',
-  description: 'Terms and Conditions for Crestwell Travel Services LLC.',
+  title: 'Terms & Conditions | Crestwell Travel Services',
+  description: 'Booking terms and conditions for Crestwell Travel Services LLC — payments, cancellations, supplier policies, and traveler responsibilities.',
+  alternates: { canonical: '/terms' },
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

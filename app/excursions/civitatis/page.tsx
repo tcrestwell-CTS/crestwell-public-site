@@ -6,6 +6,12 @@ import CivitatisContent from "@/components/CivitatisContent";
 export const metadata: Metadata = {
   title: "Civitatis Tours & Activities | Crestwell Travel Services",
   description: "Browse top-rated tours through Civitatis — best for Latin America, Spain, Portugal, and free cancellation options worldwide.",
+  alternates: { canonical: '/excursions/civitatis' },
+  openGraph: {
+    title: "Civitatis Tours & Activities | Crestwell Travel Services",
+    description: "Top-rated tours through Civitatis — Latin America, Spain, Portugal, and free cancellation worldwide.",
+    url: '/excursions/civitatis',
+  },
 };
 
 export default function CivitatisPage() {

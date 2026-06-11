@@ -1,4 +1,4 @@
-import { cities } from '@/data/cities';
+import { cities, cityPageMetadata } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
@@ -8,20 +8,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }) {
   const { city } = await params;
-  const d = cities.find((c) => c.slug === city);
-  if (!d) return {};
-  return {
-    title: d.metaTitle,
-    description: d.metaDescription,
-    alternates: { canonical: `https://crestwellgetaways.com/travel-agent-${d.slug}` },
-    openGraph: {
-      title: d.metaTitle,
-      description: d.metaDescription,
-      url: `https://crestwellgetaways.com/travel-agent-${d.slug}`,
-      siteName: 'Crestwell Travel Services',
-      type: 'website',
-    },
-  };
+  return cityPageMetadata(city);
 }
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {

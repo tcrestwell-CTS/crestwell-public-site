@@ -5,6 +5,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 export const metadata: Metadata = {
   title: 'Domestic Travel Packages | Hotels, Vacation Homes & Packages | Crestwell Travel',
   description: 'Explore domestic travel with Crestwell — luxury vacation homes via Plum Guide, vacation packages via Delta Vacations & American Vacations, and preferred hotel rates at Hilton, Hyatt, Omni, Marriott and more.',
+  alternates: { canonical: '/domestic-travel' },
   openGraph: {
     title: 'Domestic Travel | Crestwell Travel Services',
     description: 'Hotels, vacation homes, and packages across the USA — curated and booked by Crestwell Travel.',

@@ -1,21 +1,10 @@
-import { cities } from '@/data/cities';
+import { cities, cityPageMetadata } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import LeadMagnetForm from '@/components/LeadMagnetForm';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Travel Agent Huntsville AL | Cruises & Resorts | Crestwell',
-  description: 'Huntsville',
-  alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-huntsville' },
-  openGraph: {
-    title: 'Travel Agent Huntsville AL | Cruises & Resorts | Crestwell',
-    description: 'Huntsville',
-    url: 'https://crestwellgetaways.com/travel-agent-huntsville',
-    siteName: 'Crestwell Travel Services',
-    type: 'website',
-  },
-};
+export const metadata: Metadata = cityPageMetadata('huntsville');
 
 export default function Page() {
   const cityData = cities.find((c) => c.slug === 'huntsville');

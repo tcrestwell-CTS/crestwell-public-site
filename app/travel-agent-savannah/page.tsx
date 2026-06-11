@@ -1,21 +1,10 @@
-import { cities } from '@/data/cities';
+import { cities, cityPageMetadata } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import LeadMagnetForm from '@/components/LeadMagnetForm';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Travel Agent Savannah GA | Cruises & Resorts | Crestwell',
-  description: 'Savannah',
-  alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-savannah' },
-  openGraph: {
-    title: 'Travel Agent Savannah GA | Cruises & Resorts | Crestwell',
-    description: 'Savannah',
-    url: 'https://crestwellgetaways.com/travel-agent-savannah',
-    siteName: 'Crestwell Travel Services',
-    type: 'website',
-  },
-};
+export const metadata: Metadata = cityPageMetadata('savannah');
 
 export default function Page() {
   const cityData = cities.find((c) => c.slug === 'savannah');

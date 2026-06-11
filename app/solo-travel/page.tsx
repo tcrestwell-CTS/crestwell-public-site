@@ -5,6 +5,12 @@ import Breadcrumb from "@/components/Breadcrumb";
 export const metadata: Metadata = {
   title: 'Solo & Women\'s Travel | Crestwell Travel Services',
   description: 'Safe, empowering solo travel and women\'s group vacations. Norwegian Studio Cabins, Virgin Voyages adults-only cruises, and solo-friendly all-inclusive resorts — expertly planned by Crestwell.',
+  alternates: { canonical: '/solo-travel' },
+  openGraph: {
+    title: 'Solo & Women\'s Travel | Crestwell Travel Services',
+    description: 'Safe, empowering adventures crafted for solo travelers and women\'s groups — explore the world on your terms.',
+    url: '/solo-travel',
+  },
 };
 
 const cruises = [

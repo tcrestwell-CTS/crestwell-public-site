@@ -37,6 +37,29 @@ export type CityData = {
   faqs: { q: string; a: string }[];
 };
 
+// Shared SEO metadata for the /travel-agent-{city} landing pages — used by the
+// static city pages and the dynamic [city] template so titles/descriptions stay
+// consistent and city-specific.
+export function cityPageMetadata(slug: string) {
+  const d = cities.find((c) => c.slug === slug);
+  if (!d) return {};
+  const state = d.cityWithState.split(', ')[1];
+  const title = `Travel Agent in ${d.city}, ${state} | Cruises & All-Inclusive Vacations | Crestwell`;
+  const url = `https://crestwellgetaways.com/travel-agent-${d.slug}`;
+  return {
+    title,
+    description: d.metaDescription,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description: d.metaDescription,
+      url,
+      siteName: 'Crestwell Travel Services',
+      type: 'website' as const,
+    },
+  };
+}
+
 export const cities: CityData[] = [
   // ---------------- ATLANTA ----------------
   {

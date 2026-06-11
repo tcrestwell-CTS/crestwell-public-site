@@ -1,21 +1,10 @@
-import { cities } from '@/data/cities';
+import { cities, cityPageMetadata } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import LeadMagnetForm from '@/components/LeadMagnetForm';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Travel Agent Atlanta | Cruises & All-Inclusive | Crestwell',
-  description: 'Atlanta',
-  alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-atlanta' },
-  openGraph: {
-    title: 'Travel Agent Atlanta | Cruises & All-Inclusive | Crestwell',
-    description: 'Atlanta',
-    url: 'https://crestwellgetaways.com/travel-agent-atlanta',
-    siteName: 'Crestwell Travel Services',
-    type: 'website',
-  },
-};
+export const metadata: Metadata = cityPageMetadata('atlanta');
 
 export default function Page() {
   const cityData = cities.find((c) => c.slug === 'atlanta');

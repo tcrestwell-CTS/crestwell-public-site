@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
-  description: 'Privacy Policy for Crestwell Travel Services LLC.',
+  title: 'Privacy Policy | Crestwell Travel Services',
+  description: 'How Crestwell Travel Services LLC collects, uses, and protects your personal information — and the choices you have about your data.',
+  alternates: { canonical: '/privacy' },
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

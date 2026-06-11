@@ -4,8 +4,14 @@ import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
-  title: 'All-Inclusive Resorts',
+  title: 'All-Inclusive Resorts | Crestwell Travel Services',
   description: 'Sandals, Secrets, Beaches, and more. Crestwell Travel Services specializes in all-inclusive resort packages for families, couples, and groups.',
+  alternates: { canonical: '/all-inclusive' },
+  openGraph: {
+    title: 'All-Inclusive Resorts | Crestwell Travel Services',
+    description: 'Sandals, Secrets, Beaches, and more — unlimited dining, drinks, and experiences included.',
+    url: '/all-inclusive',
+  },
 };
 
 const resorts = [

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team. Plan smarter, travel better.',
   openGraph: {
     type: 'website',
-    url: 'https://www.crestwellgetaways.com/blog',
+    url: 'https://crestwellgetaways.com/blog',
     title: 'Travel Tips & Guides | Crestwell Travel Services',
     description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team. Plan smarter, travel better.',
     siteName: 'Crestwell Travel Services',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     images: ['https://crestwellgetaways.com/eurotour-og.webp?v=2'],
   },
   alternates: {
-    canonical: 'https://www.crestwellgetaways.com/blog',
+    canonical: 'https://crestwellgetaways.com/blog',
   },
 };
 
