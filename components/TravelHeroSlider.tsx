@@ -21,7 +21,7 @@ type Slide = {
 const slides: Slide[] = [
   {
     id: 1,
-    image: "https://luxurylaunches.com/wp-content/uploads/2024/05/ritz-carlton-ilma-yacht.jpg",
+    image: "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=1400&q=85",
     subtitle: "Escape the ordinary.",
     title: "Luxury Cruise Vacations",
     description: "From Caribbean getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.",
@@ -39,7 +39,7 @@ const slides: Slide[] = [
   },
   {
     id: 3,
-    image: "https://myextraordinaryadventures.com/wp-content/uploads/2022/09/group-cruises-8-700x467.jpg",
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=85",
     subtitle: "Travel better, together.",
     title: "Cruises & Group Travel",
     description: "Corporate retreats, reunions, and milestone celebrations — we coordinate groups of any size.",
@@ -48,7 +48,7 @@ const slides: Slide[] = [
   },
   {
     id: 4,
-    image: "https://media.istockphoto.com/id/1128224309/photo/black-woman-relaxing-on-beach-sand.jpg?s=170667a&w=0&k=20&c=7YuOIpi3qyHBKt3E_ZJvRhvjQKKDcclojqG-ZdvGJ2c=",
+    image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=85"  //&w=0&k=20&c=7YuOIpi3qyHBKt3E_ZJvRhvjQKKDcclojqG-ZdvGJ2c=",
     subtitle: "Empowering journeys with every step.",
     title: "Solo & Women's Travel",
     description: "Safe, empowering adventures crafted for solo travelers and women's groups — explore the world on your terms.",
@@ -57,7 +57,7 @@ const slides: Slide[] = [
   },
   {
     id: 5,
-    image: "https://tse3.mm.bing.net/th/id/OIP.rCeQtTRz28SNBX2JlvnoiwHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=85",
     subtitle: "Adventure meets elegance.",
     title: "Family Vacations",
     description: "Disney, Universal, Aulani — kid-friendly adventures with every detail handled for you.",
