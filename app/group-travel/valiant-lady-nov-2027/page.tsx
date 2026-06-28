@@ -15,9 +15,64 @@ const PROMOTIONS = [
 const CATEGORIES = [
   {
     section: "Sea Terraces",
+    priceFrom: "$2,202",
     rows: [
       { code: "TC", name: "Central Sea Terrace", category: "Balcony", maxOccupancy: 3, pricePerRoom: "$2,292", defaultPromo: "Buy One, Get One Sailor % Off" },
       { code: "TR", name: "The Sea Terrace",     category: "Balcony", maxOccupancy: 4, pricePerRoom: "$2,202", defaultPromo: "Buy One, Get One Sailor % Off" },
+    ],
+  },
+  {
+    section: "Insider",
+    priceFrom: "$1,290",
+    rows: [
+      {
+        code: "IN", name: "The Insider", category: "Interior", maxOccupancy: 3, defaultPromo: "Base Fare, Buy One Get One Sailor % Off",
+        multiPrice: [
+          { label: "Base Fare",        price: "$1,542" },
+          { label: "Essential Fare",   price: "$1,600" },
+          { label: "Premium Fare",     price: "$2,050" },
+        ],
+      },
+      {
+        code: "IZ", name: "Insider Lock It In Rate", category: "Interior", maxOccupancy: 2, defaultPromo: "Buy One, Get One Sailor % Off",
+        multiPrice: [
+          { label: "Buy One, Get One Sailor % Off", price: "$1,290" },
+        ],
+      },
+    ],
+  },
+  {
+    section: "Sea View",
+    priceFrom: "$1,590",
+    rows: [
+      {
+        code: "VW", name: "The Sea View", category: "Sea View", maxOccupancy: 3, defaultPromo: "Base Fare, Buy One Get One Sailor % Off",
+        multiPrice: [
+          { label: "Base Fare",        price: "$2,066" },
+          { label: "Essential Fare",   price: "$2,150" },
+          { label: "Premium Fare",     price: "$2,600" },
+        ],
+      },
+      {
+        code: "VZ", name: "Sea View Lock It In Rate", category: "Sea View", maxOccupancy: 2, defaultPromo: "Buy One, Get One Sailor % Off",
+        multiPrice: [
+          { label: "Buy One, Get One Sailor % Off", price: "$1,590" },
+        ],
+      },
+    ],
+  },
+  {
+    section: "RockStar Quarters",
+    priceFrom: "$6,000",
+    rows: [
+      { code: "SB",  name: "Brilliant Suite",                        category: "Suite", maxOccupancy: 4, pricePerRoom: "$6,200", defaultPromo: "Loot Offer" },
+      { code: "SCB", name: "Cheeky Corner Suite - Biggest Terrace",  category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,750", defaultPromo: "Loot Offer" },
+      { code: "SCE", name: "Cheeky Corner Suite - Even Bigger Terrace", category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,600", defaultPromo: "Loot Offer" },
+      { code: "SCP", name: "Cheeky Corner Suite - Pretty Big Terrace",  category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,550", defaultPromo: "Loot Offer" },
+      { code: "SS",  name: "Seriously Suite",                        category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,000", defaultPromo: "Loot Offer" },
+      { code: "SAB", name: "Sweet Aft Suite - Biggest Terrace",      category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,500", defaultPromo: "Loot Offer" },
+      { code: "SAE", name: "Sweet Aft Suite - Even Bigger Terrace",  category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,450", defaultPromo: "Loot Offer" },
+      { code: "SAP", name: "Sweet Aft Suite - Pretty Big Terrace",   category: "Suite", maxOccupancy: 2, pricePerRoom: "$6,400", defaultPromo: "Loot Offer" },
     ],
   },
 ];
@@ -148,8 +203,13 @@ export default function VoyagePage() {
 
           {CATEGORIES.map(section => (
             <div key={section.section} style={{ marginBottom: 48 }}>
-              <div style={{ background: "var(--gold)", padding: "12px 20px", borderRadius: "6px 6px 0 0", display: "inline-block" }}>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--navy)" }}>{section.section}</span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 0 }}>
+                <div style={{ background: "var(--gold)", padding: "12px 20px", borderRadius: "6px 6px 0 0", display: "inline-block" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--navy)" }}>{section.section}</span>
+                </div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#64748b", paddingBottom: 4 }}>
+                  Price From: <strong style={{ color: "var(--navy)" }}>USD {(section as any).priceFrom}</strong>
+                </div>
               </div>
               <div style={{ background: "white", borderRadius: "0 6px 6px 6px", border: "1px solid #e2e8f0", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
                 <div style={{ overflowX: "auto" }}>
@@ -159,25 +219,41 @@ export default function VoyagePage() {
                         <th style={th}>Code</th>
                         <th style={th}>Name</th>
                         <th style={th}>Category</th>
-                        <th style={{ ...th, textAlign: "center" }}>Max Occupancy</th>
-                        <th style={{ ...th, textAlign: "center", borderLeft: "1px solid rgba(201,168,76,0.3)" }}>Price Per Room</th>
-                        <th style={{ ...th, borderLeft: "1px solid rgba(201,168,76,0.3)" }}>Default Promotion</th>
+                        <th style={{ ...th, textAlign: "center" }}>Max Occ.</th>
+                        <th style={{ ...th, borderLeft: "1px solid rgba(201,168,76,0.3)" }}>Default Promotions</th>
+                        <th style={{ ...th, textAlign: "right", borderLeft: "1px solid rgba(201,168,76,0.3)" }}>Price Per Room</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {section.rows.map((row, idx) => (
-                        <tr key={row.code} style={{ background: idx % 2 === 0 ? "white" : "#fafbfd" }}>
-                          <td style={{ ...td, fontWeight: 700, color: "var(--navy)" }}>{row.code}</td>
-                          <td style={{ ...td, fontWeight: 500 }}>{row.name}</td>
-                          <td style={td}>{row.category}</td>
-                          <td style={{ ...td, textAlign: "center" }}>{row.maxOccupancy}</td>
-                          <td style={{ ...td, textAlign: "center", fontWeight: 700, color: "var(--navy)", borderLeft: "1px solid #f1f5f9", fontSize: "1rem" }}>
-                            USD {row.pricePerRoom}
-                          </td>
-                          <td style={{ ...td, borderLeft: "1px solid #f1f5f9", fontSize: "0.8rem", color: "#475569" }}>
-                            {row.defaultPromo}
-                          </td>
-                        </tr>
+                      {section.rows.map((row: any, idx: number) => (
+                        row.multiPrice ? (
+                          <tr key={row.code} style={{ background: idx % 2 === 0 ? "white" : "#fafbfd" }}>
+                            <td style={{ ...td, fontWeight: 700, color: "var(--navy)" }}>{row.code}</td>
+                            <td style={{ ...td, fontWeight: 500 }}>{row.name}</td>
+                            <td style={td}>{row.category}</td>
+                            <td style={{ ...td, textAlign: "center" }}>{row.maxOccupancy}</td>
+                            <td style={{ ...td, borderLeft: "1px solid #f1f5f9", fontSize: "0.8rem", color: "#475569" }}>{row.defaultPromo}</td>
+                            <td style={{ ...td, borderLeft: "1px solid #f1f5f9", padding: "8px 16px" }}>
+                              {row.multiPrice.map((mp: any) => (
+                                <div key={mp.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0", borderBottom: "1px solid #f8f9fa", gap: 16 }}>
+                                  <span style={{ fontSize: "0.78rem", color: "#0057b8", fontFamily: "var(--font-body)" }}>{mp.label}</span>
+                                  <span style={{ fontWeight: 700, color: "var(--navy)", fontSize: "0.88rem", whiteSpace: "nowrap", fontFamily: "var(--font-body)" }}>USD {mp.price}</span>
+                                </div>
+                              ))}
+                            </td>
+                          </tr>
+                        ) : (
+                          <tr key={row.code} style={{ background: idx % 2 === 0 ? "white" : "#fafbfd" }}>
+                            <td style={{ ...td, fontWeight: 700, color: "var(--navy)" }}>{row.code}</td>
+                            <td style={{ ...td, fontWeight: 500 }}>{row.name}</td>
+                            <td style={td}>{row.category}</td>
+                            <td style={{ ...td, textAlign: "center" }}>{row.maxOccupancy}</td>
+                            <td style={{ ...td, borderLeft: "1px solid #f1f5f9", fontSize: "0.8rem", color: "#475569" }}>{row.defaultPromo}</td>
+                            <td style={{ ...td, textAlign: "right", fontWeight: 700, color: "var(--navy)", borderLeft: "1px solid #f1f5f9", fontSize: "1rem" }}>
+                              USD {row.pricePerRoom}
+                            </td>
+                          </tr>
+                        )
                       ))}
                     </tbody>
                   </table>
