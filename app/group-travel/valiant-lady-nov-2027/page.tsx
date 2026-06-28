@@ -274,3 +274,33 @@ export default function VoyagePage() {
 
         </div>
       </section>
+
+      {/* ── CTA ── */}
+      <section style={{ background: "var(--navy)", padding: "72px 32px", textAlign: "center" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 18 }}>Limited Cabins Available</div>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 300, color: "white", lineHeight: 1.15, margin: "0 0 16px" }}>
+            Ready to Set Sail?
+          </h2>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.92rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.8, margin: "0 0 36px", maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
+            Contact Tim at Crestwell Travel Services to reserve your cabin. Prices are per room. Deposits secure your spot.
+          </p>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB"
+              className="btn-primary" style={{ textDecoration: "none" }}>
+              Sign Me Up →
+            </Link>
+            <a href="tel:8885086893"
+              style={{ display: "inline-block", border: "2px solid rgba(201,168,76,0.4)", color: "var(--gold-light)", padding: "13px 28px", fontFamily: "var(--font-body)", fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", textDecoration: "none", borderRadius: 2 }}>
+              Call 888.508.6893
+            </a>
+          </div>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "rgba(255,255,255,0.25)", marginTop: 28, lineHeight: 1.6 }}>
+            All itineraries, dates, times, vessel and ports are subject to change without notice.<br />
+            Voyage VL2711225NGCB · Valiant Lady · Virgin Voyages
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}
