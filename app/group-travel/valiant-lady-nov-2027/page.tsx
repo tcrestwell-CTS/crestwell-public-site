@@ -152,20 +152,59 @@ function Countdown() {
 export default function VoyagePage() {
   return (
     <>
-      {/* ── COUNTDOWN BANNER ── */}
-      <div style={{ background: "var(--navy)", borderBottom: "2px solid var(--gold)", padding: "10px 32px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: "1rem" }}>🚢</span>
-            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "white", fontWeight: 600 }}>
-              Valiant Lady sets sail <span style={{ color: "var(--gold-light)" }}>November 22, 2027</span> from Miami
-            </span>
+      {/* ── STUFFED & SAILING HERO HEADER ── */}
+      <div style={{
+        background: "linear-gradient(135deg, #0a1520 0%, #0d1b2a 40%, #1a2d1a 100%)",
+        borderBottom: "3px solid var(--gold)",
+        padding: "48px 32px 40px",
+        textAlign: "center",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+        {/* wave decoration */}
+        <div style={{ position: "absolute", inset: 0, opacity: 0.04, backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(201,168,76,1) 40px, rgba(201,168,76,1) 41px), repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(201,168,76,1) 40px, rgba(201,168,76,1) 41px)", pointerEvents: "none" }} />
+
+        <div style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}>
+          {/* emoji row */}
+          <div style={{ fontSize: "2rem", letterSpacing: "0.4em", marginBottom: 16 }}>🍽️ 🚢 🌊</div>
+
+          {/* main title */}
+          <h1 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(3rem, 9vw, 7rem)",
+            fontWeight: 400,
+            lineHeight: 0.9,
+            margin: "0 0 8px",
+            letterSpacing: "-0.01em",
+          }}>
+            <span style={{ color: "var(--gold-light)", display: "block" }}>STUFFED</span>
+            <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "0.4em", letterSpacing: "0.3em", display: "block", margin: "8px 0", fontFamily: "var(--font-body)", fontWeight: 300 }}>&amp;</span>
+            <span style={{ color: "white", display: "block" }}>SAILING</span>
+          </h1>
+
+          {/* underline accent */}
+          <div style={{ width: 120, height: 3, background: "linear-gradient(90deg, transparent, var(--gold), transparent)", margin: "20px auto 20px" }} />
+
+          {/* tagline */}
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(0.85rem,2vw,1rem)", color: "rgba(255,255,255,0.55)", letterSpacing: "0.25em", textTransform: "uppercase", margin: "0 0 8px" }}>
+            A Crestwell Group Sailing Experience
+          </p>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(0.95rem,2vw,1.2rem)", fontWeight: 300, color: "var(--gold-light)", fontStyle: "italic", margin: "0 0 32px" }}>
+            Valiant Lady · Miami · November 22–27, 2027
+          </p>
+
+          {/* CTA row */}
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link
+              href="/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB"
+              style={{ display: "inline-block", background: "var(--gold)", color: "var(--navy)", padding: "13px 32px", fontFamily: "var(--font-body)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", textDecoration: "none", borderRadius: 4 }}>
+              Sign Up Now →
+            </Link>
+            <a href="tel:8885086893"
+              style={{ display: "inline-block", border: "1px solid rgba(201,168,76,0.4)", color: "var(--gold-light)", padding: "13px 28px", fontFamily: "var(--font-body)", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", textDecoration: "none", borderRadius: 4 }}>
+              Call 888.508.6893
+            </a>
           </div>
-          <Link
-            href="/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB"
-            style={{ display: "inline-block", background: "var(--gold)", color: "var(--navy)", padding: "7px 20px", fontFamily: "var(--font-body)", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", borderRadius: 4, whiteSpace: "nowrap" }}>
-            Sign Up Now →
-          </Link>
         </div>
       </div>
 
