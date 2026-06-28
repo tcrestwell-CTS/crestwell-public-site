@@ -90,18 +90,20 @@ function CabinSelectionContent() {
 
   const handleContinue = () => {
     if (!selected) return;
+    // Build trip description for pay page
+    const tripDesc = `Stuffed & Sailing — Valiant Lady Nov 2027 | Cabin ${selected.code}: ${selected.name}${selected.fare ? " (" + selected.fare + ")" : ""} | ${guests} Guest${guests > 1 ? "s" : ""}`;
     const params = new URLSearchParams({
-      trip_type: "Group Cruise",
-      ship: VOYAGE.ship,
-      voyage: VOYAGE.number,
-      guests: String(guests),
+      trip_id:    "stuffed-sailing",
+      trip_name:  tripDesc,
+      amount:     String(deposit * 100),   // cents
+      guests:     String(guests),
       cabin_code: selected.code,
       cabin_name: selected.name,
-      fare: selected.fare ?? "Standard",
-      price: String(selected.price),
-      deposit: String(deposit),
+      fare:       selected.fare ?? "Standard",
+      room_price: String(selected.price),
+      voyage:     VOYAGE.number,
     });
-    router.push("/request-quote?" + params.toString());
+    router.push("/pay?" + params.toString());
   };
 
   return (
@@ -122,7 +124,7 @@ function CabinSelectionContent() {
       {/* ── PROGRESS BAR ── */}
       <div style={{ background: "white", borderBottom: "1px solid #e2e8f0", padding: "0 32px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", height: 52 }}>
-          {["Select Guests", "Select Cabin", "Confirm & Pay"].map((step, i) => (
+          {["Select Guests", "Select Cabin", "Pay Deposit"].map((step, i) => (
             <div key={step} style={{ display: "flex", alignItems: "center", gap: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 16px" }}>
                 <div style={{
@@ -339,7 +341,7 @@ function CabinSelectionContent() {
                     fontFamily: "var(--font-body)",
                     transition: "background 0.2s",
                   }}>
-                  {selected ? "Continue to Confirmation →" : "Select a Cabin to Continue"}
+                  {selected ? "Continue to Payment →" : "Select a Cabin to Continue"}
                 </button>
 
                 <p style={{ fontSize: "0.7rem", color: "#94a3b8", textAlign: "center", marginTop: 12, lineHeight: 1.6 }}>
