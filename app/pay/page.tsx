@@ -43,7 +43,7 @@ function calcAffirmFee(base: number)   { return Math.round(base * AFFIRM_FEE_RAT
 function calcStripeTotal(base: number) { return base + calcStripeFee(base); }
 function calcAffirmTotal(base: number) { return base + calcAffirmFee(base); }
 
-type Tab = 'stripe' | 'affirm';
+type Tab = 'stripe' | 'affirm' | 'flexpay';
 
 // ─── Success screen ───────────────────────────────────────────────────────────
 function SuccessScreen({ amount, method, name }: { amount: number; method: string; name: string }) {
@@ -94,6 +94,9 @@ export default function PublicPayPage() {
   const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
   const [stripeReady, setStripeReady] = useState(false);
+  const [flexPayOption, setFlexPayOption] = useState<'weekly' | 'biweekly' | 'monthly'>('monthly');
+  const [flexPaySent, setFlexPaySent] = useState(false);
+  const [flexPayLoading, setFlexPayLoading] = useState(false);
 
   const stripeRef = useRef<any>(null);
   const cardRef   = useRef<any>(null);
@@ -320,6 +323,37 @@ export default function PublicPayPage() {
     display: 'block', fontSize: '0.68rem',
     letterSpacing: '0.1em', textTransform: 'uppercase',
     color: '#374151', marginBottom: 5, fontFamily: 'var(--font-body)',
+  };
+
+  const handleFlexPay = async () => {
+    if (!name || !email) { setError('Name and email are required'); return; }
+    setError('');
+    setFlexPayLoading(true);
+    try {
+      const tripLabel = useGroupTrip && selectedTrip ? selectedTrip.name : (tripName || 'Group Trip Deposit');
+      const res = await fetch('/api/flexpay-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, email, phone,
+          trip_name: tripLabel,
+          amount_cents: amountCents,
+          guests: new URLSearchParams(window.location.search).get('guests') || '1',
+          cabin_code: new URLSearchParams(window.location.search).get('cabin_code') || '',
+          cabin_name: new URLSearchParams(window.location.search).get('cabin_name') || '',
+          fare: new URLSearchParams(window.location.search).get('fare') || '',
+          room_price: new URLSearchParams(window.location.search).get('room_price') || '',
+          voyage: new URLSearchParams(window.location.search).get('voyage') || '',
+          flexpay_option: flexPayOption,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to send request');
+      setFlexPaySent(true);
+    } catch (e: any) {
+      setError(e.message ?? 'Something went wrong. Please try again.');
+    } finally {
+      setFlexPayLoading(false);
+    }
   };
 
   return (
