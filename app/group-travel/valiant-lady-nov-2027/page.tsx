@@ -372,7 +372,7 @@ export default function VoyagePage() {
               {[1, 2, 3, 4].map(n => (
                 <a
                   key={n}
-                  href={`/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB&guests=${n}`}
+                  href={`/group-travel/valiant-lady-nov-2027/select-cabin?guests=${n}`}
                   style={{
                     display: "flex",
                     flexDirection: "column",
