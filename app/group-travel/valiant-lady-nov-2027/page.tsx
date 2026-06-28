@@ -314,6 +314,97 @@ export default function VoyagePage() {
         </div>
       </section>
 
+      {/* ── BOOKING INTENT SECTION ── */}
+      <section style={{ background: "white", padding: "64px 32px", borderTop: "4px solid #dc2626" }}>
+        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+
+          {/* Warning box */}
+          <div style={{ background: "#fef2f2", border: "2px solid #dc2626", borderRadius: 10, padding: "24px 28px", marginBottom: 40, display: "flex", gap: 16, alignItems: "flex-start" }}>
+            <span style={{ fontSize: "1.5rem", flexShrink: 0, marginTop: 2 }}>⛔</span>
+            <div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#dc2626", marginBottom: 8 }}>Stop — Read Before Continuing</div>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.92rem", color: "#7f1d1d", lineHeight: 1.75, margin: 0, fontWeight: 500 }}>
+                If you are <strong>NOT</strong> ready to book and pay your deposit and are simply looking for pricing, please <strong>DO NOT</strong> continue. All pricing is available on this page and selecting a cabin here will not offer you a different price.
+              </p>
+            </div>
+          </div>
+
+          {/* Welcome / instructions */}
+          <div style={{ marginBottom: 36 }}>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 300, color: "var(--navy)", margin: "0 0 20px" }}>
+              Welcome to the Stuffed &amp; Sailing<br />Reservations Booking Process
+            </h2>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: "0.92rem", color: "#374151", lineHeight: 1.85 }}>
+              <p style={{ margin: "0 0 16px" }}>
+                Here, you can complete an entire reservation, including selecting your cabin and paying the minimum required <strong>non-refundable deposit of $500 per person</strong> for each individual who will occupy the cabin.
+              </p>
+              <p style={{ margin: "0 0 16px" }}>
+                If you are booking from <strong>one (1) to four (4) people</strong> in a cabin, then please continue; otherwise, please contact Crestwell Travel Services.
+              </p>
+              <p style={{ margin: "0 0 16px" }}>
+                If you would like to discuss alternative payment options, need an ADA-modified cabin, or have any other questions, please call one of our travel representatives.
+              </p>
+              <p style={{ margin: "0 0 4px", fontWeight: 600, color: "var(--navy)" }}>
+                You can reach Crestwell Travel Services at:
+              </p>
+              <p style={{ margin: "0 0 16px" }}>
+                <a href="tel:4702329288" style={{ color: "var(--gold)", fontWeight: 700, fontSize: "1.1rem", textDecoration: "none", fontFamily: "var(--font-display)" }}>470-232-9288</a>
+              </p>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#6b7280", fontStyle: "italic" }}>
+                Itinerary, schedule and performances are subject to change. Thank you for choosing Crestwell Travel Services.
+              </p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #e2e8f0, transparent)", margin: "36px 0" }} />
+
+          {/* Guest selector */}
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 12 }}>Step 1 of 2</div>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.3rem,2.5vw,1.8rem)", fontWeight: 300, color: "var(--navy)", margin: "0 0 8px" }}>
+              Select the Number of Guests
+            </h3>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#64748b", margin: "0 0 32px" }}>
+              Please select the number of guests for this reservation
+            </p>
+            <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+              {[1, 2, 3, 4].map(n => (
+                <a
+                  key={n}
+                  href={`/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB&guests=${n}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 130,
+                    height: 110,
+                    background: "var(--navy)",
+                    border: "2px solid rgba(201,168,76,0.3)",
+                    borderRadius: 10,
+                    textDecoration: "none",
+                    transition: "border-color 0.2s, transform 0.15s",
+                    gap: 8,
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-3px)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(201,168,76,0.3)"; (e.currentTarget as HTMLAnchorElement).style.transform = "none"; }}
+                >
+                  <span style={{ fontSize: "1.6rem" }}>{n === 1 ? "🧍" : n === 2 ? "👫" : n === 3 ? "👨‍👩‍👦" : "👨‍👩‍👧‍👦"}</span>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 400, color: "var(--gold-light)", lineHeight: 1 }}>{n}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)" }}>
+                    {n === 1 ? "Guest" : "Guests"}
+                  </span>
+                </a>
+              ))}
+            </div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "#94a3b8", marginTop: 20 }}>
+              Non-refundable deposit of <strong>$500 per person</strong> required to confirm reservation
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section style={{ background: "var(--navy)", padding: "72px 32px", textAlign: "center" }}>
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
