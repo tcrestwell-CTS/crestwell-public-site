@@ -6,12 +6,46 @@ export const metadata: Metadata = {
   description: "Group sailing aboard Virgin Voyages Valiant Lady, November 22–27 2027 from Miami. Sea Terrace cabins available from $4,185/person. Book with Crestwell Travel Services.",
 };
 
+const PROMOTIONS = [
+  "Buy One, Get One Sailor % Off",
+  "Essential Fare",
+  "Groups Bar Tab",
+  "Groups Discount",
+  "Loot Offer",
+];
+
 const CATEGORIES = [
   {
     section: "Sea Terraces",
     rows: [
-      { code: "TC", name: "Central Sea Terrace", category: "Balcony", solo: "$8,370", doubles: "$4,185", triples: null, quads: null, available: true },
-      { code: "TR", name: "The Sea Terrace",     category: "Balcony", solo: "$8,270", doubles: "$4,135", triples: null, quads: null, available: true },
+      {
+        code: "TC",
+        name: "Central Sea Terrace",
+        category: "Balcony",
+        totalCabins: 55,
+        availableCabins: 3,
+        pricePerRoom: "$2,292",
+        defaultPromo: "Buy One, Get One Sailor % Off",
+        solo: null,
+        doubles: "$2,292",
+        triples: null,
+        quads: null,
+        available: true,
+      },
+      {
+        code: "TR",
+        name: "The Sea Terrace",
+        category: "Balcony",
+        totalCabins: 55,
+        availableCabins: 4,
+        pricePerRoom: "$2,202",
+        defaultPromo: "Buy One, Get One Sailor % Off",
+        solo: null,
+        doubles: "$2,202",
+        triples: null,
+        quads: null,
+        available: true,
+      },
     ],
   },
 ];
@@ -145,15 +179,10 @@ export default function VoyagePage() {
                         <th style={th}>Code</th>
                         <th style={th}>Name</th>
                         <th style={th}>Category</th>
-                        <th style={{ ...th, textAlign: "center", borderLeft: "1px solid rgba(201,168,76,0.3)" }} colSpan={4}>Price per passenger from…</th>
-                      </tr>
-                      <tr style={{ background: "#1e2d42" }}>
-                        <th style={{ ...th, background: "#1e2d42" }}></th>
-                        <th style={{ ...th, background: "#1e2d42" }}></th>
-                        <th style={{ ...th, background: "#1e2d42" }}></th>
-                        {["Solo", "Doubles", "Triples", "Quads"].map(h => (
-                          <th key={h} style={{ ...th, background: "#1e2d42", textAlign: "center", borderLeft: "1px solid rgba(255,255,255,0.08)", color: "var(--gold-light)" }}>{h}</th>
-                        ))}
+                        <th style={{ ...th, textAlign: "center" }}>Total Cabins</th>
+                        <th style={{ ...th, textAlign: "center" }}># Available</th>
+                        <th style={{ ...th, textAlign: "center", borderLeft: "1px solid rgba(201,168,76,0.3)" }}>Price Per Room</th>
+                        <th style={{ ...th, borderLeft: "1px solid rgba(201,168,76,0.3)" }}>Default Promotion</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -162,13 +191,18 @@ export default function VoyagePage() {
                           <td style={{ ...td, fontWeight: 700, color: "var(--navy)" }}>{row.code}</td>
                           <td style={{ ...td, fontWeight: 500 }}>{row.name}</td>
                           <td style={td}>{row.category}</td>
-                          {[row.solo, row.doubles, row.triples, row.quads].map((price, pi) => (
-                            <td key={pi} style={{ ...td, textAlign: "center", borderLeft: "1px solid #f1f5f9", fontWeight: price && price !== "SOLD OUT" ? 600 : 400, color: "var(--navy)" }}>
-                              {price === "SOLD OUT" ? <span style={soldOut}>Sold Out</span>
-                                : price ? <span style={{ color: "var(--navy)", fontWeight: 700 }}>{price}</span>
-                                : <span style={{ color: "#cbd5e1" }}>—</span>}
-                            </td>
-                          ))}
+                          <td style={{ ...td, textAlign: "center" }}>{row.totalCabins}</td>
+                          <td style={{ ...td, textAlign: "center" }}>
+                            <span style={row.availableCabins > 0 ? available : soldOut}>
+                              {row.availableCabins > 0 ? `${row.availableCabins} Left` : "Sold Out"}
+                            </span>
+                          </td>
+                          <td style={{ ...td, textAlign: "center", fontWeight: 700, color: "var(--navy)", borderLeft: "1px solid #f1f5f9", fontSize: "1rem" }}>
+                            USD {row.pricePerRoom}
+                          </td>
+                          <td style={{ ...td, borderLeft: "1px solid #f1f5f9", fontSize: "0.8rem", color: "#475569" }}>
+                            {row.defaultPromo}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -177,6 +211,16 @@ export default function VoyagePage() {
               </div>
             </div>
           ))}
+
+          {/* All available promotions */}
+          <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 8, padding: "24px 28px", marginBottom: 24 }}>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 14 }}>Available Promotions</div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              {PROMOTIONS.map(p => (
+                <span key={p} style={{ display: "inline-block", background: "#f0f6ff", border: "1px solid #bfdbfe", color: "#1e40af", fontSize: "0.78rem", fontWeight: 500, padding: "5px 14px", borderRadius: 20, fontFamily: "var(--font-body)" }}>{p}</span>
+              ))}
+            </div>
+          </div>
 
           {/* Availability status */}
           <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 8, padding: "28px 32px", marginBottom: 48, display: "flex", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
