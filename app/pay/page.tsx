@@ -25,6 +25,7 @@ const AFFIRM_FIXED    = 30;
 
 // ─── Group trip packages ─────────────────────────────────────────────────────
 const GROUP_TRIPS = [
+  { id: 'stuffed-sailing', name: 'Stuffed & Sailing — Valiant Lady Nov 2027', depositPerPerson: 50000 },  // $500
   { id: 'bsc-cobb', name: 'BSC for Cobb County Cruise', depositPerPerson: 25000 },  // $250
   { id: 'angels-first', name: "Angels First Cruise", depositPerPerson: 15000 },       // $150
   { id: 'claires-60th', name: "Claire's 60th Birthday Celebration", depositPerPerson: 35000 },  // $350
@@ -129,6 +130,11 @@ export default function PublicPayPage() {
     const clientName     = data.client_name     || p.get('client_name')     || '';
     const clientEmail    = data.client_email    || p.get('client_email')    || '';
     const tripNameVal    = data.trip_name       || p.get('trip_name')       || '';
+    const tripIdVal      = p.get('trip_id')     || '';
+    const cabinCode      = p.get('cabin_code')  || '';
+    const cabinName      = p.get('cabin_name')  || '';
+    const fareType       = p.get('fare')        || '';
+    const guestsVal      = p.get('guests')      || '';
     const bookingRefVal  = data.booking_ref     || p.get('booking_ref')     || '';
     const tripPaymentVal = data.trip_payment_id || p.get('trip_payment_id') || '';
     const amountVal      = data.amount          || p.get('amount')          || '';
