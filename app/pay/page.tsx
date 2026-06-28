@@ -511,12 +511,7 @@ export default function PublicPayPage() {
                     <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="(555) 000-0000" style={inputStyle} />
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div>
-                    <label style={labelStyle}>Last Name <span style={{ color: '#dc2626' }}>*</span></label>
-                    <input type="text" value={bookingRef} onChange={e => setBookingRef(e.target.value)} placeholder="Smith" style={inputStyle} />
-                  </div>
-                  <div>
+                <div>
                     <label style={labelStyle}>Trip</label>
                     <input
                       type="text"
@@ -524,10 +519,9 @@ export default function PublicPayPage() {
                       onChange={e => { if (!useGroupTrip) setTripName(e.target.value); }}
                       placeholder={useGroupTrip ? '' : 'Caribbean Cruise'}
                       readOnly={useGroupTrip}
-                      style={{ ...inputStyle, background: useGroupTrip ? '#f8fafc' : 'white', color: useGroupTrip ? 'var(--navy)' : '#0d1b2a', cursor: useGroupTrip ? 'default' : 'text' }}
+                      style={{ ...inputStyle, background: useGroupTrip ? '#f8fafc' : 'white', color: useGroupTrip ? 'var(--slate)' : 'inherit' }}
                     />
                   </div>
-                </div>
 
                 {/* Affirm address fields */}
                 {tab === 'affirm' && (
@@ -558,6 +552,16 @@ export default function PublicPayPage() {
 
             {/* Payment method tabs */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(13,27,42,0.07)' }}>
+              <button
+                onClick={() => setTab('flexpay')}
+                style={{
+                  flex: 1, padding: '14px 8px', border: 'none', borderBottom: tab === 'flexpay' ? '2px solid #7c3aed' : '2px solid transparent',
+                  background: 'none', color: tab === 'flexpay' ? '#7c3aed' : 'var(--slate)',
+                  cursor: 'pointer', fontSize: '0.8rem', fontWeight: tab === 'flexpay' ? 700 : 400,
+                  fontFamily: 'var(--font-body)', transition: 'all 0.2s',
+                }}>
+                💜 FlexPay
+              </button>
               {([{ id: 'stripe' as Tab, label: '💳 Credit / Debit Card' }, { id: 'affirm' as Tab, label: '📅 Pay Over Time (Affirm)' }]).map(t => (
                 <button key={t.id} onClick={() => { setTab(t.id); setError(''); }} style={{
                   flex: 1, padding: '15px 16px', background: 'none', border: 'none',
