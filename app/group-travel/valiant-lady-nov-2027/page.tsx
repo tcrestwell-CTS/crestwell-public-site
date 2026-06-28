@@ -131,46 +131,7 @@ export default function VoyagePage() {
         </div>
       </div>
 
-      {/* ── HERO ── */}
-      <section style={{ background: "linear-gradient(160deg,#0d1b2a 0%,#162033 50%,#0d1b2a 100%)", padding: "80px 32px 72px", textAlign: "center" }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <div style={{ display: "inline-block", border: "1px solid rgba(201,168,76,0.35)", color: "var(--gold-light)", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", padding: "5px 18px", borderRadius: 20, marginBottom: 24, fontFamily: "var(--font-body)" }}>
-            Virgin Voyages · Exclusive Group Sailing
-          </div>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem,6vw,4rem)", fontWeight: 300, color: "white", lineHeight: 1.1, margin: "0 0 12px" }}>
-            Valiant Lady
-          </h1>
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.1rem,2.5vw,1.6rem)", fontWeight: 300, color: "var(--gold-light)", fontStyle: "italic", margin: "0 0 40px" }}>
-            Pricing &amp; Cabins · Nov 22–27, 2027
-          </p>
 
-          {/* voyage info strip */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 1, background: "rgba(201,168,76,0.15)", borderRadius: 8, overflow: "hidden", border: "1px solid rgba(201,168,76,0.2)", marginBottom: 40 }}>
-            {[
-              { label: "Voyage #",  value: "VL2711225NGCB" },
-              { label: "Ship",      value: "Valiant Lady" },
-              { label: "Departs",   value: "Nov 22, 2027 · 5:00 PM" },
-              { label: "Returns",   value: "Nov 27, 2027 · 6:30 AM" },
-              { label: "Port",      value: "Miami, Florida" },
-              { label: "Group",     value: "20 Cabins · 40 Sailors" },
-            ].map(s => (
-              <div key={s.label} style={{ background: "rgba(13,27,42,0.6)", padding: "16px 20px" }}>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 5 }}>{s.label}</div>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: "0.82rem", color: "white", lineHeight: 1.4 }}>{s.value}</div>
-              </div>
-            ))}
-          </div>
-
-          <Link
-            href="/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB"
-            className="btn-primary" style={{ textDecoration: "none", marginRight: 12 }}>
-            Sign Me Up →
-          </Link>
-          <a href="tel:8885086893" style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.75)", padding: "13px 24px", fontFamily: "var(--font-body)", fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", textDecoration: "none", borderRadius: 2 }}>
-            Call 888.508.6893
-          </a>
-        </div>
-      </section>
 
       {/* ── PRICING ── */}
       <section id="pricing" style={{ background: "var(--cream)", padding: "64px 32px" }}>
