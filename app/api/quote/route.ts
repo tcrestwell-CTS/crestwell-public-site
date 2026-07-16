@@ -21,17 +21,32 @@ export async function POST(request: NextRequest) {
     utm_campaign,
     utm_term,
     utm_content,
+    // ── Triton (AI cruise finder) lead handoff — see TRITON_NOTES.md ──
+    lead_source: leadSourceOverride,
+    agent_context,
   } = body;
 
   if (!first_name || !last_name || !email) {
     return NextResponse.json({ error: 'Name and email required' }, { status: 400 });
   }
 
-  const lead_source = gclid
-    ? 'google_ads'
-    : utm_source
-      ? utm_source
-      : 'direct';
+  const lead_source = leadSourceOverride === 'triton'
+    ? 'triton'
+    : gclid
+      ? 'google_ads'
+      : utm_source
+        ? utm_source
+        : 'direct';
+
+  // quote_requests has no `agent_context` column yet (see TRITON_NOTES.md for
+  // the ALTER TABLE Tim needs to run). Fold it into the free-text message
+  // field for now so nothing is silently dropped, instead of inserting a
+  // column that doesn't exist (which would fail the whole insert).
+  const messageWithAgentContext = agent_context
+    ? [message, `[Triton agent_context — move to real column once added]\n${JSON.stringify(agent_context)}`]
+        .filter(Boolean)
+        .join('\n\n')
+    : message;
 
   try {
     const submitted_at = new Date().toISOString();
@@ -40,7 +55,7 @@ export async function POST(request: NextRequest) {
       first_name, last_name, email, phone,
       trip_type, destination, departure_date,
       travelers_adults, travelers_children,
-      budget, flexibility, message,
+      budget, flexibility, message: messageWithAgentContext,
       status: 'new',
       gclid:        gclid        || null,
       utm_source:   utm_source   || null,
