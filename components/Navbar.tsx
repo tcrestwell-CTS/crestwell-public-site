@@ -15,6 +15,7 @@ const DESTINATIONS = [
 ];
 
 const CRUISES = [
+  { label: 'Find My Cruise', href: '/cruise-finder' },
   { label: 'All Cruises', href: '/cruises' },
   { label: 'Cruise Lines', href: '/cruise-lines' },
   { label: 'Luxury Collection', href: '/luxury-cruises' },
@@ -99,7 +100,7 @@ export default function Navbar() {
   }, [pathname]);
 
   const isDestActive = pathname?.startsWith('/destinations') || pathname?.startsWith('/trips');
-  const isCruiseActive = pathname?.startsWith('/cruises') || pathname?.startsWith('/cruise-lines') || pathname?.startsWith('/luxury-cruises');
+  const isCruiseActive = pathname?.startsWith('/cruises') || pathname?.startsWith('/cruise-lines') || pathname?.startsWith('/luxury-cruises') || pathname?.startsWith('/cruise-finder');
 
   const dropdownTrigger = (label: string, isActive: boolean, isOpen: boolean, onClick: () => void, onHover: () => void) => (
     <button
