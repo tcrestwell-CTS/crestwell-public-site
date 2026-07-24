@@ -439,7 +439,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <NewsletterSection />
 
       {/* ── STAY CONNECTED ── */}
       <section style={{
