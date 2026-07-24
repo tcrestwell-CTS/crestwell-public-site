@@ -28,6 +28,7 @@ const SERVICES = [
   { label: 'Domestic Travel',        href: '/domestic-travel',     icon: '🗺️' },
   { label: 'Excursions',             href: '/excursions',          icon: '🤿' },
   { label: 'Solo Travel',            href: '/solo-travel',         icon: '🧳' },
+  { label: 'Car Rental',             href: '/car-rental',          icon: '🚗' },
   { label: 'Financing',              href: '/financing',           icon: '💳' },
   { label: 'The Circle',             href: '/the-circle',          icon: '✦' },
 ];
