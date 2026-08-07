@@ -36,7 +36,14 @@ export async function POST(request: NextRequest) {
   try {
     const submitted_at = new Date().toISOString();
 
-    await supabase.from('quote_requests').insert([{
+    // BUG FIX: this never checked the insert's error return value — if
+    // RLS blocked the write (which it did, confirmed: no anon INSERT
+    // policy existed on quote_requests at all), this silently continued
+    // on to fire Tiara and send the "Request Received!" confirmation
+    // email regardless, meaning leads were never actually saved while
+    // users believed their request went through. Same class of bug found
+    // and fixed elsewhere in this project (CTN onboarding, doc checklist).
+    const { error: insertError } = await supabase.from('quote_requests').insert([{
       first_name, last_name, email, phone,
       trip_type, destination, departure_date,
       travelers_adults, travelers_children,
@@ -50,6 +57,14 @@ export async function POST(request: NextRequest) {
       utm_content:  utm_content  || null,
       lead_source,
     }]);
+
+    if (insertError) {
+      console.error('[quote] insert failed:', insertError);
+      return NextResponse.json(
+        { error: 'We could not save your request. Please try again or call us at 888.508.6893.' },
+        { status: 500 },
+      );
+    }
 
     // ── Fire Tiara — send full lead data so AI can qualify properly ──────
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
