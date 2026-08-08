@@ -18,23 +18,21 @@ export function middleware(request: NextRequest) {
   const host = request.headers.get('host') ?? '';
   const { pathname } = request.nextUrl;
 
-  response_setup: {
-    const response = NextResponse.next();
-    response.headers.set('x-pathname', pathname);
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', pathname);
 
-    // Not a recognized root host, and not already inside the agent-site
-    // route (avoid rewrite loops) — treat the subdomain as an agent slug.
-    if (!ROOT_HOSTS.has(host) && !pathname.startsWith('/agent-site')) {
-      const slug = host.split('.')[0];
-      if (slug && slug !== 'www') {
-        const url = request.nextUrl.clone();
-        url.pathname = `/agent-site/${slug}`;
-        return NextResponse.rewrite(url);
-      }
+  // Not a recognized root host, and not already inside the agent-site
+  // route (avoid rewrite loops) — treat the subdomain as an agent slug.
+  if (!ROOT_HOSTS.has(host) && !pathname.startsWith('/agent-site')) {
+    const slug = host.split('.')[0];
+    if (slug && slug !== 'www') {
+      const url = request.nextUrl.clone();
+      url.pathname = `/agent-site/${slug}`;
+      return NextResponse.rewrite(url);
     }
-
-    return response;
   }
+
+  return response;
 }
 
 export const config = {
