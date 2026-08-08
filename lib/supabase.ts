@@ -125,3 +125,33 @@ export async function getFeaturedTrip(id: string): Promise<FeaturedTrip | null> 
   if (error) throw error;
   return data;
 }
+
+
+// ─── Agent storefronts ─────────────────────────────────────────────────────
+// {slug}.crestwelltravels.com — a personal, trip-browsing page per agent.
+// Distinct from booking_slug/booking_enabled (that's the separate agent
+// call-scheduling feature). Public, unauthenticated lookup — the anon
+// SELECT policy on profiles is scoped to only expose rows where
+// storefront_enabled = true.
+export type AgentStorefront = {
+  user_id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  job_title: string | null;
+  phone: string | null;
+  storefront_slug: string;
+  storefront_headline: string | null;
+  storefront_bio: string | null;
+};
+
+export async function getAgentByStorefrontSlug(slug: string): Promise<AgentStorefront | null> {
+  const client = getSupabase();
+  const { data, error } = await client
+    .from('profiles')
+    .select('user_id, full_name, avatar_url, job_title, phone, storefront_slug, storefront_headline, storefront_bio')
+    .eq('storefront_slug', slug.toLowerCase())
+    .eq('storefront_enabled', true)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
