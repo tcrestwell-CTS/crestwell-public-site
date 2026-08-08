@@ -134,7 +134,13 @@ function RequestQuoteForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, ...getAttribution(), assigned_agent_id: agentId || undefined }),
       });
-      if (!res.ok) throw new Error('Something went wrong. Please try again or email us directly.');
+      if (!res.ok) {
+        // Was discarding the API's actual error message and always showing
+        // a generic fallback — surfacing the real reason now so failures
+        // are actually diagnosable instead of a dead end.
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || 'Something went wrong. Please try again or email us directly.');
+      }
       setSubmitted(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again or email us directly.';
