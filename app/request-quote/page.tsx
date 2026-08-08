@@ -56,6 +56,9 @@ const initialForm = {
 function RequestQuoteForm() {
   const searchParams = useSearchParams();
   const railTripName = searchParams.get('trip') || '';
+  // Present when this form was reached via an agent's personal storefront
+  // ({slug}.crestwelltravels.com) — routes the lead directly to them.
+  const agentId = searchParams.get('agent') || '';
   const [form, setForm] = useState(() => {
     const cruiseName   = searchParams.get('cruise_name') || '';
     const cruiseLine   = searchParams.get('line') || '';
@@ -129,7 +132,7 @@ function RequestQuoteForm() {
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, ...getAttribution() }),
+        body: JSON.stringify({ ...form, ...getAttribution(), assigned_agent_id: agentId || undefined }),
       });
       if (!res.ok) throw new Error('Something went wrong. Please try again or email us directly.');
       setSubmitted(true);
