@@ -21,6 +21,10 @@ export async function POST(request: NextRequest) {
     utm_campaign,
     utm_term,
     utm_content,
+    // Set when submitted from an agent's personal storefront
+    // ({slug}.crestwelltravels.com) — routes the lead directly to that
+    // agent instead of the general pool.
+    assigned_agent_id,
   } = body;
 
   if (!first_name || !last_name || !email) {
@@ -49,6 +53,8 @@ export async function POST(request: NextRequest) {
       travelers_adults, travelers_children,
       budget, flexibility, message,
       status: 'new',
+      assigned_agent_id: assigned_agent_id || null,
+      funnel_name: assigned_agent_id ? 'Agent Storefront' : null,
       gclid:        gclid        || null,
       utm_source:   utm_source   || null,
       utm_medium:   utm_medium   || null,
