@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
     // ({slug}.crestwelltravels.com) — routes the lead directly to that
     // agent instead of the general pool.
     assigned_agent_id,
+    funnel_name,
   } = body;
 
   if (!first_name || !last_name || !email) {
@@ -73,7 +74,11 @@ export async function POST(request: NextRequest) {
       budget, flexibility, message,
       status: 'new',
       assigned_agent_id: assigned_agent_id || null,
-      funnel_name: assigned_agent_id ? 'Agent Storefront' : null,
+      // Respect a specific funnel_name if the caller sent one (e.g. the
+      // agent storefront popup sends 'Agent Storefront: {slug}') — was
+      // previously hardcoded here, silently discarding anything more
+      // specific the caller actually provided.
+      funnel_name: funnel_name || (assigned_agent_id ? 'Agent Storefront' : null),
       gclid:        gclid        || null,
       utm_source:   utm_source   || null,
       utm_medium:   utm_medium   || null,
