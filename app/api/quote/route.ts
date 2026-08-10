@@ -3,7 +3,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+// Agent storefronts ({slug}.crestwelltravels.com, a different domain
+// entirely) submit quotes here in-page via a popup instead of navigating
+// away — that's a genuine cross-origin request, so this needs real CORS
+// support. Scoped to just crestwelltravels.com subdomains, not a blanket
+// wildcard, since this endpoint accepts unauthenticated writes.
+function corsHeaders(origin: string | null) {
+  const allowed = origin && /^https:\/\/([a-z0-9-]+\.)?crestwelltravels\.com$/i.test(origin);
+  return {
+    'Access-Control-Allow-Origin': allowed ? origin! : '',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: corsHeaders(request.headers.get('origin')) });
+}
+
 export async function POST(request: NextRequest) {
+  const cors = corsHeaders(request.headers.get('origin'));
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -28,7 +47,7 @@ export async function POST(request: NextRequest) {
   } = body;
 
   if (!first_name || !last_name || !email) {
-    return NextResponse.json({ error: 'Name and email required' }, { status: 400 });
+    return NextResponse.json({ error: 'Name and email required' }, { status: 400, headers: cors });
   }
 
   const lead_source = gclid
@@ -149,6 +168,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, submitted_at });
   } catch (error) {
     console.error('Quote route error:', error);
-    return NextResponse.json({ error: 'Failed to submit quote' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to submit quote' }, { status: 500, headers: cors });
   }
 }
