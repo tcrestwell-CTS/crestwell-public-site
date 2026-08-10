@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       console.error('[quote] insert failed:', insertError);
       return NextResponse.json(
         { error: 'We could not save your request. Please try again or call us at 888.508.6893.' },
-        { status: 500 },
+        { status: 500, headers: cors },
       );
     }
 
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    return NextResponse.json({ success: true, submitted_at });
+    return NextResponse.json({ success: true, submitted_at }, { status: 200, headers: cors });
   } catch (error) {
     console.error('Quote route error:', error);
     return NextResponse.json({ error: 'Failed to submit quote' }, { status: 500, headers: cors });
