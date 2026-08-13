@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import GYGWidget from '@/components/GYGWidget';
 import RailDeals from '@/components/RailDeals';
+import AmtrakScheduleSearch from '@/components/AmtrakScheduleSearch';
 
 
 const experiences = [
@@ -287,6 +288,7 @@ export default function VacationsByRailClient() {
             Departing within the next 90 days — spaces are limited. Call us today to lock in your spot.
           </p>
         </div>
+        <AmtrakScheduleSearch />
         <RailDeals />
         <div style={{ textAlign: 'center', marginTop: 40 }}>
           <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)', marginBottom: 16 }}>
