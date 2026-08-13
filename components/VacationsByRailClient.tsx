@@ -153,11 +153,16 @@ export default function VacationsByRailClient() {
           <p style={{ marginTop: 20, fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>
             Planning is always free — no booking fees, ever
           </p>
-        </div>
-        {/* textAlign: left overrides the hero's centered parent, which
-            would otherwise cascade into the search form's labels/inputs */}
-        <div style={{ position: 'relative', maxWidth: 800, margin: '0 auto', padding: '0 clamp(16px,5vw,32px) 40px', textAlign: 'left' }}>
-          <AmtrakScheduleSearch />
+          {/* Nested INSIDE the existing content div (not a sibling) — the
+              hero <section> is display:flex, and a second top-level
+              relatively-positioned sibling here becomes a second flex
+              item, which is what caused the headline to shift left with
+              the search box sitting beside it instead of below it.
+              textAlign:left overrides the parent's centered text, which
+              would otherwise cascade into the form's labels/inputs. */}
+          <div style={{ marginTop: 28, textAlign: 'left' }}>
+            <AmtrakScheduleSearch />
+          </div>
         </div>
       </section>
 
