@@ -49,24 +49,37 @@ function StationInput({
   const [query, setQuery] = useState(value?.displayName ?? '');
   const [results, setResults] = useState<Station[]>([]);
   const [open, setOpen] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (query.length < 2 || (value && query === value.displayName)) {
       setResults([]);
+      setSearchError(null);
       return;
     }
     debounceRef.current = setTimeout(async () => {
       try {
         const res = await fetch(`/api/amtrak/stations?term=${encodeURIComponent(query)}`);
         const body = await res.json();
+        // Was silently swallowing this — if the API key isn't configured
+        // or the proxy fails, the box just showed nothing with zero
+        // indication anything was wrong. Now surfaces the real reason.
+        if (!res.ok || body?.error) {
+          setSearchError(body?.error || 'Station search failed');
+          setResults([]);
+          setOpen(false);
+          return;
+        }
         const stations: Station[] = (body?.data?.results ?? []).map((r: { stationCode: string; displayName: string }) => ({
           stationCode: r.stationCode, displayName: r.displayName,
         }));
+        setSearchError(null);
         setResults(stations);
         setOpen(stations.length > 0);
-      } catch {
+      } catch (err) {
+        setSearchError(err instanceof Error ? err.message : 'Station search failed');
         setResults([]);
       }
     }, 300);
@@ -95,6 +108,9 @@ function StationInput({
             </button>
           ))}
         </div>
+      )}
+      {searchError && (
+        <p style={{ color: '#c00', fontSize: 12, marginTop: 4 }}>{searchError}</p>
       )}
     </div>
   );
