@@ -154,6 +154,11 @@ export default function VacationsByRailClient() {
             Planning is always free — no booking fees, ever
           </p>
         </div>
+        {/* textAlign: left overrides the hero's centered parent, which
+            would otherwise cascade into the search form's labels/inputs */}
+        <div style={{ position: 'relative', maxWidth: 800, margin: '0 auto', padding: '0 clamp(16px,5vw,32px) 40px', textAlign: 'left' }}>
+          <AmtrakScheduleSearch />
+        </div>
       </section>
 
       {/* ANNOUNCEMENT BAR — after hero, no nav conflict */}
@@ -288,7 +293,6 @@ export default function VacationsByRailClient() {
             Departing within the next 90 days — spaces are limited. Call us today to lock in your spot.
           </p>
         </div>
-        <AmtrakScheduleSearch />
         <RailDeals />
         <div style={{ textAlign: 'center', marginTop: 40 }}>
           <p style={{ fontSize: '0.85rem', color: 'var(--slate)', fontFamily: 'var(--font-body)', marginBottom: 16 }}>
