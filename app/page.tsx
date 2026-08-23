@@ -146,6 +146,52 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── CRUISE FINDER TEASER ── */}
+      <section style={{ background: 'var(--navy)', borderTop: '1px solid rgba(201,168,76,0.2)', borderBottom: '1px solid rgba(201,168,76,0.2)', padding: 'clamp(32px, 5vw, 48px) clamp(18px, 5vw, 32px)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <div style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 10, fontFamily: 'var(--font-body)' }}>
+              New — AI-Assisted Search
+            </div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 300, color: 'white', margin: 0 }}>
+              Not Sure Which Cruise Is Right for You?
+            </h2>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Link
+              href="/cruise-finder"
+              style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                padding: '18px 22px', maxWidth: 520, width: '100%',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(201,168,76,0.25)',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(201,168,76,0.1)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.5)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.25)';
+              }}
+            >
+              <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>🧭</span>
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'white', letterSpacing: '0.02em', marginBottom: 3, fontFamily: 'var(--font-body)' }}>
+                  Answer One Question, Get 3 Hand-Picked Cruises
+                </div>
+                <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
+                  Free shortlist from your advisor — takes about a minute
+                </div>
+              </div>
+              <span style={{ marginLeft: 'auto', color: 'var(--gold)', fontSize: '0.9rem', flexShrink: 0 }}>→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── FEATURED DESTINATIONS — client island ── */}
       <FeaturedTrips />
 
