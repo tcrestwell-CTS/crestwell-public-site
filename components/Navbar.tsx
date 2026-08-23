@@ -25,6 +25,7 @@ const CRUISES = [
 const SERVICES = [
   { label: 'All-Inclusive Resorts',  href: '/all-inclusive',      icon: '🌴' },
   { label: 'Group Travel',           href: '/group-travel',        icon: '👥' },
+  { label: 'Veterans & Military Family Travel', href: '/veterans', icon: '🇺🇸' },
   { label: 'Vacations by Rail',      href: '/vacations-by-rail',   icon: '🚂' },
   { label: 'Domestic Travel',        href: '/domestic-travel',     icon: '🗺️' },
   { label: 'Excursions',             href: '/excursions',          icon: '🤿' },
@@ -234,7 +235,7 @@ export default function Navbar() {
 
             {/* ── Services dropdown ── */}
             <div ref={servicesRef} style={{ position: 'relative' }}>
-              {dropdownTrigger('Services', ['/all-inclusive','/group-travel','/vacations-by-rail','/domestic-travel','/excursions','/solo-travel','/financing'].some(h => pathname.startsWith(h)), servicesOpen, () => setServicesOpen(o => !o), () => setServicesOpen(true))}
+              {dropdownTrigger('Services', ['/all-inclusive','/group-travel','/veterans','/vacations-by-rail','/domestic-travel','/excursions','/solo-travel','/financing'].some(h => pathname.startsWith(h)), servicesOpen, () => setServicesOpen(o => !o), () => setServicesOpen(true))}
               {servicesOpen && (
                 <div onMouseLeave={() => setServicesOpen(false)} style={{ ...dropdownBox, minWidth: 240 }}>
                   <div style={dropdownArrow} />

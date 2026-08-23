@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Name and email required' }, { status: 400 });
   }
 
-  const lead_source = leadSourceOverride === 'triton'
-    ? 'triton'
+  const lead_source = leadSourceOverride
+    ? leadSourceOverride
     : gclid
       ? 'google_ads'
       : utm_source
