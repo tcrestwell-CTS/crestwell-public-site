@@ -166,8 +166,19 @@ export async function POST(req: NextRequest) {
       efxReasons = Array.isArray(rawReasons)
         ? rawReasons.map((r: any) => r.code || r.reasonCode || String(r)).filter(Boolean)
         : [];
+      // DIAGNOSTIC: a 200 OK from Equifax with a score we couldn't extract
+      // was previously silent — no error logged at all, since nothing
+      // technically "failed". This is the most likely explanation for the
+      // generic "unable to retrieve credit information" fallback showing
+      // up with zero corresponding error log. Log the raw shape whenever
+      // extraction comes up empty, so the actual response structure is
+      // visible ahead of the production switch.
+      if (efxScore === null) {
+        console.error('[equifax-prequal] Got 200 OK but could not extract a score. Raw response:', JSON.stringify(efxRaw).substring(0, 2000));
+      }
     } else {
       efxError = `Equifax API ${efxRes.status}: ${JSON.stringify(efxRaw).substring(0, 300)}`;
+      console.error('[equifax-prequal]', efxError);
     }
   } catch (e: any) {
     efxError = `Equifax call failed: ${e.message}`;
