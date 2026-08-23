@@ -51,6 +51,10 @@ const initialForm = {
   _sailing_date: '',
   _resort_name: '',
   _resort_tag: '',
+  // ── Triton (AI cruise finder) handoff fields — see TRITON_NOTES.md ──
+  _triton_query: '',
+  _searched_at: '',
+  _price_from: '',
 };
 
 function RequestQuoteForm() {
@@ -60,10 +64,19 @@ function RequestQuoteForm() {
   // ({slug}.crestwelltravels.com) — routes the lead directly to them.
   const agentId = searchParams.get('agent') || '';
   const [form, setForm] = useState(() => {
-    const cruiseName   = searchParams.get('cruise_name') || '';
+    const tritonQuery  = searchParams.get('triton_query') || '';
+    const tritonSearchedAt = searchParams.get('searched_at') || '';
+    const priceFrom    = searchParams.get('price_from') || '';
+    let   cruiseName   = searchParams.get('cruise_name') || '';
     const cruiseLine   = searchParams.get('line') || '';
     const cruiseShip   = searchParams.get('ship') || '';
     const cruiseDur    = searchParams.get('duration') || '';
+
+    // Triton results don't include a single "cruise_name" — build one from line + ship
+    // so the existing "Selected Cruise" summary panel picks it up unmodified.
+    if (!cruiseName && (cruiseLine || cruiseShip)) {
+      cruiseName = [cruiseLine, cruiseShip].filter(Boolean).join(' — ');
+    }
     const sailingDate  = searchParams.get('date_from') || searchParams.get('sailing_date') || '';
     const resortName   = searchParams.get('resort') || searchParams.get('destination') || '';
     const typeParam    = searchParams.get('type') || '';
@@ -105,6 +118,9 @@ function RequestQuoteForm() {
       _cruise_ship:     cruiseShip,
       _cruise_duration: cruiseDur,
       _cruise_id:       searchParams.get('cruise_id') || '',
+      _triton_query:    tritonQuery,
+      _searched_at:     tritonSearchedAt,
+      _price_from:      priceFrom,
       notes: railTripName ? `Rail trip of interest: ${railTripName}` :
              searchParams.get('partner') ? `Partner: ${searchParams.get('partner')}` : '',
       _sailing_date:    sailingDate,
@@ -132,7 +148,30 @@ function RequestQuoteForm() {
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, ...getAttribution(), assigned_agent_id: agentId || undefined }),
+        // ── Triton (AI cruise finder) lead handoff — see TRITON_NOTES.md ──
+        // agent_context has no column yet on quote_requests; /api/quote folds
+        // it into `message` until Tim runs the ALTER TABLE in TRITON_NOTES.md.
+        const tritonExtras = form._triton_query
+          ? {
+              lead_source: 'triton',
+              agent_context: {
+                triton_query: form._triton_query,
+                selected_sailing: (form._cruise_line || form._cruise_ship || form._sailing_date || form._price_from)
+                  ? {
+                      line:        form._cruise_line || null,
+                      ship:        form._cruise_ship || null,
+                      embark_date: form._sailing_date || null,
+                      embark_port: form.destination || null,
+                      nights:      form._cruise_duration || null,
+                      price_from:  form._price_from || null,
+                    }
+                  : null,
+                searched_at: form._searched_at || null,
+              },
+            }
+          : {};
+
+        body: JSON.stringify({ ...form, ...getAttribution(), assigned_agent_id: agentId || undefined, ...tritonExtras }),
       });
       if (!res.ok) {
         // Was discarding the API's actual error message and always showing
