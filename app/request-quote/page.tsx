@@ -145,32 +145,32 @@ function RequestQuoteForm() {
     setSubmitting(true);
     setError('');
     try {
+      // ── Triton (AI cruise finder) lead handoff — see TRITON_NOTES.md ──
+      // agent_context has no column yet on quote_requests; /api/quote folds
+      // it into `message` until Tim runs the ALTER TABLE in TRITON_NOTES.md.
+      const tritonExtras = form._triton_query
+        ? {
+            lead_source: 'triton',
+            agent_context: {
+              triton_query: form._triton_query,
+              selected_sailing: (form._cruise_line || form._cruise_ship || form._sailing_date || form._price_from)
+                ? {
+                    line:        form._cruise_line || null,
+                    ship:        form._cruise_ship || null,
+                    embark_date: form._sailing_date || null,
+                    embark_port: form.destination || null,
+                    nights:      form._cruise_duration || null,
+                    price_from:  form._price_from || null,
+                  }
+                : null,
+              searched_at: form._searched_at || null,
+            },
+          }
+        : {};
+
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // ── Triton (AI cruise finder) lead handoff — see TRITON_NOTES.md ──
-        // agent_context has no column yet on quote_requests; /api/quote folds
-        // it into `message` until Tim runs the ALTER TABLE in TRITON_NOTES.md.
-        const tritonExtras = form._triton_query
-          ? {
-              lead_source: 'triton',
-              agent_context: {
-                triton_query: form._triton_query,
-                selected_sailing: (form._cruise_line || form._cruise_ship || form._sailing_date || form._price_from)
-                  ? {
-                      line:        form._cruise_line || null,
-                      ship:        form._cruise_ship || null,
-                      embark_date: form._sailing_date || null,
-                      embark_port: form.destination || null,
-                      nights:      form._cruise_duration || null,
-                      price_from:  form._price_from || null,
-                    }
-                  : null,
-                searched_at: form._searched_at || null,
-              },
-            }
-          : {};
-
         body: JSON.stringify({ ...form, ...getAttribution(), assigned_agent_id: agentId || undefined, ...tritonExtras }),
       });
       if (!res.ok) {
