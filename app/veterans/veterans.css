@@ -17,7 +17,7 @@
 .btn-ghost{display:inline-block;background:transparent;color:var(--gold-pale);font-family:var(--font-body);font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;padding:15px 34px;border:2px solid rgba(226,195,122,.55);text-decoration:none;transition:all .3s ease}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-light)}
 /* hero */
-.vets-hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-mid) 55%,var(--navy-light) 100%);color:var(--warm-white);padding:96px 0 84px;position:relative;overflow:hidden}
+.vets-hero{background:linear-gradient(160deg,rgba(13,27,42,.90) 0%,rgba(22,32,51,.85) 55%,rgba(30,45,66,.8) 100%),url('/images/veterans-og.jpg');background-size:cover;background-position:center 35%;background-repeat:no-repeat;color:var(--warm-white);padding:96px 0 84px;position:relative;overflow:hidden}
 .vets-hero::after{content:"";position:absolute;inset:auto -80px -120px auto;width:420px;height:420px;border:1px solid rgba(201,168,76,.25);border-radius:50%}
 .vets-hero::before{content:"";position:absolute;inset:auto -40px -180px auto;width:560px;height:560px;border:1px solid rgba(201,168,76,.14);border-radius:50%}
 .vets-hero h1{font-family:var(--font-display);font-weight:500;font-size:clamp(2.5rem,5.6vw,4rem);line-height:1.08;margin:16px 0 18px;text-wrap:balance;max-width:16ch}
