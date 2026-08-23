@@ -45,17 +45,32 @@ export async function POST(request: NextRequest) {
     // agent instead of the general pool.
     assigned_agent_id,
     funnel_name,
+    // ── Triton (AI cruise finder) lead handoff — see TRITON_NOTES.md ──
+    lead_source: leadSourceOverride,
+    agent_context,
   } = body;
 
   if (!first_name || !last_name || !email) {
     return NextResponse.json({ error: 'Name and email required' }, { status: 400, headers: cors });
   }
 
-  const lead_source = gclid
-    ? 'google_ads'
-    : utm_source
-      ? utm_source
-      : 'direct';
+  const lead_source = leadSourceOverride
+    ? leadSourceOverride
+    : gclid
+      ? 'google_ads'
+      : utm_source
+        ? utm_source
+        : 'direct';
+
+  // quote_requests has no `agent_context` column yet (see TRITON_NOTES.md
+  // for the ALTER TABLE needed). Fold it into the free-text message field
+  // for now so nothing is silently dropped, instead of inserting a column
+  // that doesn't exist (which would fail the whole insert).
+  const messageWithAgentContext = agent_context
+    ? [message, `[Triton agent_context — move to real column once added]\n${JSON.stringify(agent_context)}`]
+        .filter(Boolean)
+        .join('\n\n')
+    : message;
 
   try {
     const submitted_at = new Date().toISOString();
@@ -71,7 +86,7 @@ export async function POST(request: NextRequest) {
       first_name, last_name, email, phone,
       trip_type, destination, departure_date,
       travelers_adults, travelers_children,
-      budget, flexibility, message,
+      budget, flexibility, message: messageWithAgentContext,
       status: 'new',
       assigned_agent_id: assigned_agent_id || null,
       // Respect a specific funnel_name if the caller sent one (e.g. the
