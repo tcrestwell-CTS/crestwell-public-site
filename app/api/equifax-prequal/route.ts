@@ -43,6 +43,16 @@ async function supabaseGet(table: string, id: string) {
     { headers: { apikey: SUPA_SERVICE_KEY, Authorization: `Bearer ${SUPA_SERVICE_KEY}`, Accept: 'application/json' } }
   );
   const rows = await res.json();
+  // DIAGNOSTIC: an RLS-blocked or auth-rejected request (e.g. falling
+  // back to the anon key because SUPABASE_SERVICE_ROLE_KEY isn't set)
+  // returns an empty array or an error object here — indistinguishable
+  // from a genuinely nonexistent row without logging the raw response.
+  // "Application not found" for a real, valid ID could mean either a
+  // wrong project OR insufficient permissions on a correct one — this
+  // makes it possible to tell which.
+  if (!Array.isArray(rows) || !rows.length) {
+    console.error(`[equifax-prequal] supabaseGet('${table}', '${id}') found nothing. URL: ${SUPA_URL}. Status: ${res.status}. Response:`, JSON.stringify(rows).substring(0, 500));
+  }
   return Array.isArray(rows) && rows.length ? rows[0] : null;
 }
 
