@@ -360,7 +360,7 @@ export default function VoyagePage() {
           <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #e2e8f0, transparent)", margin: "36px 0" }} />
 
           {/* Guest selector */}
-          <div style={{ textAlign: "center" }}>
+          <div id="select-guests" style={{ textAlign: "center", scrollMarginTop: 100 }}>
             <div style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 12 }}>Step 1 of 2</div>
             <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.3rem,2.5vw,1.8rem)", fontWeight: 300, color: "var(--navy)", margin: "0 0 8px" }}>
               Select the Number of Guests
@@ -416,7 +416,7 @@ export default function VoyagePage() {
             Contact Tim at Crestwell Travel Services to reserve your cabin. Prices are per room. Deposits secure your spot.
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB"
+            <Link href="#select-guests"
               className="btn-primary" style={{ textDecoration: "none" }}>
               Sign Me Up →
             </Link>
