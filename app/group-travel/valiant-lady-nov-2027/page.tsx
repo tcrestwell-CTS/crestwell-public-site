@@ -215,7 +215,7 @@ export default function VoyagePage() {
             { label: "Home",          href: "/" },
             { label: "Group Travel",  href: "/group-travel" },
             { label: "Pricing",       href: "#pricing" },
-            { label: "Sign Up",       href: "/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB" },
+            { label: "Sign Up",       href: "#select-guests" },
             { label: "Contact",       href: "/contact" },
           ].map(l => (
             <Link key={l.href} href={l.href} style={{ display: "inline-block", padding: "13px 0", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", textDecoration: "none", whiteSpace: "nowrap", fontFamily: "var(--font-body)" }}>
