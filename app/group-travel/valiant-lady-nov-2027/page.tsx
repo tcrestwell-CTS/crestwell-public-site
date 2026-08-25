@@ -196,7 +196,7 @@ export default function VoyagePage() {
           {/* CTA row */}
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <Link
-              href="/request-quote?trip_type=Group+Cruise&ship=Valiant+Lady&voyage=VL2711225NGCB"
+              href="#select-guests"
               style={{ display: "inline-block", background: "var(--gold)", color: "var(--navy)", padding: "13px 32px", fontFamily: "var(--font-body)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", textDecoration: "none", borderRadius: 4 }}>
               Sign Up Now →
             </Link>
