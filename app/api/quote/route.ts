@@ -82,10 +82,16 @@ export async function POST(request: NextRequest) {
     // email regardless, meaning leads were never actually saved while
     // users believed their request went through. Same class of bug found
     // and fixed elsewhere in this project (CTN onboarding, doc checklist).
+    // CONFIRMED root cause of real, live 500s (found in production logs):
+    // quote_requests.travelers_adults is NOT NULL, but lighter-weight forms
+    // like the veterans page don't ask for a traveler count at all, so it
+    // arrives as undefined and the insert failed outright. Default to 1
+    // rather than requiring every caller to know about this column.
     const { error: insertError } = await supabase.from('quote_requests').insert([{
       first_name, last_name, email, phone,
       trip_type, destination, departure_date,
-      travelers_adults, travelers_children,
+      travelers_adults: travelers_adults ?? 1,
+      travelers_children: travelers_children ?? 0,
       budget, flexibility, message: messageWithAgentContext,
       status: 'new',
       assigned_agent_id: assigned_agent_id || null,
