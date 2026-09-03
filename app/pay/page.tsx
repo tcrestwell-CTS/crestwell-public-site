@@ -250,6 +250,12 @@ export default function PublicPayPage() {
     if (!window.affirm) { setError('Affirm is still loading. Please try again.'); return; }
     setStatus('processing'); setError('');
     const [firstName, ...rest] = name.trim().split(' ');
+    // CONFIRMED root cause via real Affirm 400 response: "fields": ["billing.zipcode"].
+    // The raw zip value was sent unsanitized -- any dash, space, or ZIP+4
+    // format Affirm doesn't accept fails validation. Affirm requires a
+    // plain 5-digit US zip.
+    const cleanZip = zip.replace(/[^0-9]/g, '').substring(0, 5);
+    if (cleanZip.length !== 5) { setError('Please enter a valid 5-digit zip code.'); return; }
     window.affirm.checkout({
       merchant: {
         user_cancel_url: `${SITE_DOMAIN}/pay`,
@@ -260,12 +266,12 @@ export default function PublicPayPage() {
       },
       shipping: {
         name: { full: name },
-        address: { line1: address, city, state, zipcode: zip, country: 'USA' },
+        address: { line1: address, city, state, zipcode: cleanZip, country: 'USA' },
         email, phone_number: phone || '0000000000',
       },
       billing: {
         name: { full: name },
-        address: { line1: address, city, state, zipcode: zip, country: 'USA' },
+        address: { line1: address, city, state, zipcode: cleanZip, country: 'USA' },
         email, phone_number: phone || '0000000000',
       },
       items: [{
