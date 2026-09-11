@@ -99,7 +99,8 @@ export default function PublicPayPage() {
   const [flexPayLoading, setFlexPayLoading] = useState(false);
 
   const stripeRef = useRef<any>(null);
-  const cardRef   = useRef<any>(null);
+  const elementsRef = useRef<any>(null);
+  const paymentElementRef = useRef<any>(null);
   const cardMount = useRef<HTMLDivElement>(null);
 
   const selectedTrip = GROUP_TRIPS.find(t => t.id === tripId);
@@ -154,17 +155,34 @@ export default function PublicPayPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Mount Stripe
+  // Mount Stripe — switched from the basic Card Element to the dynamic
+  // Payment Element, so Klarna, Link/Instant Bank Payments, and anything
+  // else enabled in the Stripe Dashboard's payment method settings appear
+  // automatically. Uses Stripe's "deferred" pattern (mode/amount/currency,
+  // no clientSecret yet) so the widget can update live as the amount
+  // field changes, without creating a new PaymentIntent on every keystroke
+  // — the real PaymentIntent (via the existing create-payment-intent
+  // function, already configured correctly) is only created at submit time.
   const mountStripe = () => {
     if (!window.StripeInstance) return;
     if (!stripeRef.current) stripeRef.current = window.StripeInstance(STRIPE_PK);
-    if (cardRef.current) return;
-    const elements = stripeRef.current.elements();
-    cardRef.current = elements.create('card', {
-      style: { base: { fontFamily: 'Georgia, serif', fontSize: '16px', color: '#0d1b2a', '::placeholder': { color: '#94a3b8' } }, invalid: { color: '#dc2626' } },
+    if (paymentElementRef.current) return;
+    const elements = stripeRef.current.elements({
+      mode: 'payment',
+      amount: Math.max(amountCents, 50),
+      currency: 'usd',
+      appearance: {
+        variables: {
+          fontFamily: 'Georgia, serif',
+          colorText: '#0d1b2a',
+          colorDanger: '#dc2626',
+        },
+      },
     });
+    elementsRef.current = elements;
+    paymentElementRef.current = elements.create('payment');
     const tryMount = () => {
-      if (cardMount.current) { cardRef.current.mount(cardMount.current); setStripeReady(true); }
+      if (cardMount.current) { paymentElementRef.current.mount(cardMount.current); setStripeReady(true); }
       else setTimeout(tryMount, 50);
     };
     tryMount();
@@ -202,17 +220,41 @@ export default function PublicPayPage() {
       setTimeout(() => clearInterval(poll), 10000); // give up after 10s
     }
     else {
-      if (cardRef.current) { cardRef.current.unmount(); cardRef.current = null; setStripeReady(false); }
+      if (paymentElementRef.current) {
+        paymentElementRef.current.unmount();
+        paymentElementRef.current = null;
+        elementsRef.current = null;
+        setStripeReady(false);
+      }
     }
   }, [tab]);
 
-  // Stripe submit
+  // Keep the mounted Payment Element in sync as the amount field changes —
+  // required for the 'mode: payment' deferred pattern (unlike a fixed-price
+  // checkout, this page's amount is user-editable).
+  useEffect(() => {
+    if (tab === 'stripe' && elementsRef.current) {
+      elementsRef.current.update({ amount: Math.max(amountCents, 50) });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amountCents, tab]);
+
+  // Stripe submit — switched from confirmCardPayment (Card Element only)
+  // to confirmPayment (works with the dynamic Payment Element, covering
+  // whichever methods are enabled in the Stripe Dashboard: cards, Klarna,
+  // Link/Instant Bank Payments, etc). redirect: 'if_required' keeps the
+  // existing on-page success flow for methods that don't need a redirect
+  // (cards, Link), while still correctly redirecting for methods that do.
   const handleStripe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (amountCents < 50) { setError('Minimum payment is $0.50'); return; }
     if (!name || !email) { setError('Name and email are required'); return; }
+    if (!elementsRef.current) { setError('Payment form is still loading. Please try again.'); return; }
     setStatus('processing'); setError('');
     try {
+      const { error: submitErr } = await elementsRef.current.submit();
+      if (submitErr) throw new Error(submitErr.message);
+
       const res = await fetch(`${SUPABASE_URL}/functions/v1/create-payment-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -231,11 +273,18 @@ export default function PublicPayPage() {
       });
       const { clientSecret, error: fnErr } = await res.json();
       if (fnErr) throw new Error(fnErr);
-      const { error: stripeErr, paymentIntent } = await stripeRef.current.confirmCardPayment(clientSecret, {
-        payment_method: { card: cardRef.current, billing_details: { name, email } },
+
+      const { error: stripeErr, paymentIntent } = await stripeRef.current.confirmPayment({
+        elements: elementsRef.current,
+        clientSecret,
+        confirmParams: {
+          return_url: `${SITE_DOMAIN}/pay?status=success`,
+          payment_method_data: { billing_details: { name, email } },
+        },
+        redirect: 'if_required',
       });
       if (stripeErr) throw new Error(stripeErr.message);
-      if (paymentIntent.status === 'succeeded') { logIp('pay', 'succeeded'); setStatus('success'); }
+      if (paymentIntent && paymentIntent.status === 'succeeded') { logIp('pay', 'succeeded'); setStatus('success'); }
     } catch (err: any) {
       setError(err.message || 'Payment failed. Please try again.');
       setStatus('error');
