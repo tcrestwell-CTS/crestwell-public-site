@@ -317,7 +317,7 @@ function CabinSelectionContent() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#dc2626", textTransform: "uppercase", letterSpacing: "0.08em" }}>Deposit Due Today</div>
-                      <div style={{ fontSize: "0.72rem", color: "#7f1d1d", marginTop: 2 }}>Non-refundable · $500 × {guests} guests</div>
+                      <div style={{ fontSize: "0.72rem", color: "#7f1d1d", marginTop: 2 }}>Non-refundable · $250 × {guests} guests</div>
                     </div>
                     <div style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", color: "#dc2626", fontWeight: 400 }}>${deposit.toLocaleString()}</div>
                   </div>
