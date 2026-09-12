@@ -214,6 +214,7 @@ export default function VoyagePage() {
           {[
             { label: "Home",          href: "/" },
             { label: "Group Travel",  href: "/group-travel" },
+            { label: "Itinerary",     href: "#itinerary" },
             { label: "Pricing",       href: "#pricing" },
             { label: "Sign Up",       href: "#select-guests" },
             { label: "Contact",       href: "/contact" },
@@ -226,6 +227,58 @@ export default function VoyagePage() {
       </div>
 
 
+
+            {/* ── DESTINATION & ITINERARY ── */}
+      <section id="itinerary" style={{ background: "var(--cream)", padding: "64px 32px", borderTop: "1px solid #e2e8f0" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 10 }}>Where We're Sailing</div>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem,3.5vw,2.6rem)", fontWeight: 300, color: "var(--navy)", margin: "0 0 12px" }}>Destination &amp; Itinerary</h2>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#64748b", maxWidth: 560, margin: "0 auto", lineHeight: 1.7 }}>
+              A 5-night Caribbean escape aboard the Valiant Lady, round-trip from Miami &mdash; George Town, Grand Cayman for duty-free shopping and stingray swims, then a day at Virgin Voyages&rsquo; own private Beach Club at Bimini before sailing home.
+            </p>
+          </div>
+
+          <div style={{ background: "white", borderRadius: 6, border: "1px solid #e2e8f0", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)" }}>
+                <thead>
+                  <tr style={{ background: "var(--navy)" }}>
+                    <th style={{ textAlign: "left", padding: "14px 20px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>Day</th>
+                    <th style={{ textAlign: "left", padding: "14px 20px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>Port</th>
+                    <th style={{ textAlign: "left", padding: "14px 20px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>Arrive</th>
+                    <th style={{ textAlign: "left", padding: "14px 20px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>Depart</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { day: "1", date: "Mon, Nov 22", port: "Miami, Florida", arrive: "—", depart: "5:00 PM" },
+                    { day: "2", date: "Tue, Nov 23", port: "At Sea", arrive: "—", depart: "—" },
+                    { day: "3", date: "Wed, Nov 24", port: "George Town, Grand Cayman", arrive: "8:00 AM", depart: "5:00 PM" },
+                    { day: "4", date: "Thu, Nov 25", port: "At Sea", arrive: "—", depart: "—" },
+                    { day: "5", date: "Fri, Nov 26", port: "The Beach Club at Bimini, Bahamas", arrive: "9:00 AM", depart: "6:00 PM" },
+                    { day: "6", date: "Sat, Nov 27", port: "Miami, Florida (Return)", arrive: "6:30 AM", depart: "—" },
+                  ].map((row, i) => (
+                    <tr key={row.day} style={{ borderTop: i === 0 ? "none" : "1px solid #f1f5f9" }}>
+                      <td style={{ padding: "14px 20px", fontSize: "0.85rem", color: "var(--navy)", fontWeight: 600 }}>{row.day}</td>
+                      <td style={{ padding: "14px 20px", fontSize: "0.85rem", color: "var(--navy)" }}>
+                        {row.port}
+                        <div style={{ fontSize: "0.72rem", color: "#94a3b8", marginTop: 2 }}>{row.date}</div>
+                      </td>
+                      <td style={{ padding: "14px 20px", fontSize: "0.85rem", color: "#64748b" }}>{row.arrive}</td>
+                      <td style={{ padding: "14px 20px", fontSize: "0.85rem", color: "#64748b" }}>{row.depart}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "#94a3b8", textAlign: "center", marginTop: 16 }}>
+            Itinerary, schedule and port times are subject to change by Virgin Voyages.
+          </p>
+        </div>
+      </section>
 
       {/* ── PRICING ── */}
       <section id="pricing" style={{ background: "var(--cream)", padding: "64px 32px" }}>
@@ -336,7 +389,7 @@ export default function VoyagePage() {
             </h2>
             <div style={{ fontFamily: "var(--font-body)", fontSize: "0.92rem", color: "#374151", lineHeight: 1.85 }}>
               <p style={{ margin: "0 0 16px" }}>
-                Here, you can complete an entire reservation, including selecting your cabin and paying the minimum required <strong>non-refundable deposit of $500 per person</strong> for each individual who will occupy the cabin.
+                Here, you can complete an entire reservation, including selecting your cabin and paying the minimum required <strong>non-refundable deposit of $250 per person</strong> for each individual who will occupy the cabin.
               </p>
               <p style={{ margin: "0 0 16px" }}>
                 If you are booking from <strong>one (1) to four (4) people</strong> in a cabin, then please continue; otherwise, please contact Crestwell Travel Services.
@@ -399,7 +452,7 @@ export default function VoyagePage() {
               ))}
             </div>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "#94a3b8", marginTop: 20 }}>
-              Non-refundable deposit of <strong>$500 per person</strong> required to confirm reservation
+              Non-refundable deposit of <strong>$250 per person</strong> required to confirm reservation
             </p>
           </div>
         </div>
