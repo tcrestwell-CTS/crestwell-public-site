@@ -81,7 +81,7 @@ function CabinSelectionContent() {
   const [selected, setSelected] = useState<{ code: string; name: string; fare?: string; price: number } | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>("Sea Terraces");
 
-  const deposit = guests * 500;
+  const deposit = guests * 250;
 
   const handleSelect = (cabin: any, fareLabel?: string, farePrice?: number) => {
     const price = farePrice ?? cabin.pricePerRoom;
@@ -153,7 +153,7 @@ function CabinSelectionContent() {
             <div style={{ marginBottom: 24 }}>
               <h1 style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 300, color: "var(--navy)", margin: "0 0 6px" }}>Select Your Cabin</h1>
               <p style={{ fontSize: "0.88rem", color: "#64748b", margin: 0 }}>
-                Booking for <strong style={{ color: "var(--navy)" }}>{guests} {guests === 1 ? "Guest" : "Guests"}</strong> · $500/person deposit required · Total deposit: <strong style={{ color: "var(--navy)" }}>${deposit.toLocaleString()}</strong>
+                Booking for <strong style={{ color: "var(--navy)" }}>{guests} {guests === 1 ? "Guest" : "Guests"}</strong> · $250/person deposit required · Total deposit: <strong style={{ color: "var(--navy)" }}>${deposit.toLocaleString()}</strong>
               </p>
             </div>
 
