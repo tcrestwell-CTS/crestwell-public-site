@@ -2,7 +2,7 @@
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import CruiseSearch from '@/components/CruiseSearch';
+import RevelexCruiseSearch from '@/components/RevelexCruiseSearch';
 import Breadcrumb from "@/components/Breadcrumb";
 import ViatorSearch from "@/components/ViatorSearch";
 
@@ -77,7 +77,7 @@ function CruisesContent() {
 
       {/* Cruise Search with results — key forces remount when URL params change */}
       <div id="cruise-search">
-        <CruiseSearch key={searchKey} initialFilters={initialFilters} />
+        <RevelexCruiseSearch />
       </div>
 
       {/* CTA */}
