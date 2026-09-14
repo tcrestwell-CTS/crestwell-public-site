@@ -34,7 +34,10 @@ export default function RevelexCruiseSearch() {
   }, []);
 
   return (
-    <div style={{ minHeight: 400 }}>
+    // The widget's own CSS has no max-width/centering built in -- it
+    // stretches full browser width by default. Wrapped to match this
+    // page's established 1280px content container convention.
+    <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', minHeight: 400 }}>
       <div
         className="rvlx-widget-viewport"
         data-rvlx-widget
