@@ -31,6 +31,25 @@ export default function RevelexCruiseSearch() {
       script.setAttribute('data-revelex-js', 'true');
       document.body.appendChild(script);
     }
+
+    // Confirm real initialization via the widget's own documented loaded
+    // events, rather than relying on brittle, hard-to-automate UI probing.
+    // Listens for whichever template tab is actually active by default.
+    const loadedEvents = [
+      'rvlxWidget.cruise_only.loaded',
+      'rvlxWidget.river_only.loaded',
+      'rvlxWidget.cruise_tours.loaded',
+      'rvlxWidget.river_tours.loaded',
+    ];
+    const onLoaded = (e: Event) => {
+      // eslint-disable-next-line no-console
+      console.log('[Revelex widget] initialized:', e.type);
+    };
+    loadedEvents.forEach((evt) => document.addEventListener(evt, onLoaded));
+
+    return () => {
+      loadedEvents.forEach((evt) => document.removeEventListener(evt, onLoaded));
+    };
   }, []);
 
   return (
