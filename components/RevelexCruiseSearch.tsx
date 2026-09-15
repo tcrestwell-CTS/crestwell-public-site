@@ -24,6 +24,7 @@ export default function RevelexCruiseSearch() {
         className="rvlx-widget-viewport"
         data-rvlx-widget
         data-rvlx-endpoint="https://b2cdemo.revelex.com/"
+        data-rvlx-id="CTW00048158"
       />
       <Script
         src="/revelex/app.bundle.js"
