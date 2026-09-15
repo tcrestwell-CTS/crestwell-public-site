@@ -23,7 +23,7 @@ export default function RevelexCruiseSearch() {
         ref={widgetRef}
         className="rvlx-widget-viewport"
         data-rvlx-widget
-        data-rvlx-endpoint="https://vacationresults.us.ensembletravel.com/app/0/cruise/0/search.html"
+        data-rvlx-endpoint="https://vacationresults.us.ensembletravel.com/"
         data-rvlx-id="CTW00048158"
       />
       <Script
