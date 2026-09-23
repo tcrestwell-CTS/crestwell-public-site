@@ -39,6 +39,7 @@ export default function JourneyOfHonorPage() {
             <span>ASTA Member</span>
             <span>CLIA Certified</span>
             <span>No Planning Fees</span>
+            <span>10% Off Cruises &amp; Packages</span>
           </div>
         </div>
       </section>
@@ -200,6 +201,10 @@ export default function JourneyOfHonorPage() {
             <details>
               <summary>Is there a cost to join Journey of Honor?</summary>
               <p>No. There&apos;s no membership fee and no planning fee — the program is free to join, and you only pay for the trip itself.</p>
+            </details>
+            <details>
+              <summary>What kind of discount do I get?</summary>
+              <p>Journey of Honor members generally receive a 10% discount on cruises and other vacation packages. Your advisor will confirm the exact discount for your specific trip.</p>
             </details>
             <details>
               <summary>Do I need documentation to prove my service?</summary>
