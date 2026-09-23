@@ -73,8 +73,8 @@ export default function JourneyOfHonorPage() {
             </div>
             <div className="benefit">
               <span className="ico">🌐</span>
-              <h3>Real Supplier Access</h3>
-              <p>Direct relationships with major cruise lines, resort brands and tour operators — the same access Crestwell uses for every client.</p>
+              <h3>10% Off Cruises &amp; Vacation Packages</h3>
+              <p>Journey of Honor members generally receive a 10% discount on cruises and other vacation packages, on top of no planning fees.</p>
             </div>
             <div className="benefit">
               <span className="ico">📞</span>
