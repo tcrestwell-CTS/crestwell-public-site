@@ -14,7 +14,9 @@ function logIp(page: string, outcome: string, extras: Record<string, unknown> = 
 
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const STRIPE_PK = 'pk_live_51RrgVIPJljF0WNcYMZK3XH5QGmffC4LsV0e8EdSglGdrD8SlY9akQwJhBO8N2d87i574E3ONKvbsabfgKc3SDSq500gJ96MghZ';
+// Client/customer payments run on the dedicated NEW Stripe account (acct_1RqmDcPN86ZkZBcR).
+// Loan financing (app/financing) intentionally stays on the OLD account's key.
+const STRIPE_PK = 'pk_live_51RqmDcPN86ZkZBcRku28H4mlTEYLDF5pg6O3pDbhogoPYobO1vyiNTrzrmLDKloxwQYfnWNaBBiOGGlQg7MWAjJZ009MLOSUg0';
 const SITE_DOMAIN = 'https://crestwellgetaways.com';
 
 // ─── Fee constants ────────────────────────────────────────────────────────────
