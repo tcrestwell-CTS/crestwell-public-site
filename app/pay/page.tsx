@@ -312,6 +312,10 @@ export default function PublicPayPage() {
         user_confirmation_url_action: 'GET',
         name: 'Crestwell Travel Services',
         public_api_key: process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || '',
+        // VCN only for agent-linked payments -- create-virtual-card needs an
+        // existing trip_payments record (tripPaymentId) to attach the card to.
+        // Generic/unlinked deposits keep using the standard direct-charge flow.
+        ...(isAgentLink ? { use_vcn: true } : {}),
       },
       shipping: {
         name: { full: name },
@@ -338,18 +342,36 @@ export default function PublicPayPage() {
       onFail: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
       onSuccess: async ({ checkout_token }: { checkout_token: string }) => {
         try {
-          const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              checkout_token, amount_cents: calcAffirmTotal(amountCents),
-              customer_name: name, customer_email: email,
-              booking_ref: bookingRef, trip_name: useGroupTrip && selectedTrip ? selectedTrip.name : tripName, payment_type: 'deposit',
-            }),
-          });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-          setStatus('success');
+          if (isAgentLink) {
+            // VCN flow -- create the virtual card record via our own server,
+            // which holds the internal agent secret. The agent then reveals
+            // and uses the card details securely from within cts-agent-dash.
+            const res = await fetch('/api/create-virtual-card', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                paymentId: tripPaymentId,
+                method: 'affirm',
+                affirmCheckoutId: checkout_token,
+              }),
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            setStatus('success');
+          } else {
+            const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                checkout_token, amount_cents: calcAffirmTotal(amountCents),
+                customer_name: name, customer_email: email,
+                booking_ref: bookingRef, trip_name: useGroupTrip && selectedTrip ? selectedTrip.name : tripName, payment_type: 'deposit',
+              }),
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            setStatus('success');
+          }
         } catch (err: any) { setError(err.message || 'Affirm charge failed.'); setStatus('error'); }
       },
     });
