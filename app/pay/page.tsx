@@ -338,27 +338,43 @@ export default function PublicPayPage() {
       total: calcAffirmTotal(amountCents),
       tax_amount: 0, shipping_amount: 0, discounts: {},
     });
-    window.affirm.checkout.open({
-      onFail: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
-      onSuccess: async ({ checkout_token }: { checkout_token: string }) => {
-        try {
-          if (isAgentLink) {
-            // VCN flow -- create the virtual card record via our own server,
-            // which holds the internal agent secret. The agent then reveals
-            // and uses the card details securely from within cts-agent-dash.
+    if (isAgentLink) {
+      // VCN checkout uses a DIFFERENT launch method and callback shape than
+      // the standard flow -- open_vcn()/success()/error(), not open()/onSuccess()/onFail().
+      // (Bug found & fixed: a real customer application returned nothing because this
+      // was still calling the standard open() method even with use_vcn:true set above.)
+      window.affirm.checkout.open_vcn({
+        success: async (card_response: any) => {
+          try {
+            // We deliberately do NOT use any raw card data present in this
+            // client-side response. The card is retrieved securely,
+            // server-side, only when an agent reveals it in cts-agent-dash.
+            const checkoutId = card_response?.checkout_id || card_response?.checkout_token;
+            if (!checkoutId) throw new Error('Affirm did not return a checkout id.');
             const res = await fetch('/api/create-virtual-card', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 paymentId: tripPaymentId,
                 method: 'affirm',
-                affirmCheckoutId: checkout_token,
+                affirmCheckoutId: checkoutId,
               }),
             });
             const data = await res.json();
             if (data.error) throw new Error(data.error);
             setStatus('success');
-          } else {
+          } catch (err: any) { setError(err.message || 'Affirm charge failed.'); setStatus('error'); }
+        },
+        error: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
+      });
+      return;
+    }
+
+    window.affirm.checkout.open({
+      onFail: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
+      onSuccess: async ({ checkout_token }: { checkout_token: string }) => {
+        try {
+          {
             const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
