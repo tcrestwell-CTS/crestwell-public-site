@@ -291,8 +291,12 @@ export default function PublicPayPage() {
     }
   };
 
-  // Affirm checkout
-  const handleAffirm = () => {
+  // Affirm checkout -- ALL Affirm payments now use the VCN (virtual card)
+  // flow. Agent-linked payments already have a trip_payments record
+  // (tripPaymentId); generic/unlinked deposits get one created on the fly
+  // via create-standalone-payment (a "shell trip" owned by the admin
+  // account) so create-virtual-card always has a paymentId to attach to.
+  const handleAffirm = async () => {
     if (amountCents < 5000) { setError('Affirm requires a minimum of $50'); return; }
     if (!name || !email) { setError('Name and email are required'); return; }
     if (!address || !city || !state || !zip) { setError('Full address is required for Affirm'); return; }
@@ -305,6 +309,33 @@ export default function PublicPayPage() {
     // plain 5-digit US zip.
     const cleanZip = zip.replace(/[^0-9]/g, '').substring(0, 5);
     if (cleanZip.length !== 5) { setError('Please enter a valid 5-digit zip code.'); return; }
+
+    const effectiveTripName = useGroupTrip && selectedTrip ? selectedTrip.name : tripName;
+
+    let effectivePaymentId = tripPaymentId;
+    if (!isAgentLink) {
+      try {
+        const res = await fetch('/api/create-standalone-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer_name: name, customer_email: email, customer_phone: phone,
+            amount: amountCents / 100,
+            trip_name: effectiveTripName || 'Deposit',
+            booking_ref: bookingRef,
+            payment_type: 'deposit',
+          }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        effectivePaymentId = data.paymentId;
+      } catch (err: any) {
+        setError(err.message || 'Could not start payment. Please try again.');
+        setStatus('error');
+        return;
+      }
+    }
+
     window.affirm.checkout({
       merchant: {
         user_cancel_url: `${SITE_DOMAIN}/pay`,
@@ -312,10 +343,7 @@ export default function PublicPayPage() {
         user_confirmation_url_action: 'GET',
         name: 'Crestwell Travel Services',
         public_api_key: process.env.NEXT_PUBLIC_AFFIRM_PUBLIC_KEY || '',
-        // VCN only for agent-linked payments -- create-virtual-card needs an
-        // existing trip_payments record (tripPaymentId) to attach the card to.
-        // Generic/unlinked deposits keep using the standard direct-charge flow.
-        ...(isAgentLink ? { use_vcn: true } : {}),
+        use_vcn: true,
       },
       shipping: {
         name: { full: name },
@@ -338,43 +366,44 @@ export default function PublicPayPage() {
       total: calcAffirmTotal(amountCents),
       tax_amount: 0, shipping_amount: 0, discounts: {},
     });
-    if (isAgentLink) {
-      // VCN checkout uses a DIFFERENT launch method and callback shape than
-      // the standard flow -- open_vcn()/success()/error(), not open()/onSuccess()/onFail().
-      // (Bug found & fixed: a real customer application returned nothing because this
-      // was still calling the standard open() method even with use_vcn:true set above.)
-      window.affirm.checkout.open_vcn({
-        success: async (card_response: any) => {
-          try {
-            // We deliberately do NOT use any raw card data present in this
-            // client-side response. The card is retrieved securely,
-            // server-side, only when an agent reveals it in cts-agent-dash.
-            const checkoutId = card_response?.checkout_id || card_response?.checkout_token;
-            if (!checkoutId) throw new Error('Affirm did not return a checkout id.');
-            const res = await fetch('/api/create-virtual-card', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                paymentId: tripPaymentId,
-                method: 'affirm',
-                affirmCheckoutId: checkoutId,
-              }),
-            });
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
-            setStatus('success');
-          } catch (err: any) { setError(err.message || 'Affirm charge failed.'); setStatus('error'); }
-        },
-        error: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
-      });
-      return;
-    }
-
-    window.affirm.checkout.open({
-      onFail: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
-      onSuccess: async ({ checkout_token }: { checkout_token: string }) => {
+    // VCN checkout uses a DIFFERENT launch method and callback shape than
+    // the standard flow -- open_vcn()/success()/error(), not open()/onSuccess()/onFail().
+    // (Bug found & fixed: a real customer application returned nothing because this
+    // was still calling the standard open() method even with use_vcn:true set above.)
+    window.affirm.checkout.open_vcn({
+      success: async (card_response: any) => {
         try {
-          {
+          // We deliberately do NOT use any raw card data present in this
+          // client-side response. The card is retrieved securely,
+          // server-side, only when an agent reveals it in cts-agent-dash.
+          const checkoutId = card_response?.checkout_id || card_response?.checkout_token;
+          if (!checkoutId) throw new Error('Affirm did not return a checkout id.');
+          const res = await fetch('/api/create-virtual-card', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              paymentId: effectivePaymentId,
+              method: 'affirm',
+              affirmCheckoutId: checkoutId,
+            }),
+          });
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          setStatus('success');
+        } catch (err: any) { setError(err.message || 'Affirm charge failed.'); setStatus('error'); }
+      },
+      error: (e: any) => { setError(e?.reason || 'Affirm checkout cancelled.'); setStatus('idle'); },
+    });
+  };
+
+  // Retained for reference only -- no longer called, since all Affirm
+  // payments now use the VCN flow above. Left in place temporarily in case
+  // of an emergency rollback need; safe to delete once VCN is confirmed
+  // stable across a few real transactions.
+  const _legacyAffirmDirectCharge_UNUSED = async () => {
+    {
+      {
+        {
             const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
