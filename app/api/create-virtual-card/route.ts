@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // (CW_AGENT_SECRET) that must never be exposed to the browser -- so the
 // public /pay page calls this route instead of the edge function directly.
 const CTS_SUPABASE_URL = process.env.CTS_SUPABASE_URL!;
+const CTS_SUPABASE_ANON_KEY = process.env.CTS_SUPABASE_ANON_KEY!;
 const CW_AGENT_SECRET = process.env.CW_AGENT_SECRET!;
 
 export async function POST(req: NextRequest) {
@@ -19,6 +20,7 @@ export async function POST(req: NextRequest) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "apikey": CTS_SUPABASE_ANON_KEY,
       "x-agent-secret": CW_AGENT_SECRET,
     },
     body: JSON.stringify({ paymentId, method, affirmCheckoutId }),
