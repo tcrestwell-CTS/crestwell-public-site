@@ -396,32 +396,6 @@ export default function PublicPayPage() {
     });
   };
 
-  // Retained for reference only -- no longer called, since all Affirm
-  // payments now use the VCN flow above. Left in place temporarily in case
-  // of an emergency rollback need; safe to delete once VCN is confirmed
-  // stable across a few real transactions.
-  const _legacyAffirmDirectCharge_UNUSED = async () => {
-    {
-      {
-        {
-            const res = await fetch(`${SUPABASE_URL}/functions/v1/create-affirm-charge`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                checkout_token, amount_cents: calcAffirmTotal(amountCents),
-                customer_name: name, customer_email: email,
-                booking_ref: bookingRef, trip_name: useGroupTrip && selectedTrip ? selectedTrip.name : tripName, payment_type: 'deposit',
-              }),
-            });
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
-            setStatus('success');
-          }
-        } catch (err: any) { setError(err.message || 'Affirm charge failed.'); setStatus('error'); }
-      },
-    });
-  };
-
   const isAgentLink = !!tripPaymentId;
 
   if (status === 'success') {
