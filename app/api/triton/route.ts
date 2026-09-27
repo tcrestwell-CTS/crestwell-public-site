@@ -12,10 +12,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRealIp } from '@/lib/logPaymentIp';
 
+// The CruiseFeed-backed search (multiple cruise-line queries + a two-stage
+// Claude parse/rank pipeline) genuinely takes ~20s end to end -- confirmed by
+// direct timing against the live edge function. The old Widgety-era 15s
+// timeout was cutting the request off before it could finish, surfacing as a
+// raw infrastructure 502 rather than a graceful error. maxDuration also
+// extends Vercel's own function time limit for this route, since that would
+// otherwise cut things off even before our own timeout fires.
+export const maxDuration = 45;
+
 const MAX_RESULTS = 3;
 const QUERY_MIN_LEN = 10;
 const QUERY_MAX_LEN = 500;
-const UPSTREAM_TIMEOUT_MS = 15_000;
+const UPSTREAM_TIMEOUT_MS = 35_000;
 
 // ── Rate limiting (v1) ──────────────────────────────────────────────────────
 // Simple per-IP sliding window: 5 searches / hour, in-memory Map.
