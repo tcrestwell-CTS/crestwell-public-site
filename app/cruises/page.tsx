@@ -80,21 +80,6 @@ function CruisesContent() {
         <RevelexCruiseSearch />
       </div>
 
-      {/* CTA */}
-      <section style={{ background: 'var(--cream)', padding: '64px 32px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
-          <div className="overline" style={{ marginBottom: 16 }}>Not Sure Where to Start?</div>
-          <h2 className="font-display" style={{ fontSize: '2rem', fontWeight: 300, color: 'var(--navy)', marginBottom: 16 }}>
-            Let Us Find the Perfect Cruise for You
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.75, marginBottom: 32 }}>
-            Tell us your travel dates, budget, and what matters most — our specialists do the rest.
-          </p>
-          <Link href="/request-quote?trip_type=Cruise+Vacation" className="btn-navy" style={{ textDecoration: 'none' }}>
-            Request a Free Quote
-          </Link>
-        </div>
-      </section>
       {/* ── EEAT CONTENT: Cruise expertise ── */}
       <section style={{ background: 'white', padding: '72px 32px' }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
