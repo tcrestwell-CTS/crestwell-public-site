@@ -309,7 +309,7 @@ export default function CruiseFinderSearch() {
                   fontFamily: 'var(--font-body)',
                 }}
               >
-                None of these fit? Tell us more and a human will dig deeper →
+                None of these fit? Tell us more and we'll dig deeper.
               </Link>
             </div>
           </div>
