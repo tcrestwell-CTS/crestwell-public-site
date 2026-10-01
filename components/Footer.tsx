@@ -73,17 +73,30 @@ export default function Footer() {
                 { label: 'Vacations by Rail', href: '/vacations-by-rail' },
                 { label: 'Destinations', href: '/destinations' },
                 { label: 'Request a Quote', href: '/request-quote' },
+                { label: 'Manage Your Reservation', href: 'https://app.crestwelltravels.com/client/login', external: true },
                 { label: 'About Us', href: '/about' },
                 { label: 'Contact', href: '/contact' },
               ].map(item => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.02em' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}>
-                    {item.label}
-                  </Link>
+                  {item.external ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.02em' }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}>
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.02em' }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}>
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
