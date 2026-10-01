@@ -66,7 +66,7 @@ export default function VeteransPage() {
                 <li>Family &amp; friends welcome — all ages</li>
                 <li>Deposit-friendly payment plans</li>
               </ul>
-              <a className="btn-gold" href="#plan">Get First Access →</a>
+              <a className="btn-gold" href="https://bit.ly/3VFT8gI" target="_blank" rel="noopener noreferrer">Get First Access →</a>
             </div>
             <div className="flag-side">
               <p className="big">
