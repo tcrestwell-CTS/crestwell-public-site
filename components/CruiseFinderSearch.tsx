@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -58,6 +58,62 @@ function ctaHref(query: string, searchedAt: string, r?: TritonResult): string {
     if (r.price_from != null) params.set('price_from', String(r.price_from));
   }
   return `/request-quote?${params.toString()}`;
+}
+
+
+const SEARCH_STAGES = [
+  { at: 0, label: 'Understanding your request' },
+  { at: 4, label: 'Searching sailings across cruise lines' },
+  { at: 12, label: 'Comparing itineraries and prices' },
+  { at: 20, label: 'Choosing your best matches' },
+];
+
+function SearchProgress() {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const start = Date.now();
+    const id = setInterval(() => setElapsed((Date.now() - start) / 1000), 200);
+    return () => clearInterval(id);
+  }, []);
+
+  // Eases toward 95% (never reaches 100 until results arrive); ~63% at 20s
+  const pct = Math.min(95, 95 * (1 - Math.exp(-elapsed / 20)));
+  let active = 0;
+  SEARCH_STAGES.forEach((st, i) => { if (elapsed >= st.at) active = i; });
+
+  return (
+    <div role="status" aria-live="polite" style={{ maxWidth: 520, margin: '0 auto', textAlign: 'left' }}>
+      <div style={{ position: 'relative', height: 44, marginBottom: 4 }}>
+        <div className="cw-ship" style={{ left: `${pct}%` }} aria-hidden="true">🚢</div>
+        <div className="cw-waves" aria-hidden="true" />
+      </div>
+      <div className="cw-track" aria-hidden="true">
+        <div className="cw-fill" style={{ width: `${pct}%` }} />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--slate)' }}>
+        <span>Setting sail</span>
+        <span>{Math.round(pct)}%</span>
+      </div>
+      <ul style={{ listStyle: 'none', margin: '28px 0 0', padding: 0 }}>
+        {SEARCH_STAGES.map((st, i) => {
+          const done = i < active;
+          const current = i === active;
+          return (
+            <li key={st.label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '7px 0', fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: done || current ? 'var(--navy)' : 'var(--slate-light)', fontWeight: current ? 500 : 400, transition: 'color 0.3s' }}>
+              <span className={current ? 'cw-dot cw-dot-active' : 'cw-dot'} style={{ background: done ? 'var(--gold)' : current ? 'var(--gold-light)' : 'transparent', borderColor: done || current ? 'var(--gold)' : '#d1d9e0' }}>
+                {done ? '✓' : ''}
+              </span>
+              {st.label}{current ? '…' : ''}
+            </li>
+          );
+        })}
+      </ul>
+      <p style={{ marginTop: 20, fontSize: '0.8rem', color: 'var(--slate)', lineHeight: 1.6 }}>
+        Checking Royal Caribbean, Carnival, NCL, Disney, MSC and more. This usually takes about 20–30 seconds.
+      </p>
+    </div>
+  );
 }
 
 export default function CruiseFinderSearch() {
@@ -197,12 +253,7 @@ export default function CruiseFinderSearch() {
       {/* ── LOADING ── */}
       {state === 'loading' && (
         <section style={{ background: 'var(--cream)', padding: '80px 32px', textAlign: 'center' }}>
-          <div style={{ maxWidth: 480, margin: '0 auto' }}>
-            <div className="cw-spinner" style={{ margin: '0 auto 24px' }} />
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-              Checking sailings across Royal Caribbean, Carnival, NCL, Disney, MSC and more…
-            </p>
-          </div>
+          <SearchProgress />
         </section>
       )}
 
@@ -317,14 +368,35 @@ export default function CruiseFinderSearch() {
       )}
 
       <style>{`
-        .cw-spinner {
-          width: 40px; height: 40px;
-          border: 3px solid rgba(13,27,42,0.12);
-          border-top-color: var(--gold);
-          border-radius: 50%;
-          animation: cwSpin 0.8s linear infinite;
+        .cw-track { height: 6px; background: rgba(13,27,42,0.1); border-radius: 3px; overflow: hidden; }
+        .cw-fill {
+          height: 100%; border-radius: 3px; transition: width 0.4s linear;
+          background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+          background-size: 200% 100%; animation: cwShimmer 2s linear infinite;
         }
-        @keyframes cwSpin { to { transform: rotate(360deg); } }
+        .cw-ship {
+          position: absolute; bottom: 6px; font-size: 1.7rem; line-height: 1;
+          transform: translateX(-50%); transition: left 0.4s linear;
+          animation: cwBob 2.4s ease-in-out infinite;
+        }
+        .cw-waves {
+          position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+          background: radial-gradient(circle at 6px 0, transparent 5px, rgba(201,168,76,0.35) 5.5px, rgba(201,168,76,0.35) 7px, transparent 7.5px) 0 0 / 12px 6px repeat-x;
+          animation: cwWave 1.6s linear infinite; opacity: 0.8;
+        }
+        .cw-dot {
+          width: 18px; height: 18px; border-radius: 50%; border: 2px solid; flex-shrink: 0;
+          display: inline-flex; align-items: center; justify-content: center;
+          font-size: 0.65rem; color: var(--navy); font-weight: 700;
+        }
+        .cw-dot-active { animation: cwPulse 1.4s ease-in-out infinite; }
+        @keyframes cwShimmer { to { background-position: -200% 0; } }
+        @keyframes cwBob { 0%,100% { margin-bottom: 0; rotate: -2deg; } 50% { margin-bottom: 3px; rotate: 2deg; } }
+        @keyframes cwWave { to { background-position: 12px 0; } }
+        @keyframes cwPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.5); } 50% { box-shadow: 0 0 0 6px rgba(201,168,76,0); } }
+        @media (prefers-reduced-motion: reduce) {
+          .cw-fill, .cw-ship, .cw-waves, .cw-dot-active { animation: none; }
+        }
 
         @media (max-width: 640px) {
           .cw-finder-grid {
