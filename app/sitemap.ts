@@ -20,6 +20,7 @@ const STATIC_PAGES = [
   { path: '/plan',          priority: 0.9,  changeFreq: 'monthly' },
   { path: '/request-quote',priority: 0.8,  changeFreq: 'monthly' },
   { path: '/budget',        priority: 0.8,  changeFreq: 'monthly' },
+  { path: '/signature-experiences', priority: 0.7, changeFreq: 'monthly' },
   { path: '/payment',      priority: 0.6,  changeFreq: 'monthly' },
   { path: '/terms',        priority: 0.3,  changeFreq: 'yearly'  },
   { path: '/privacy',      priority: 0.3,  changeFreq: 'yearly'  },

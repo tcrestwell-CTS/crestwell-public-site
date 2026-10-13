@@ -1,0 +1,4 @@
+/* Signature Experiences — reuses the .joh-page design tokens/components; overrides only the hero art */
+.joh-page .se-hero{background:linear-gradient(160deg,#0d1b2a 0%,#162033 55%,#1e2d42 100%)}
+.joh-page .se-hero h1{max-width:20ch}
+.joh-page .se-note{max-width:640px;margin:22px auto 0;text-align:center;font-size:.8rem;color:var(--slate)}

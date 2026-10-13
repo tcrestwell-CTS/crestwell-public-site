@@ -33,6 +33,7 @@ const SERVICES = [
   { label: 'Car Rental',             href: '/car-rental',          icon: '🚗' },
   { label: 'Financing',              href: '/financing',           icon: '💳' },
   { label: 'The Circle',             href: '/the-circle',          icon: '✦' },
+  { label: 'Signature Experiences',  href: '/signature-experiences', icon: '🥂' },
 ];
 
 // Top-level nav — 6 items (was 11)
