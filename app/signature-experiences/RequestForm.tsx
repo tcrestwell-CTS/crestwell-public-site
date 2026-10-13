@@ -15,16 +15,8 @@ export default function RequestForm() {
     const first_name = nameParts[0] || "";
     const last_name = nameParts.slice(1).join(" ") || "-";
 
-    const message = [
-      "Signature Experiences invitation request",
-      data.interest && `Most interested in: ${data.interest}`,
-      data.occasion && `Upcoming occasion: ${data.occasion}`,
-      data.referred && `Referred by / existing client: ${data.referred}`,
-      data.notes,
-    ].filter(Boolean).join("\n");
-
     try {
-      const res = await fetch("/api/quote", {
+      const res = await fetch("/api/signature-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -32,10 +24,11 @@ export default function RequestForm() {
           last_name,
           email: data.email,
           phone: data.phone || "",
-          trip_type: "Signature Experiences",
           budget: data.budget || "",
-          message,
-          lead_source: "signature-experiences",
+          interest: data.interest || "",
+          occasion: data.occasion || "",
+          referred: data.referred || "",
+          notes: data.notes || "",
         }),
       });
       if (!res.ok) throw new Error(String(res.status));

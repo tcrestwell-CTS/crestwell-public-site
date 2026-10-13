@@ -73,6 +73,7 @@ export default function Footer() {
                 { label: 'Vacations by Rail', href: '/vacations-by-rail' },
                 { label: 'Destinations', href: '/destinations' },
                 { label: 'Request a Quote', href: '/request-quote' },
+                { label: 'Signature Experiences', href: '/signature-experiences' },
                 { label: 'Manage Your Reservation', href: 'https://app.crestwelltravels.com/client/login', external: true },
                 { label: 'About Us', href: '/about' },
                 { label: 'Contact', href: '/contact' },
