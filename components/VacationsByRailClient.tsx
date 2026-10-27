@@ -5,6 +5,7 @@ import Image from 'next/image';
 import GYGWidget from '@/components/GYGWidget';
 import RailDeals from '@/components/RailDeals';
 import AmtrakScheduleSearch from '@/components/AmtrakScheduleSearch';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 
 const experiences = [
@@ -110,6 +111,12 @@ export default function VacationsByRailClient() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: form.name, email: form.email, brochure: modal?.brochure }),
     });
+    if (res.ok) {
+      trackGenerateLead({
+        lead_source: 'rail-brochure',
+        trip_type: modal?.label || 'Rail brochure',
+      });
+    }
     setStatus(res.ok ? 'success' : 'error');
   }
 

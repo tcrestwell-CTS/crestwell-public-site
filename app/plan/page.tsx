@@ -2,6 +2,7 @@
 import { EmailField, useEmailValidation } from '@/components/EmailField';
 import { useState } from 'react';
 import Link from 'next/link';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -204,6 +205,11 @@ export default function PlanPage() {
         }),
       });
       if (!res.ok) throw new Error('Submission failed');
+      trackGenerateLead({
+        lead_source: 'plan-page',
+        trip_type: form.trip_types[0] || 'Cruise Vacation',
+        destination: form.destination,
+      });
       setSubmitted(true);
     } catch (e: any) {
       setError('Something went wrong. Please try again or call us at 888.508.6893.');

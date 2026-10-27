@@ -2,6 +2,7 @@
 import { EmailField, useEmailValidation } from '@/components/EmailField';
 import { useState } from 'react';
 import Link from 'next/link';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 export default function WinPage() {
   const [status, setStatus] = useState<'idle'|'loading'|'success'|'error'>('idle');
@@ -30,6 +31,11 @@ export default function WinPage() {
         const d = await res.json();
         throw new Error(d.error || 'Something went wrong');
       }
+      trackGenerateLead({
+        lead_source: 'win-entry',
+        trip_type: 'Giveaway entry',
+        destination: form.destination,
+      });
       setStatus('success');
     } catch (err: any) {
       setError(err.message);

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { EmailField, useEmailValidation } from '@/components/EmailField'
+import { trackGenerateLead } from '@/lib/track-generate-lead'
 
 export function ContactForm({ tripName, tripId }: { tripName?: string; tripId?: string }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', groupSize: '2', message: '' })
@@ -19,6 +20,10 @@ export function ContactForm({ tripName, tripId }: { tripName?: string; tripId?: 
         body: JSON.stringify({ ...form, tripName, tripId }),
       })
       if (!res.ok) throw new Error()
+      trackGenerateLead({
+        lead_source: 'trip-inquiry',
+        trip_type: tripName || 'Trip Inquiry',
+      })
       setStatus('sent')
     } catch {
       setStatus('error')

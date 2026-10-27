@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { trackGenerateLead } from "@/lib/track-generate-lead";
 
 export default function RequestForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
@@ -32,6 +33,10 @@ export default function RequestForm() {
         }),
       });
       if (!res.ok) throw new Error(String(res.status));
+      trackGenerateLead({
+        lead_source: "signature-experiences",
+        trip_type: "Signature Experiences",
+      });
       setStatus("ok");
     } catch {
       setStatus("error");
