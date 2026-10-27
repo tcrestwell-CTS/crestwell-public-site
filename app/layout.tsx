@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AnalyticsEvents from '@/components/AnalyticsEvents';
 import { headers } from 'next/headers';
 
 async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) {
@@ -174,6 +175,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Google Tag Manager (noscript) */}
         <noscript dangerouslySetInnerHTML={{ __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3HVW4HR" height="0" width="0" style="display:none;visibility:hidden"></iframe>` }} />
         {/* End Google Tag Manager (noscript) */}
+        <AnalyticsEvents />
         <NavbarFooterWrapper>
           {children}
         </NavbarFooterWrapper>

@@ -180,6 +180,32 @@ function RequestQuoteForm() {
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.error || 'Something went wrong. Please try again or email us directly.');
       }
+
+      // GA4 + GTM lead event
+      if (typeof window !== 'undefined') {
+        const leadPayload = {
+          event: 'generate_lead',
+          trip_type: form.trip_type || 'quote_request',
+          lead_source: form._triton_query ? 'triton' : (form._cruise_name ? 'cruise' : 'website'),
+          destination: form.destination || undefined,
+        };
+
+        // dataLayer (works with GTM)
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(leadPayload);
+
+        // Direct gtag (works with GA4)
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'generate_lead', {
+            event_category: 'engagement',
+            event_label: form.trip_type || 'quote_request',
+            trip_type: form.trip_type,
+            lead_source: leadPayload.lead_source,
+            value: 1,
+          });
+        }
+      }
+
       setSubmitted(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again or email us directly.';
