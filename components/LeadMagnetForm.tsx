@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { EmailField, useEmailValidation } from '@/components/EmailField';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 export default function LeadMagnetForm({ city, cityName }: { city: string; cityName: string }) {
   const [email, setEmail] = useState('');
@@ -26,6 +27,12 @@ export default function LeadMagnetForm({ city, cityName }: { city: string; cityN
         const d = await res.json();
         throw new Error(d.error || 'Something went wrong');
       }
+
+      trackGenerateLead({
+        lead_source: 'lead-magnet',
+        trip_type: 'Port Guide',
+        destination: cityName,
+      });
 
       setStatus('success');
       setEmail('');

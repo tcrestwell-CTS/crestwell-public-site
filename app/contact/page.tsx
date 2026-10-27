@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { EmailField, HoneypotField } from '@/components/EmailField';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 const subjects = [
   'General Inquiry',
@@ -60,6 +61,10 @@ export default function ContactPage() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Something went wrong. Please try again.');
+      trackGenerateLead({
+        lead_source: 'contact',
+        trip_type: form.subject || 'General Inquiry',
+      });
       setSubmitted(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';

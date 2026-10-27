@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { trackGenerateLead } from "@/lib/track-generate-lead";
 
 export default function IntakeForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
@@ -37,6 +38,10 @@ export default function IntakeForm() {
         }),
       });
       if (!res.ok) throw new Error(String(res.status));
+      trackGenerateLead({
+        lead_source: "journey-of-honor",
+        trip_type: "Journey of Honor",
+      });
       setStatus("ok");
     } catch {
       setStatus("error");

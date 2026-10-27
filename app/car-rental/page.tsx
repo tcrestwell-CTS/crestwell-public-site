@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { EmailField, useEmailValidation } from '@/components/EmailField';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 const PROVIDERS = [
   { id: 'enterprise', name: 'Enterprise',  logo: '🔴', tagline: 'Best loyalty program' },
@@ -138,6 +139,11 @@ export default function CarRentalPage() {
       .then(res => res.json().then(data => ({ ok: res.ok, data })))
       .then(({ ok, data }) => {
         if (!ok) throw new Error(data.error);
+        trackGenerateLead({
+          lead_source: 'car-rental',
+          trip_type: 'Car Rental',
+          destination: pickupDisplay,
+        });
         setSubmitted(true);
       })
       .catch((e: Error) => setError(e.message || 'Submission failed — please try again.'))

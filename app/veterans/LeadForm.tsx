@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { trackGenerateLead } from "@/lib/track-generate-lead";
 
 export default function LeadForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
@@ -39,6 +40,10 @@ export default function LeadForm() {
         }),
       });
       if (!res.ok) throw new Error(String(res.status));
+      trackGenerateLead({
+        lead_source: "veterans-page",
+        trip_type: data.trip_type || "Veterans Day at Sea 2027",
+      });
       setStatus("ok");
     } catch {
       setStatus("error");

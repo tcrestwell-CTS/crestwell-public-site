@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { EmailField, useEmailValidation } from "@/components/EmailField";
+import { trackGenerateLead } from "@/lib/track-generate-lead";
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
@@ -22,6 +23,10 @@ export default function NewsletterSection() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
+      trackGenerateLead({
+        lead_source: "homepage-port-guide",
+        trip_type: "Southeast Port Guide",
+      });
       setStatus("success");
       setEmail("");
       setName("");
