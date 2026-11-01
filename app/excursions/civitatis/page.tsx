@@ -5,7 +5,8 @@ import CivitatisContent from "@/components/CivitatisContent";
 
 export const metadata: Metadata = {
   title: "Civitatis Tours & Activities | Crestwell Travel Services",
-  description: "Browse top-rated tours through Civitatis — best for Latin America, Spain, Portugal, and free cancellation options worldwide.",
+  description: "Browse tours through Civitatis — linked from Crestwell Travel Services. The page highlights Latin America, Spain, Portugal, and free-cancellation options.",
+  alternates: { canonical: 'https://crestwellgetaways.com/excursions/civitatis' },
 };
 
 export default function CivitatisPage() {

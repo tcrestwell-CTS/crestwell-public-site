@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const PAGE_URL = "https://www.crestwellgetaways.com/veterans";
+const PAGE_URL = "https://crestwellgetaways.com/veterans";
 const SHARE_TEXT =
   "Veterans, Family & Group Travel — planned start to finish by Crestwell Travel Services";
 

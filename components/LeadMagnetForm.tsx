@@ -49,7 +49,8 @@ export default function LeadMagnetForm({ city, cityName }: { city: string; cityN
         <div className="text-4xl mb-4">📬</div>
         <h3 className="text-xl font-bold text-slate-900 mb-2">Check your inbox!</h3>
         <p className="text-slate-600">
-          Your free <strong>{cityName} Cruiser's Port Guide</strong> is on its way.
+          Your free <strong>Southeast Cruiser&apos;s Port Guide</strong> is on its way.
+          It covers ports within reach of {cityName} and the rest of Georgia, Tennessee, Alabama, and Florida.
           Check your email — it should arrive within a minute.
         </p>
         <p className="text-sm text-slate-400 mt-4">
@@ -88,7 +89,7 @@ export default function LeadMagnetForm({ city, cityName }: { city: string; cityN
         <p className="text-red-600 text-sm text-center">{error}</p>
       )}
       <p className="text-xs text-slate-400 text-center">
-        No spam. Unsubscribe any time. Your info stays with Crestwell.
+        No spam. Unsubscribe any time. Your info stays with Crestwell Travel Services.
       </p>
     </form>
   );

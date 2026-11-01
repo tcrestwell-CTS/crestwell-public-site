@@ -1,6 +1,22 @@
 // /data/cities.ts
 // Data source for all /travel-agent-[city] landing pages.
 // Add new cities by appending to this array — the template page reads from here.
+//
+// The eight pages share one template. Each city's distinct job is the
+// port-and-airport decision in pageFocus, closestPorts, and drivingVsFlying:
+//   Atlanta — ATL versus a drive to Florida or Alabama ports
+//   Nashville — Mobile as the drive-to port; BNA for flights
+//   Birmingham — shortest drives to Mobile and New Orleans
+//   Chattanooga — home base; ATL two hours away; Mobile as the drive
+//   Huntsville — Mobile in about 4 hours; HSV versus a drive to BNA
+//   Knoxville — TYS nonstops to Florida cruise cities
+//   Memphis — New Orleans as the closest major port
+//   Savannah — Jacksonville about 2 hours away
+// TODO(Tim Crestwell): Add firsthand local notes per city (where you meet
+// clients, ports you have actually used with travelers from that city).
+// Do not invent client stories, savings amounts, or per-city ratings.
+// Testimonials below are kept in the data file and are not rendered.
+// Confirm each quote, name, and detail before publishing them.
 
 export type CityPort = {
   name: string;
@@ -30,10 +46,12 @@ export type CityData = {
     note: string;                  // One-sentence local color
   };
   heroSubhead: string;             // Hero section city-specific subhead
+  pageFocus: string;               // One sentence: what this city page is for
   localAngle: string;              // 2-paragraph "why your city, specifically"
   closestPorts: CityPort[];        // Ordered nearest → farthest
   drivingVsFlying: string;         // One paragraph of real advice
-  testimonials: CityTestimonial[]; // 2-3 local testimonials
+  // Not rendered. TODO(Tim Crestwell): confirm before publishing.
+  testimonials: CityTestimonial[];
   faqs: { q: string; a: string }[];
 };
 
@@ -43,7 +61,7 @@ export const cities: CityData[] = [
     slug: "atlanta",
     city: "Atlanta",
     cityWithState: "Atlanta, GA",
-    metaTitle: "Travel Agent Atlanta | Cruises & All-Inclusive | Crestwell",
+    metaTitle: "Travel Agent Atlanta | Crestwell Travel Services",
     metaDescription:
       "Atlanta's personal cruise and all-inclusive vacation advisor. ASTA & CLIA certified, exclusive rates, 24hr quotes. Serving Atlanta, Marietta, Alpharetta & Metro ATL.",
     primaryKeyword: "travel agent Atlanta",
@@ -55,6 +73,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "Skip the 40 browser tabs and the endless booking headaches. Tell us what you want — we'll send you three hand-picked options within 24 hours, booked at rates you can't get on Expedia.",
+    pageFocus:
+      "This page is for Atlanta-area travelers choosing between a drive to a Florida or Alabama cruise port and a flight out of Hartsfield-Jackson (ATL).",
     localAngle:
       "Atlanta is one of the best cities in the country to launch a cruise or international vacation from — and also one of the most confusing. Between Hartsfield-Jackson being the world's busiest airport, the drive to the Florida cruise ports, and the sheer number of deals flooding your inbox, most Atlanta travelers overpay by 15–30% or book the wrong cabin, the wrong resort, or the wrong week.\n\nThat's where we come in. Crestwell Travel Services is a Southeast-based, ASTA-accredited travel agency that works with Atlanta families, couples, and groups to plan cruises, all-inclusive resorts, Disney vacations, and group trips. You get a dedicated advisor — not a call center — who learns your preferences, monitors price drops after you book, and handles the logistics from your ATL departure to the moment you're back in your driveway.",
     closestPorts: [
@@ -116,7 +136,7 @@ export const cities: CityData[] = [
     slug: "nashville",
     city: "Nashville",
     cityWithState: "Nashville, TN",
-    metaTitle: "Travel Agent Nashville | Cruises & All-Inclusive | Crestwell",
+    metaTitle: "Travel Agent Nashville | Crestwell Travel Services",
     metaDescription:
       "Nashville's personal cruise and vacation advisor. ASTA & CLIA certified. Exclusive rates on Carnival, Royal Caribbean, Sandals & more. Serving Middle Tennessee.",
     primaryKeyword: "travel agent Nashville",
@@ -128,6 +148,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "Planning a cruise or resort vacation shouldn't feel like a second job. Tell us what you want — we'll send you three hand-picked options within 24 hours at rates you can't find online.",
+    pageFocus:
+      "This page is for Middle Tennessee travelers. The Port of Mobile is the closest drive-to cruise port; BNA covers Florida and Caribbean flights.",
     localAngle:
       "Nashville has quietly become one of the fastest-growing vacation-booking markets in the South, and for good reason: BNA's expanded international service, a strong Gulf Coast drive radius, and the sheer number of milestone trips (bachelorettes, anniversary getaways, church groups, CMA-adjacent group celebrations) flowing through Middle Tennessee.\n\nBut that also means Nashville travelers are targeted with more noise than almost anyone else — online booking engines, timeshare pitches, and 'exclusive' deals that aren't actually exclusive. Crestwell gives you a dedicated ASTA-accredited advisor who cuts through all of it. We match you with the right cruise or resort, lock in rates the public doesn't see, and handle every logistical detail from your departure out of BNA to the moment you're back home.",
     closestPorts: [
@@ -189,7 +211,7 @@ export const cities: CityData[] = [
     slug: "birmingham",
     city: "Birmingham",
     cityWithState: "Birmingham, AL",
-    metaTitle: "Travel Agent Birmingham AL | Cruises & Resorts | Crestwell",
+    metaTitle: "Travel Agent Birmingham AL | Crestwell Travel Services",
     metaDescription:
       "Birmingham's cruise and all-inclusive vacation advisor. Closest to Mobile & New Orleans cruise ports. ASTA & CLIA certified. Free planning, 24hr quotes.",
     primaryKeyword: "travel agent Birmingham AL",
@@ -201,6 +223,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "You shouldn't have to piece together flights, transfers, and cabin picks on your own. Tell us what you want — we'll send three hand-picked options within 24 hours at rates the public can't see.",
+    pageFocus:
+      "This page is for Birmingham travelers who can drive to the Port of Mobile in about 4.5 hours or to New Orleans in about 6.",
     localAngle:
       "Birmingham sits in one of the best geographic positions in the country for cruising — you're 4.5 hours from the Port of Mobile and 6 hours from New Orleans, meaning you can be on a ship by dinnertime without booking a single flight. That's a real advantage most travelers in other cities don't have, and it's why Birmingham and surrounding Hoover, Vestavia, and Mountain Brook families book more drive-to cruises per capita than almost anywhere else in the South.\n\nBut drive-to doesn't mean simple. Choosing between Carnival's Mobile sailings and Norwegian's New Orleans itineraries, picking the right cabin category, timing the booking to catch the right promotion — that's where most Birmingham travelers leave money on the table. Crestwell gives you an ASTA-accredited advisor who knows these two ports cold and handles every logistical detail: parking, pre-cruise hotels, shore excursions, and price-drop monitoring after you book.",
     closestPorts: [
@@ -262,7 +286,7 @@ export const cities: CityData[] = [
     slug: "chattanooga",
     city: "Chattanooga",
     cityWithState: "Chattanooga, TN",
-    metaTitle: "Travel Agent Chattanooga | Cruises & Resorts | Crestwell",
+    metaTitle: "Travel Agent Chattanooga | Crestwell Travel Services",
     metaDescription:
       "Chattanooga's local travel agency for cruises, all-inclusive resorts, and group trips. ASTA & CLIA certified. Free planning, exclusive rates, 24hr quotes.",
     primaryKeyword: "travel agent Chattanooga",
@@ -274,6 +298,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "As your local Chattanooga travel advisor, we make cruise and resort planning actually enjoyable. Tell us what you want — three hand-picked options, back to you within 24 hours.",
+    pageFocus:
+      "This page is for Chattanooga, Hixson, Ooltewah, and Signal Mountain travelers. Crestwell Travel Services is based in Chattanooga.",
     localAngle:
       "Crestwell is based right here in Chattanooga, and that matters. We're not a 1-800 number or a big-box agency with a regional rep who doesn't know the Southeast — we're your neighbors, and Chattanooga, Hixson, Ooltewah, and Signal Mountain families make up a huge portion of our business.\n\nChattanooga sits in a sweet spot for vacation planning: close enough to Atlanta (ATL) to tap into world-class direct Caribbean flights, and within a reasonable drive to Florida and Alabama cruise ports. What most travelers don't realize is how much the right port, cabin, and timing can swing the price of the exact same trip. We spend our days inside these cruise line systems and know where the value actually is.",
     closestPorts: [
@@ -335,7 +361,7 @@ export const cities: CityData[] = [
     slug: "huntsville",
     city: "Huntsville",
     cityWithState: "Huntsville, AL",
-    metaTitle: "Travel Agent Huntsville AL | Cruises & Resorts | Crestwell",
+    metaTitle: "Travel Agent Huntsville AL | Crestwell Travel Services",
     metaDescription:
       "Huntsville's trusted cruise and vacation advisor. Closest to Mobile & New Orleans cruise ports. ASTA & CLIA certified. Free planning, exclusive rates.",
     primaryKeyword: "travel agent Huntsville AL",
@@ -347,6 +373,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "Whether you're heading to Mobile for a Carnival cruise or flying out of HSV for an all-inclusive honeymoon, we handle everything. Three hand-picked options within 24 hours of your request.",
+    pageFocus:
+      "This page is for Huntsville and Madison travelers. Mobile is about 4 hours away, and some flights are easier from HSV while others are easier from BNA.",
     localAngle:
       "Huntsville has one of the strongest drive-to-port positions in the Southeast — Mobile is under 4 hours, New Orleans about 6. For a city with Huntsville's income levels and professional demographics (thank you, Redstone and the aerospace corridor), that means cruising is genuinely one of the best vacation values available.\n\nWhat we see over and over from Huntsville and Madison clients: smart, busy professionals who don't want to spend their evenings clicking through cruise-line websites and cabin diagrams. They want someone trustworthy to say 'here's the right ship for your family, here's the right cabin, here's when to book.' That's exactly what we do. ASTA-accredited, CLIA-certified, and free to you — because the cruise lines pay us, not you.",
     closestPorts: [
@@ -408,7 +436,7 @@ export const cities: CityData[] = [
     slug: "knoxville",
     city: "Knoxville",
     cityWithState: "Knoxville, TN",
-    metaTitle: "Travel Agent Knoxville | Cruises & Resorts | Crestwell",
+    metaTitle: "Travel Agent Knoxville | Crestwell Travel Services",
     metaDescription:
       "Knoxville's cruise and all-inclusive vacation advisor. ASTA & CLIA certified. Free planning, exclusive rates, dedicated advisor — not a call center.",
     primaryKeyword: "travel agent Knoxville",
@@ -420,6 +448,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "Stop comparing 15 cruise line websites. Tell us what you want — we'll send you three hand-picked options within 24 hours, at rates you can't find online.",
+    pageFocus:
+      "This page is for Knoxville, Farragut, and Maryville travelers using McGhee Tyson (TYS), which has direct flights to Orlando, Tampa, and Miami.",
     localAngle:
       "Knoxville and the surrounding Farragut, Maryville, and Oak Ridge communities have a strong cruising and resort-travel culture — but also some of the most time-strapped vacation planners we work with. Between UT, the national labs, and the East Tennessee corporate base, our Knoxville clients tend to be people who know exactly what they want but don't have 20 hours to research ships, cabins, and resort categories.\n\nThat's where a good travel advisor pays for herself (and then some). We ask you four or five smart questions, come back with three genuinely curated options, and handle every detail from flight selection out of TYS to the specialty dining reservation on night three. And because we're ASTA-accredited and CLIA-certified, you get access to promotions and amenities the general public never sees.",
     closestPorts: [
@@ -481,7 +511,7 @@ export const cities: CityData[] = [
     slug: "memphis",
     city: "Memphis",
     cityWithState: "Memphis, TN",
-    metaTitle: "Travel Agent Memphis | Cruises & All-Inclusive | Crestwell",
+    metaTitle: "Travel Agent Memphis | Crestwell Travel Services",
     metaDescription:
       "Memphis's personal cruise and vacation advisor. ASTA & CLIA certified. Closest to New Orleans and Mobile cruise ports. Free planning, 24hr quotes.",
     primaryKeyword: "travel agent Memphis",
@@ -493,6 +523,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "Cruise and resort planning, done right. Tell us what you want — we'll send three hand-picked options within 24 hours at rates the public can't see.",
+    pageFocus:
+      "This page is for Memphis, Germantown, and Collierville travelers. New Orleans is the closest major cruise port, about 6 hours by car.",
     localAngle:
       "Memphis has a unique advantage: you're geographically closer to New Orleans than almost any other cruise port, which opens up a cruise market (Norwegian, Carnival, Royal Caribbean out of NOLA) that's fantastic value and often overlooked by travelers who default to Florida. We steer a lot of our Memphis, Germantown, and Collierville clients toward New Orleans sailings for exactly this reason.\n\nBut Memphis travelers also need the full toolkit — Sandals honeymoons, Disney cruises, family trips to Beaches Turks & Caicos, and group celebrations. Crestwell handles all of it. You get a dedicated ASTA-accredited advisor, exclusive rates from our preferred partnerships, and someone who actually picks up the phone when you have questions. No planning fees, ever.",
     closestPorts: [
@@ -554,7 +586,7 @@ export const cities: CityData[] = [
     slug: "savannah",
     city: "Savannah",
     cityWithState: "Savannah, GA",
-    metaTitle: "Travel Agent Savannah GA | Cruises & Resorts | Crestwell",
+    metaTitle: "Travel Agent Savannah GA | Crestwell Travel Services",
     metaDescription:
       "Savannah's cruise and all-inclusive vacation advisor. Jacksonville port just 2 hours away. ASTA & CLIA certified. Free planning, exclusive rates.",
     primaryKeyword: "travel agent Savannah GA",
@@ -566,6 +598,8 @@ export const cities: CityData[] = [
     },
     heroSubhead:
       "Cruise and resort planning without the headache. Tell us what you want — three hand-picked options at rates the public can't see, back to you within 24 hours.",
+    pageFocus:
+      "This page is for Savannah and Pooler travelers. Jacksonville is about 2 hours away — the shortest drive to a cruise port among these city pages.",
     localAngle:
       "Savannah has the best drive-to-port position on this entire list — Jacksonville is just 2 hours away, which makes short Bahamas cruises almost absurdly easy. You can leave your house Friday morning and be on a Carnival ship by lunchtime. That's a vacation structure most of the country simply doesn't have access to.\n\nSavannah, Pooler, and Richmond Hill families have been some of our most loyal clients for exactly this reason. We help you pick the right Jacksonville sailing, book the right cabin, and handle the pre-cruise logistics (including whether to stay a night in Jacksonville vs. drive down morning-of). We also book Sandals honeymoons, Disney cruises, Mediterranean sailings, and group trips — everything a full-service ASTA-accredited agency should do.",
     closestPorts: [

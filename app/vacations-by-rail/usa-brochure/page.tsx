@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Best of USA by Rail 2026 | Crestwell Travel Services',
   description: 'Browse the Vacations By Rail Best of USA 2026 ebrochure. Discover scenic rail vacations across America — book through Crestwell Travel Services, planning is always free.',
+  alternates: { canonical: 'https://crestwellgetaways.com/vacations-by-rail/usa-brochure' },
 };
 
 export default function USARailBrochurePage() {

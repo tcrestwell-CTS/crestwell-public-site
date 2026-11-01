@@ -3,11 +3,12 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Royal Caribbean Special Offer — Legend of the Seas 2026 | Crestwell Travel',
+  title: 'Royal Caribbean Special Offer — Legend of the Seas 2026 | Crestwell Travel Services',
   description: 'Exclusive Caribbean sailings on Royal Caribbean\'s Legend of the Seas. 3 to 8-night itineraries from Fort Lauderdale. Western Caribbean, Southern Caribbean & Perfect Day at CocoCay. Book now — limited time offer.',
+  alternates: { canonical: 'https://crestwellgetaways.com/deals/legend-of-the-seas-2026' },
   openGraph: {
     title: 'Royal Caribbean Special Offer — Legend of the Seas 2026',
-    description: 'Exclusive Caribbean sailings from Fort Lauderdale. Book with Crestwell Travel — planning is always free.',
+    description: 'Exclusive Caribbean sailings from Fort Lauderdale. Book with Crestwell Travel Services — planning is always free.',
     url: 'https://crestwellgetaways.com/deals/legend-of-the-seas-2026',
     siteName: 'Crestwell Travel Services',
     type: 'website',

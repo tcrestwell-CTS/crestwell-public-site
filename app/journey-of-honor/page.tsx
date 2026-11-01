@@ -1,17 +1,43 @@
 import type { Metadata } from "next";
 import "./joh.css";
 import IntakeForm from "./IntakeForm";
+import JsonLd from "@/components/JsonLd";
+import { faqPageJsonLd } from "@/lib/jsonld";
+import { SITE_URL } from "@/lib/site";
+
+const JOH_FAQS = [
+  {
+    question: "Is there a cost to join Journey of Honor?",
+    answer: "No. There's no membership fee and no planning fee — the program is free to join, and you only pay for the trip itself.",
+  },
+  {
+    question: "What kind of discount do I get?",
+    answer: "Journey of Honor members generally receive a 10% discount on cruises and other vacation packages. Your advisor will confirm the exact discount for your specific trip.",
+  },
+  {
+    question: "Do I need documentation to prove my service?",
+    answer: "Not to join or start planning. Your advisor will let you know if any specific supplier requires ID or documentation for a particular discount or benefit.",
+  },
+  {
+    question: "Can my family travel with me?",
+    answer: "Yes — Journey of Honor trips are built for veterans, active-duty members and their families together, not solo travel only.",
+  },
+  {
+    question: "What if I'm not sure where I want to go yet?",
+    answer: "That's completely fine. Fill out the form with as much or as little as you know — your advisor will help you figure out the rest.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "Journey of Honor — Veteran & Military Family Travel | Crestwell Travel Services",
   description:
     "A dedicated travel program for veterans, active-duty service members and their families — cruises, all-inclusive resorts and guided land trips, planned by an advisor who understands your service.",
-  alternates: { canonical: "https://www.crestwellgetaways.com/journey-of-honor" },
+  alternates: { canonical: `${SITE_URL}/journey-of-honor` },
   openGraph: {
     title: "Journey of Honor — Veteran & Military Family Travel | Crestwell Travel Services",
     description:
       "A dedicated travel program for veterans, active-duty service members and their families — cruises, all-inclusive resorts and guided land trips, planned by an advisor who understands your service.",
-    url: "https://www.crestwellgetaways.com/journey-of-honor",
+    url: `${SITE_URL}/journey-of-honor`,
     type: "website",
     images: [{ url: "/images/veterans-og.jpg", width: 1140, height: 655 }],
   },
@@ -21,6 +47,7 @@ export const metadata: Metadata = {
 export default function JourneyOfHonorPage() {
   return (
     <main className="joh-page">
+      <JsonLd data={faqPageJsonLd(JOH_FAQS)} />
       {/* HERO */}
       <section className="joh-hero">
         <div className="joh-wrap">

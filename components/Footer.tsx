@@ -56,8 +56,8 @@ export default function Footer() {
                 Travel Services
               </div>
             </div>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: 260 }}>
-              See the World One Port at a Time. Personalized travel experiences for families, couples, and groups across the Southeast.
+            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: 280 }}>
+              Crestwell Travel Services. See the World One Port at a Time. Personalized travel for families, couples, and groups. Website: crestwellgetaways.com.
             </p>
           </div>
 
@@ -73,6 +73,9 @@ export default function Footer() {
                 { label: 'Vacations by Rail', href: '/vacations-by-rail' },
                 { label: 'Destinations', href: '/destinations' },
                 { label: 'Request a Quote', href: '/request-quote' },
+                { label: 'Planning Guide', href: '/planning-guide' },
+                { label: 'FAQ', href: '/faq' },
+                { label: 'Journey of Honor', href: '/journey-of-honor' },
                 { label: 'Signature Experiences', href: '/signature-experiences' },
                 { label: 'Manage Your Reservation', href: 'https://app.crestwelltravels.com/client/login', external: true },
                 { label: 'About Us', href: '/about' },

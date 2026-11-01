@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Breadcrumb from "@/components/Breadcrumb";
+import JsonLd from '@/components/JsonLd';
+import { faqPageJsonLd } from '@/lib/jsonld';
 
 // ─── Group types ──────────────────────────────────────────────────────────────
 
@@ -161,6 +163,7 @@ export default function GroupTravelPage() {
 
   return (
     <>
+      <JsonLd data={faqPageJsonLd(FAQS.map((faq) => ({ question: faq.q, answer: faq.a })))} />
       <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Group Travel' }]} />
       {/* ── Hero ── */}
       <section style={{
@@ -383,7 +386,10 @@ export default function GroupTravelPage() {
           <div>
             {FAQS.map((faq, i) => <FaqItem key={i} faq={faq} />)}
           </div>
-          <div style={{ textAlign: 'center', marginTop: 40 }}>
+          <div style={{ textAlign: 'center', marginTop: 40, display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/planning-guide#group-organizer-prep" style={{ fontSize: '0.72rem', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', borderBottom: '1px solid rgba(201,168,76,0.4)', paddingBottom: 2 }}>
+              What to prepare before a group quote →
+            </Link>
             <Link href="/faq" style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-body)', borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: 2 }}>
               View Full FAQ →
             </Link>

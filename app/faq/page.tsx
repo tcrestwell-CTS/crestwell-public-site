@@ -1,6 +1,9 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import JsonLd from '@/components/JsonLd';
+import { PLANNING_FAQS } from '@/data/planning-guide';
+import { faqPageJsonLd } from '@/lib/jsonld';
 
 // ─── FAQ Data ─────────────────────────────────────────────────────────────────
 
@@ -194,6 +197,11 @@ const CATEGORIES = [
       },
     ],
   },
+  {
+    id: 'planning-guide',
+    label: 'Before You Request a Quote',
+    questions: PLANNING_FAQS.map((item) => ({ q: item.question, a: item.answer })),
+  },
 ];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -264,7 +272,7 @@ function FAQItem({ faq, index }: { faq: FAQ; index: number }) {
         <p style={{
           padding: '0 28px 24px 68px',
           fontSize: '0.92rem', color: 'var(--text-secondary)',
-          lineHeight: 1.85, margin: 0,
+          lineHeight: 1.85, margin: 0, whiteSpace: 'pre-line',
         }}>
           {faq.a}
         </p>
@@ -339,8 +347,11 @@ export default function FAQPage() {
     }, 50);
   };
 
+  const allFaqs = CATEGORIES.flatMap((cat) => cat.questions.map((faq) => ({ question: faq.q, answer: faq.a })));
+
   return (
     <>
+      <JsonLd data={faqPageJsonLd(allFaqs)} />
       {/* ── Hero ── */}
       <section style={{
         background: 'var(--navy)',
@@ -367,8 +378,13 @@ export default function FAQPage() {
             Frequently Asked<br />
             <em style={{ color: 'var(--gold-light)' }}>Questions</em>
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1rem', maxWidth: 520, lineHeight: 1.75, marginBottom: 40 }}>
-            {totalQuestions} answers covering cruises, all-inclusive resorts, group travel, payments, and everything in between. Can't find what you need? We're one message away.
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1rem', maxWidth: 520, lineHeight: 1.75, marginBottom: 20 }}>
+            {totalQuestions} answers covering cruises, all-inclusive resorts, group travel, payments, and everything in between. Can&apos;t find what you need? We&apos;re one message away.
+          </p>
+          <p style={{ marginBottom: 40 }}>
+            <Link href="/planning-guide" style={{ color: 'var(--gold-light)', fontSize: '0.9rem' }}>
+              Read the planning guide — multigenerational cruises, group organizers, Journey of Honor, and Signature Experiences
+            </Link>
           </p>
 
           {/* Search */}

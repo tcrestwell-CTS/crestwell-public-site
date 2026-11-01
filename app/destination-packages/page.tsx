@@ -5,7 +5,8 @@ import GYGWidget from '@/components/GYGWidget';
 
 export const metadata: Metadata = {
   title: 'Destination Packages | Customized Vacations | Crestwell Travel Services',
-  description: 'Explore the world with Crestwell Travel. We partner with Avanti Destinations to create fully customized vacation packages to Europe, Asia, Latin America, the Middle East, Africa, and the South Pacific. Planning is always free.',
+  description: 'Explore the world with Crestwell Travel Services. We partner with Avanti Destinations to create fully customized vacation packages to Europe, Asia, Latin America, the Middle East, Africa, and the South Pacific. Planning is always free.',
+  alternates: { canonical: 'https://crestwellgetaways.com/destination-packages' },
   openGraph: {
     title: 'Destination Packages — Crestwell Travel Services',
     description: 'Fully customized international vacation packages. Europe, Asia, Latin America, Middle East, Africa & South Pacific. No cookie-cutter tours — every trip is built for you.',

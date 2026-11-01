@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Press Release: Crestwell Travel Services Adds TxtCha Cross-Channel Messaging | Crestwell Travel',
+  title: 'Press Release: Crestwell Travel Services Adds TxtCha Cross-Channel Messaging',
   description: 'Crestwell Travel Services introduces TxtCha, a cross-channel platform that unifies SMS, email, Telegram, and in-app chat into a single shared conversation for client travel accounts.',
+  alternates: { canonical: 'https://crestwellgetaways.com/press/txtcha-cross-channel-messaging' },
   openGraph: {
     title: 'Crestwell Travel Services Adds TxtCha Cross-Channel Messaging for Client Travel Accounts',
     description: 'New group communication option keeps families and travel companions connected across SMS, email, Telegram, and in-app chat — all in one conversation.',
