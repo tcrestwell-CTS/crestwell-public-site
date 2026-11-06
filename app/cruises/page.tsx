@@ -120,8 +120,9 @@ function CruisesContent() {
               </ul>
             </div>
           </div>
-          <div style={{ marginTop: 48, textAlign: 'center' }}>
+          <div style={{ marginTop: 48, textAlign: 'center', display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/request-quote?trip_type=Cruise+Vacation" className="btn-primary" style={{ textDecoration: 'none' }}>Get a Free Cruise Quote</Link>
+            <Link href="/planning-guide#multigenerational-cruise" className="btn-navy" style={{ textDecoration: 'none' }}>Which cruise fits a family?</Link>
           </div>
         </div>
       </section>

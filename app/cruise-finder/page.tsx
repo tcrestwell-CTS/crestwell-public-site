@@ -4,7 +4,8 @@ import CruiseFinderSearch from '@/components/CruiseFinderSearch';
 
 export const metadata: Metadata = {
   title: 'Cruise Finder — Three Hand-Picked Cruises | Crestwell Travel Services',
-  description: 'Answer one quick question and get three hand-picked cruise options from your Crestwell advisor — free, in about a minute.',
+  description: 'Answer one quick question and get three hand-picked cruise options from your Crestwell Travel Services advisor — free, in about a minute.',
+  alternates: { canonical: 'https://crestwellgetaways.com/cruise-finder' },
 };
 
 export default function CruiseFinderPage() {

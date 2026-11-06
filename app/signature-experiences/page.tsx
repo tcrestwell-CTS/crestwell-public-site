@@ -2,21 +2,40 @@ import type { Metadata } from "next";
 import "../journey-of-honor/joh.css";
 import "./se.css";
 import RequestForm from "./RequestForm";
+import JsonLd from "@/components/JsonLd";
+import { faqPageJsonLd } from "@/lib/jsonld";
+import { SITE_URL } from "@/lib/site";
 
-const TITLE = "Crestwell Signature Experiences — Private Travel Concierge";
+const SIGNATURE_FAQS = [
+  {
+    question: "Is Signature Experiences the same as requesting a quote?",
+    answer: "No. Signature Experiences is an invitation-based concierge membership. Membership is currently complimentary for qualified clients, and trips are booked and priced separately. To price a specific trip, use the quote request form.",
+  },
+  {
+    question: "What does membership include?",
+    answer: "A dedicated advisor, curated luxury cruise and resort options, private group travel planning, and celebration travel coordination. Priority sports and premium requests are worked with suppliers; availability varies and cannot be guaranteed. Special experiences and supplier offers are shared when they are actually available.",
+  },
+  {
+    question: "How do I ask to join?",
+    answer: "Request an invitation on this page. Each request is reviewed personally, and Crestwell follows up either way.",
+  },
+];
+
+const TITLE = "Signature Experiences | Crestwell Travel Services";
 const DESC =
   "An invitation-based concierge service from Crestwell Travel Services: a dedicated advisor, curated luxury cruise and resort opportunities, private group planning and celebration travel.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
-  alternates: { canonical: "https://www.crestwellgetaways.com/signature-experiences" },
-  openGraph: { title: TITLE, description: DESC, url: "https://www.crestwellgetaways.com/signature-experiences", type: "website" },
+  alternates: { canonical: `${SITE_URL}/signature-experiences` },
+  openGraph: { title: TITLE, description: DESC, url: `${SITE_URL}/signature-experiences`, type: "website" },
 };
 
 export default function SignatureExperiencesPage() {
   return (
     <main className="joh-page">
+      <JsonLd data={faqPageJsonLd(SIGNATURE_FAQS)} />
       {/* HERO */}
       <section className="joh-hero se-hero">
         <div className="joh-wrap">
@@ -103,6 +122,26 @@ export default function SignatureExperiencesPage() {
           <p className="se-note">
             Signature Experiences membership is currently complimentary for qualified clients. Trips are
             booked and priced separately. Terms may change in the future.
+          </p>
+        </div>
+      </section>
+
+      <section className="joh-faq">
+        <div className="joh-wrap">
+          <div className="center">
+            <div className="joh-eyebrow">Questions</div>
+            <h2 className="joh-h2">Quote, or invitation?</h2>
+          </div>
+          <div className="faq">
+            {SIGNATURE_FAQS.map((faq) => (
+              <details key={faq.question}>
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+          <p className="se-note">
+            For a specific trip, use the <a href="/request-quote">quote request form</a>. For the concierge membership, use the invitation form on this page.
           </p>
         </div>
       </section>

@@ -4,7 +4,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "Shore Excursions & Tours | Crestwell Travel Services",
-  description: "Browse shore excursions and destination activities through Viator, GetYourGuide, and Civitatis — three world-class platforms curated by Crestwell Travel.",
+  description: "Browse shore excursions and destination activities through Viator, GetYourGuide, and Civitatis — three platforms linked from Crestwell Travel Services.",
+  alternates: { canonical: 'https://crestwellgetaways.com/excursions' },
 };
 
 const providers = [

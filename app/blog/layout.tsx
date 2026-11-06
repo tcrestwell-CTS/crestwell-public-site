@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Travel Tips & Guides | Crestwell Travel Services',
-  description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team. Plan smarter, travel better.',
+  description: 'Travel tips, destination guides, cruise advice, and vacation inspiration from Crestwell Travel Services.',
   openGraph: {
     type: 'website',
-    url: 'https://www.crestwellgetaways.com/blog',
+    url: 'https://crestwellgetaways.com/blog',
     title: 'Travel Tips & Guides | Crestwell Travel Services',
-    description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team. Plan smarter, travel better.',
+    description: 'Travel tips, destination guides, cruise advice, and vacation inspiration from Crestwell Travel Services.',
     siteName: 'Crestwell Travel Services',
     locale: 'en_US',
     images: [
@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Travel Tips & Guides | Crestwell Travel Services',
-    description: 'Expert travel tips, destination guides, cruise advice, and vacation inspiration from the Crestwell Travel team.',
+    description: 'Travel tips, destination guides, cruise advice, and vacation inspiration from Crestwell Travel Services.',
     images: ['https://crestwellgetaways.com/eurotour-og.webp?v=2'],
   },
   alternates: {
-    canonical: 'https://www.crestwellgetaways.com/blog',
+    canonical: 'https://crestwellgetaways.com/blog',
   },
 };
 

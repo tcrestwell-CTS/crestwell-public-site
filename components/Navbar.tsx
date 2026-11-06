@@ -34,6 +34,8 @@ const SERVICES = [
   { label: 'Financing',              href: '/financing',           icon: '💳' },
   { label: 'The Circle',             href: '/the-circle',          icon: '✦' },
   { label: 'Signature Experiences',  href: '/signature-experiences', icon: '🥂' },
+  { label: 'Journey of Honor',       href: '/journey-of-honor',    icon: '🎖️' },
+  { label: 'Planning Guide',         href: '/planning-guide',      icon: '📘' },
 ];
 
 // Top-level nav — 6 items (was 11)
@@ -237,7 +239,7 @@ export default function Navbar() {
 
             {/* ── Services dropdown ── */}
             <div ref={servicesRef} style={{ position: 'relative' }}>
-              {dropdownTrigger('Services', ['/all-inclusive','/group-travel','/veterans','/vacations-by-rail','/domestic-travel','/excursions','/solo-travel','/financing'].some(h => pathname.startsWith(h)), servicesOpen, () => setServicesOpen(o => !o), () => setServicesOpen(true))}
+              {dropdownTrigger('Services', ['/all-inclusive','/group-travel','/veterans','/vacations-by-rail','/domestic-travel','/excursions','/solo-travel','/financing','/the-circle','/signature-experiences','/journey-of-honor','/planning-guide','/car-rental'].some(h => pathname.startsWith(h)), servicesOpen, () => setServicesOpen(o => !o), () => setServicesOpen(true))}
               {servicesOpen && (
                 <div onMouseLeave={() => setServicesOpen(false)} style={{ ...dropdownBox, minWidth: 240 }}>
                   <div style={dropdownArrow} />

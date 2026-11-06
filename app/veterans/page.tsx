@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   title: "Veterans, Family & Group Travel | Crestwell Travel Services",
   description:
     "Group cruises, all-inclusive resorts, reunions and milestone trips — planned start to finish for veterans, military families and the people they love. Payment plans available.",
-  alternates: { canonical: "https://www.crestwellgetaways.com/veterans" },
+  alternates: { canonical: "https://crestwellgetaways.com/veterans" },
   openGraph: {
     title: "Veterans, Family & Group Travel | Crestwell Travel Services",
     description:
       "Group cruises, all-inclusive resorts, reunions and milestone trips — planned start to finish for veterans, military families and the people they love. Payment plans available.",
-    url: "https://www.crestwellgetaways.com/veterans",
+    url: "https://crestwellgetaways.com/veterans",
     type: "website",
     images: [{ url: "/images/veterans-og.jpg", width: 1140, height: 655 }],
   },
@@ -129,6 +129,8 @@ export default function VeteransPage() {
           </div>
           <p className="how-note">
             Flexible payment plans available through our secure payment portal — spread your trip over time.
+            Veterans, active-duty members, and military families can also join{' '}
+            <a href="/journey-of-honor">Journey of Honor</a>, the Crestwell Travel Services program with no planning fee.
           </p>
         </div>
       </section>

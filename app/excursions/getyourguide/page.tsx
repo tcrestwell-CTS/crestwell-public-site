@@ -5,7 +5,8 @@ import GYGContent from "@/components/GYGContent";
 
 export const metadata: Metadata = {
   title: "GetYourGuide Experiences | Crestwell Travel Services",
-  description: "Browse top-rated tours and experiences through GetYourGuide — best for city tours, skip-the-line access, and European destinations.",
+  description: "Browse tours and experiences through GetYourGuide, linked from Crestwell Travel Services, including city tours and European destinations.",
+  alternates: { canonical: 'https://crestwellgetaways.com/excursions/getyourguide' },
 };
 
 export default function GetYourGuidePage() {
