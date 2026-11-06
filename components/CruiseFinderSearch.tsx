@@ -116,6 +116,27 @@ function SearchProgress() {
   );
 }
 
+// Click tracking for the "get a quote" CTAs. Deliberately NOT generate_lead:
+// a click is not a lead (the quote form fires generate_lead on a real submit,
+// with lead_source "triton"), so counting both would double-count.
+function trackQuoteClick(location: 'result_card' | 'none_fit' | 'no_matches' | 'error', cruise?: string): void {
+  if (typeof window === 'undefined') return;
+  const payload: Record<string, unknown> = {
+    event: 'cruise_finder_quote_click',
+    cta_location: location,
+    cruise: cruise || undefined,
+  };
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(payload);
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'cruise_finder_quote_click', {
+      event_category: 'engagement',
+      cta_location: location,
+      cruise: cruise || undefined,
+    });
+  }
+}
+
 export default function CruiseFinderSearch() {
   const [query, setQuery] = useState('');
   const [state, setState] = useState<SearchState>('idle');
@@ -264,7 +285,7 @@ export default function CruiseFinderSearch() {
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>
               {errorMessage || 'Something went wrong. Please try again.'}
             </p>
-            <Link href={ctaHref(query.trim() || 'General cruise inquiry', new Date().toISOString())} className="btn-primary" style={{ textDecoration: 'none' }}>
+            <Link href={ctaHref(query.trim() || 'General cruise inquiry', new Date().toISOString())} onClick={() => trackQuoteClick('error')} className="btn-primary" style={{ textDecoration: 'none' }}>
               Get exact pricing from your advisor
             </Link>
           </div>
@@ -282,7 +303,7 @@ export default function CruiseFinderSearch() {
             <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 32 }}>
               Sailings shift constantly and some of the best fits never show up in an automated search. Tell your advisor what you told us here, and a real person will dig deeper.
             </p>
-            <Link href={ctaHref(lastQuery, searchedAt)} className="btn-primary" style={{ textDecoration: 'none' }}>
+            <Link href={ctaHref(lastQuery, searchedAt)} onClick={() => trackQuoteClick('no_matches')} className="btn-primary" style={{ textDecoration: 'none' }}>
               Get exact pricing from your advisor
             </Link>
           </div>
@@ -344,7 +365,7 @@ export default function CruiseFinderSearch() {
                     </div>
                   )}
 
-                  <Link href={ctaHref(lastQuery, searchedAt, r)} className="btn-primary" style={{ textDecoration: 'none', textAlign: 'center' }}>
+                  <Link href={ctaHref(lastQuery, searchedAt, r)} onClick={() => trackQuoteClick('result_card', `${r.line} ${r.ship}`.trim())} className="btn-primary" style={{ textDecoration: 'none', textAlign: 'center' }}>
                     Get exact pricing from your advisor
                   </Link>
                 </div>
@@ -354,6 +375,7 @@ export default function CruiseFinderSearch() {
             <div style={{ textAlign: 'center', marginTop: 40 }}>
               <Link
                 href={ctaHref(lastQuery, searchedAt)}
+                onClick={() => trackQuoteClick('none_fit')}
                 style={{
                   fontSize: '0.8rem', color: 'var(--navy)', textDecoration: 'none',
                   borderBottom: '1px solid var(--gold)', paddingBottom: 2,
