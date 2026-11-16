@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const TRIP_URL = 'https://app.crestwelltravels.com/group/a0740186471284758657708e';
 const STORAGE_KEY = 'cts_trip_popup_obama2027_dismissed';
-const SNOOZE_MS = 7 * 24 * 60 * 60 * 1000;
+const SNOOZE_MS = 1 * 24 * 60 * 60 * 1000;
 const SHOW_DELAY_MS = 4000;
 
 function track(event: string) {
