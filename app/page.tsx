@@ -7,6 +7,7 @@ import NewsletterSection from '@/components/NewsletterSection';
 import PartnerLogos from '@/components/PartnerLogos';
 import TravelHeroSlider from '@/components/TravelHeroSlider';
 import LeadMagnetForm from '@/components/LeadMagnetForm';
+import TripPopup from '@/components/TripPopup';
 
 const services = [
   { icon: '⚓', title: 'Cruise Vacations', description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.' },
@@ -51,6 +52,7 @@ const testimonials = [
 export default function HomePage() {
   return (
     <>
+      <TripPopup />
       {/* ── HERO ── */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--navy)' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1618064541372-289bdb6f5b7b?w=1800&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 1.0 }} aria-hidden="true" />
