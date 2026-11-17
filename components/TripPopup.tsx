@@ -19,11 +19,27 @@ export default function TripPopup() {
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
+    const show = () => {
       setOpen(true);
       track('trip_popup_view');
+    };
+    let id = 0;
+    const onClosed = () => {
+      window.removeEventListener('cts:priority-popup-closed', onClosed);
+      id = window.setTimeout(show, 600);
+    };
+    id = window.setTimeout(() => {
+      // If a priority popup (e.g. Black Friday) is up, wait until it is closed.
+      if ((window as unknown as { __ctsPriorityPopup?: boolean }).__ctsPriorityPopup) {
+        window.addEventListener('cts:priority-popup-closed', onClosed);
+      } else {
+        show();
+      }
     }, SHOW_DELAY_MS);
-    return () => window.clearTimeout(id);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener('cts:priority-popup-closed', onClosed);
+    };
   }, []);
 
   const close = () => setOpen(false);

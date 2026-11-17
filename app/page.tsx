@@ -8,6 +8,7 @@ import PartnerLogos from '@/components/PartnerLogos';
 import TravelHeroSlider from '@/components/TravelHeroSlider';
 import LeadMagnetForm from '@/components/LeadMagnetForm';
 import TripPopup from '@/components/TripPopup';
+import BlackFridayPopup from '@/components/BlackFridayPopup';
 
 const services = [
   { icon: '⚓', title: 'Cruise Vacations', description: 'From 3-night getaways to world voyages — we match you with the perfect ship, itinerary, and cabin.' },
@@ -52,6 +53,7 @@ const testimonials = [
 export default function HomePage() {
   return (
     <>
+      <BlackFridayPopup />
       <TripPopup />
       {/* ── HERO ── */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--navy)' }}>
