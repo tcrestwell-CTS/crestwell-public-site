@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: 'Savannah',
   alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-savannah' },
   openGraph: {
+    images: [{ url: 'https://crestwellgetaways.com/images/og-crestwell.png', width: 1200, height: 630, alt: 'Crestwell Travel Services' }],
     title: 'Travel Agent Savannah GA | Cruises & Resorts | Crestwell',
     description: 'Savannah',
     url: 'https://crestwellgetaways.com/travel-agent-savannah',

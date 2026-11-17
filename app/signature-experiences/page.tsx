@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
   alternates: { canonical: "https://www.crestwellgetaways.com/signature-experiences" },
-  openGraph: { title: TITLE, description: DESC, url: "https://www.crestwellgetaways.com/signature-experiences", type: "website" },
+  openGraph: {
+    images: [{ url: 'https://crestwellgetaways.com/images/og-crestwell.png', width: 1200, height: 630, alt: 'Crestwell Travel Services' }], title: TITLE, description: DESC, url: "https://www.crestwellgetaways.com/signature-experiences", type: "website" },
 };
 
 export default function SignatureExperiencesPage() {

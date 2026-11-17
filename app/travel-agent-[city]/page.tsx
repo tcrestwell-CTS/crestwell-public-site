@@ -15,6 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     description: d.metaDescription,
     alternates: { canonical: `https://crestwellgetaways.com/travel-agent-${d.slug}` },
     openGraph: {
+    images: [{ url: 'https://crestwellgetaways.com/images/og-crestwell.png', width: 1200, height: 630, alt: 'Crestwell Travel Services' }],
       title: d.metaTitle,
       description: d.metaDescription,
       url: `https://crestwellgetaways.com/travel-agent-${d.slug}`,

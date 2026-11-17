@@ -21,10 +21,11 @@ async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) 
 }
 
 const SITE_URL = 'https://crestwellgetaways.com';
-const OG_IMAGE = 'https://crestwellgetaways.com/images/ASTAHorizontalCMYK0247817c-a713-4d83-9e60-913564067b77.png';
+const OG_IMAGE = 'https://crestwellgetaways.com/images/og-crestwell.png';
 
 // Fix: Title trimmed to under 60 chars
 export const metadata: Metadata = {
+  metadataBase: new URL('https://crestwellgetaways.com'),
   title: {
     template: '%s',
     default: 'Crestwell Travel Services | Cruises, Resorts & Group Travel',
@@ -136,7 +137,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Crestwell Travel Services | Cruises & Resorts" />
         <meta name="twitter:description" content="Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations." />
-        <meta name="twitter:image" content={OG_IMAGE} />
 
         {/* JSON-LD Structured Data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrganization) }} />

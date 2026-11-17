@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: 'Memphis',
   alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-memphis' },
   openGraph: {
+    images: [{ url: 'https://crestwellgetaways.com/images/og-crestwell.png', width: 1200, height: 630, alt: 'Crestwell Travel Services' }],
     title: 'Travel Agent Memphis | Cruises & All-Inclusive | Crestwell',
     description: 'Memphis',
     url: 'https://crestwellgetaways.com/travel-agent-memphis',

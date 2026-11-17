@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Royal Caribbean Special Offer — Legend of the Seas 2026 | Crestwell Travel',
   description: 'Exclusive Caribbean sailings on Royal Caribbean\'s Legend of the Seas. 3 to 8-night itineraries from Fort Lauderdale. Western Caribbean, Southern Caribbean & Perfect Day at CocoCay. Book now — limited time offer.',
   openGraph: {
+    images: [{ url: 'https://crestwellgetaways.com/images/og-crestwell.png', width: 1200, height: 630, alt: 'Crestwell Travel Services' }],
     title: 'Royal Caribbean Special Offer — Legend of the Seas 2026',
     description: 'Exclusive Caribbean sailings from Fort Lauderdale. Book with Crestwell Travel — planning is always free.',
     url: 'https://crestwellgetaways.com/deals/legend-of-the-seas-2026',

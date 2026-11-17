@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: 'Birmingham',
   alternates: { canonical: 'https://crestwellgetaways.com/travel-agent-birmingham' },
   openGraph: {
+    images: [{ url: 'https://crestwellgetaways.com/images/og-crestwell.png', width: 1200, height: 630, alt: 'Crestwell Travel Services' }],
     title: 'Travel Agent Birmingham AL | Cruises & Resorts | Crestwell',
     description: 'Birmingham',
     url: 'https://crestwellgetaways.com/travel-agent-birmingham',
