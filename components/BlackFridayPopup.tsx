@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const QUOTE_URL = '/request-quote?utm_source=site_popup&utm_medium=popup&utm_campaign=black_friday_2026';
+const QUOTE_URL = '/black-friday-cruise-deals?utm_source=site_popup&utm_medium=popup&utm_campaign=black_friday_2026';
 const SHOW_DELAY_MS = 3000;
 export const POPUP_CLOSED_EVENT = 'cts:priority-popup-closed';
 
@@ -75,7 +75,7 @@ export default function BlackFridayPopup() {
           />
         </a>
         <a href={QUOTE_URL} onClick={() => track('promo_popup_click')} className="bf-popup-cta">
-          Request your free quote
+          See all Black Friday deals
         </a>
       </div>
       <style>{`

@@ -9,6 +9,7 @@ const STATIC_PAGES = [
   { path: '/cruises',      priority: 0.9,  changeFreq: 'daily'   },
   { path: '/luxury-cruises', priority: 0.9,  changeFreq: 'weekly'  },
   { path: '/cruise-lines', priority: 0.9,  changeFreq: 'weekly'  },
+  { path: '/black-friday-cruise-deals', priority: 0.9, changeFreq: 'daily' },
   { path: '/group-travel',     priority: 0.8,  changeFreq: 'monthly' },
   { path: '/all-inclusive',priority: 0.8,  changeFreq: 'weekly'  },
   { path: '/destinations', priority: 0.9,  changeFreq: 'weekly'  },
