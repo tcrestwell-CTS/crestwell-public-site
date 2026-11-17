@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 const TRIP_URL = 'https://app.crestwelltravels.com/group/a0740186471284758657708e';
-const STORAGE_KEY = 'cts_trip_popup_obama2027_dismissed';
-const SNOOZE_MS = 1 * 24 * 60 * 60 * 1000;
 const SHOW_DELAY_MS = 4000;
 
 function track(event: string) {
@@ -16,21 +14,11 @@ function track(event: string) {
   }
 }
 
-function recentlyDismissed(): boolean {
-  try {
-    const t = Number(window.localStorage.getItem(STORAGE_KEY));
-    return !!t && Date.now() - t < SNOOZE_MS;
-  } catch {
-    return false;
-  }
-}
-
 export default function TripPopup() {
   const [open, setOpen] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (recentlyDismissed()) return;
     const id = window.setTimeout(() => {
       setOpen(true);
       track('trip_popup_view');
@@ -38,14 +26,7 @@ export default function TripPopup() {
     return () => window.clearTimeout(id);
   }, []);
 
-  const close = () => {
-    setOpen(false);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
-    } catch {
-      /* storage unavailable: popup may show again next visit */
-    }
-  };
+  const close = () => setOpen(false);
 
   useEffect(() => {
     if (!open) return;
