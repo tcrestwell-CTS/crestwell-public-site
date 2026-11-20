@@ -201,6 +201,7 @@ function RequestQuoteForm() {
             event_label: form.trip_type || 'quote_request',
             trip_type: form.trip_type,
             lead_source: leadPayload.lead_source,
+            destination: leadPayload.destination,
             value: 1,
           });
         }

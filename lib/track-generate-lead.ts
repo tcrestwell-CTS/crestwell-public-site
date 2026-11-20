@@ -32,6 +32,7 @@ export function trackGenerateLead({ lead_source, trip_type, destination }: Gener
       event_label: tripType,
       trip_type: tripType,
       lead_source,
+      destination: destinationValue,
       value: 1,
     });
   }
