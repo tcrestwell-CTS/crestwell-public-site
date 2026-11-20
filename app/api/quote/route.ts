@@ -112,6 +112,10 @@ export async function POST(request: NextRequest) {
       utm_content:  utm_content  || null,
       lead_source,
       referral_source: referrer || null,
+      landing_page: landing_page || null,
+      referrer: referrer || null,
+      // 24-hour response promise from the confirmation email
+      next_follow_up_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       // First-touch context for attribution reporting (no schema change needed)
       raw_answers: { landing_page: landing_page || null, referrer: referrer || null, submitted_from: request.headers.get('referer') || null },
     }]);
