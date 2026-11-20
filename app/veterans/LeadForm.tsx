@@ -1,5 +1,6 @@
 "use client";
 
+import { getAttribution } from "@/lib/utm-capture";
 import { useState, type FormEvent } from "react";
 import { trackGenerateLead } from "@/lib/track-generate-lead";
 
@@ -30,6 +31,7 @@ export default function LeadForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...getAttribution(),
           first_name,
           last_name,
           email: data.email,

@@ -1,4 +1,5 @@
 'use client';
+import { getAttribution } from '@/lib/utm-capture';
 import { EmailField, useEmailValidation } from '@/components/EmailField';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -175,6 +176,7 @@ export default function PlanPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          ...getAttribution(),
           first_name: form.full_name.split(' ')[0] || form.full_name,
           last_name: form.full_name.split(' ').slice(1).join(' ') || '',
           email: form.email,

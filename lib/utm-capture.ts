@@ -16,6 +16,9 @@ export function getAttribution(): Record<string, string | null> {
       utm_campaign: localStorage.getItem('utm_campaign'),
       utm_term:     localStorage.getItem('utm_term'),
       utm_content:  localStorage.getItem('utm_content'),
+      // First-touch context, saved once per browser by the layout script
+      landing_page: localStorage.getItem('cts_landing_page'),
+      referrer:     localStorage.getItem('cts_referrer'),
     };
   } catch {
     return {};
@@ -29,7 +32,7 @@ export function getAttribution(): Record<string, string | null> {
 export function clearAttribution(): void {
   if (typeof window === 'undefined') return;
   try {
-    ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']
+    ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'cts_landing_page', 'cts_referrer']
       .forEach(k => localStorage.removeItem(k));
   } catch {
     // ignore

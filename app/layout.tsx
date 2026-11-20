@@ -162,6 +162,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               const p = new URLSearchParams(window.location.search);
               ['gclid','utm_source','utm_medium','utm_campaign','utm_term','utm_content']
                 .forEach(function(k) { const v = p.get(k); if (v) localStorage.setItem(k, v); });
+              // First touch: landing page + external referrer, saved once
+              if (!localStorage.getItem('cts_landing_page')) {
+                localStorage.setItem('cts_landing_page', window.location.pathname);
+                var r = document.referrer;
+                if (r && r.indexOf(window.location.hostname) === -1) {
+                  try { localStorage.setItem('cts_referrer', new URL(r).hostname.replace(/^www\\./,'')); } catch(e) {}
+                }
+              }
             } catch(e) {}
           })();
         `}</Script>

@@ -40,6 +40,8 @@ export async function POST(request: NextRequest) {
     utm_campaign,
     utm_term,
     utm_content,
+    landing_page,
+    referrer,
     // Set when submitted from an agent's personal storefront
     // ({slug}.crestwelltravels.com) — routes the lead directly to that
     // agent instead of the general pool.
@@ -60,7 +62,9 @@ export async function POST(request: NextRequest) {
       ? 'google_ads'
       : utm_source
         ? utm_source
-        : 'direct';
+        : referrer
+          ? referrer
+          : 'direct';
 
   // quote_requests has no `agent_context` column yet (see TRITON_NOTES.md
   // for the ALTER TABLE needed). Fold it into the free-text message field
@@ -107,6 +111,9 @@ export async function POST(request: NextRequest) {
       utm_term:     utm_term     || null,
       utm_content:  utm_content  || null,
       lead_source,
+      referral_source: referrer || null,
+      // First-touch context for attribution reporting (no schema change needed)
+      raw_answers: { landing_page: landing_page || null, referrer: referrer || null, submitted_from: request.headers.get('referer') || null },
     }]);
 
     if (insertError) {
