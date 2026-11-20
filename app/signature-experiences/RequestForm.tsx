@@ -34,8 +34,8 @@ export default function RequestForm() {
       });
       if (!res.ok) throw new Error(String(res.status));
       trackGenerateLead({
-        lead_source: "signature-experiences",
-        trip_type: "Signature Experiences",
+        lead_source: "signature_experiences",
+        trip_type: data.interest || "Signature Experiences",
       });
       setStatus("ok");
     } catch {

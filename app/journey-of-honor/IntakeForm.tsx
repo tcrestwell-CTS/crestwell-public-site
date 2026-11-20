@@ -41,7 +41,7 @@ export default function IntakeForm() {
       });
       if (!res.ok) throw new Error(String(res.status));
       trackGenerateLead({
-        lead_source: "journey-of-honor",
+        lead_source: "journey_of_honor",
         trip_type: "Journey of Honor",
       });
       setStatus("ok");

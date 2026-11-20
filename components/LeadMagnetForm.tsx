@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { EmailField, useEmailValidation } from '@/components/EmailField';
+import { portGuideLeadSource } from '@/lib/analytics-config';
 import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 export default function LeadMagnetForm({ city, cityName }: { city: string; cityName: string }) {
@@ -29,7 +30,7 @@ export default function LeadMagnetForm({ city, cityName }: { city: string; cityN
       }
 
       trackGenerateLead({
-        lead_source: 'lead-magnet',
+        lead_source: portGuideLeadSource(city),
         trip_type: 'Port Guide',
         destination: cityName,
       });

@@ -21,7 +21,7 @@ export function ContactForm({ tripName, tripId }: { tripName?: string; tripId?: 
       })
       if (!res.ok) throw new Error()
       trackGenerateLead({
-        lead_source: 'trip-inquiry',
+        lead_source: 'trip_inquiry',
         trip_type: tripName || 'Trip Inquiry',
       })
       setStatus('sent')

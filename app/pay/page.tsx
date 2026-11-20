@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 // IP logging helper — fire-and-forget, never blocks payment
 function logIp(page: string, outcome: string, extras: Record<string, unknown> = {}) {
@@ -444,6 +445,10 @@ export default function PublicPayPage() {
         }),
       });
       if (!res.ok) throw new Error('Failed to send request');
+      trackGenerateLead({
+        lead_source: 'flexpay',
+        trip_type: tripLabel,
+      });
       setFlexPaySent(true);
     } catch (e: any) {
       setError(e.message ?? 'Something went wrong. Please try again.');

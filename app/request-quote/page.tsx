@@ -1,9 +1,10 @@
 'use client';
-import { useState, Suspense } from 'react';
+import { useRef, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { EmailField, HoneypotField } from '@/components/EmailField';
 import { useSearchParams } from 'next/navigation';
 import { getAttribution } from '@/lib/utm-capture';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 const tripTypes = [
   'Cruise Vacation',
@@ -135,13 +136,16 @@ function RequestQuoteForm() {
   const [error, setError] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [emailValidState, setEmailValidState] = useState<'idle'|'checking'|'valid'|'invalid'>('idle');
+  const submitLock = useRef(false);
 
   const update = (field: string, value: string | number) => setForm(f => ({ ...f, [field]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitLock.current) return;
     if (honeypot) return;
     if (emailValidState === 'invalid') { setError('Please enter a valid email address.'); return; }
+    submitLock.current = true;
     setSubmitting(true);
     setError('');
     try {
@@ -181,33 +185,18 @@ function RequestQuoteForm() {
         throw new Error(body?.error || 'Something went wrong. Please try again or email us directly.');
       }
 
-      // GA4 + GTM lead event
-      if (typeof window !== 'undefined') {
-        const leadPayload = {
-          event: 'generate_lead',
-          trip_type: form.trip_type || 'quote_request',
-          lead_source: form._triton_query ? 'triton' : (form._cruise_name ? 'cruise' : 'website'),
-          destination: form.destination || undefined,
-        };
-
-        // dataLayer (works with GTM)
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push(leadPayload);
-
-        // Direct gtag (works with GA4)
-        if (typeof window.gtag === 'function') {
-          window.gtag('event', 'generate_lead', {
-            event_category: 'engagement',
-            event_label: form.trip_type || 'quote_request',
-            trip_type: form.trip_type,
-            lead_source: leadPayload.lead_source,
-            value: 1,
-          });
-        }
-      }
+      // One generate_lead, queued with beacon before the success view replaces the form.
+      // Triton handoff is its own source so cruise-finder clicks are not also counted.
+      // A selected cruise stays request_quote; trip_type and destination carry the details.
+      trackGenerateLead({
+        lead_source: form._triton_query ? 'triton' : 'request_quote',
+        trip_type: form.trip_type,
+        destination: form.destination,
+      });
 
       setSubmitted(true);
     } catch (err: unknown) {
+      submitLock.current = false;
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again or email us directly.';
       setError(message);
     } finally {

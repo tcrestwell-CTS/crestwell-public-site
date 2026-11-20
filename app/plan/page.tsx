@@ -208,7 +208,7 @@ export default function PlanPage() {
       });
       if (!res.ok) throw new Error('Submission failed');
       trackGenerateLead({
-        lead_source: 'plan-page',
+        lead_source: 'plan',
         trip_type: form.trip_types[0] || 'Cruise Vacation',
         destination: form.destination,
       });

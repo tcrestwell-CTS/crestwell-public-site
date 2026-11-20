@@ -1,8 +1,14 @@
+type GtagParams = Record<string, unknown>;
+
+interface GtagFunction {
+  (command: 'js', date: Date): void;
+  (command: 'config', measurementId: string, params?: GtagParams): void;
+  (command: 'event', eventName: string, params?: GtagParams): void;
+  (command: 'set', params: GtagParams): void;
+  (command: 'consent', action: string, params?: GtagParams): void;
+}
+
 interface Window {
-  dataLayer: Record<string, unknown>[];
-  gtag: (
-    command: 'config' | 'event' | 'js' | 'set' | 'consent',
-    targetIdOrAction: string,
-    params?: Record<string, unknown>
-  ) => void;
+  dataLayer: unknown[];
+  gtag: GtagFunction;
 }

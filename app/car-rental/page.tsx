@@ -140,7 +140,7 @@ export default function CarRentalPage() {
       .then(({ ok, data }) => {
         if (!ok) throw new Error(data.error);
         trackGenerateLead({
-          lead_source: 'car-rental',
+          lead_source: 'car_rental',
           trip_type: 'Car Rental',
           destination: pickupDisplay,
         });

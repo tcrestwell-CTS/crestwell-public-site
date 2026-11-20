@@ -43,7 +43,7 @@ export default function LeadForm() {
       });
       if (!res.ok) throw new Error(String(res.status));
       trackGenerateLead({
-        lead_source: "veterans-page",
+        lead_source: "veterans",
         trip_type: data.trip_type || "Veterans Day at Sea 2027",
       });
       setStatus("ok");

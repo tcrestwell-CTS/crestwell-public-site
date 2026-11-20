@@ -17,8 +17,8 @@ export default function WinPage() {
     setForm(f => ({ ...f, [k]: e.target.value }));
 
   async function handleSubmit(e: React.FormEvent) {
-    if (emailValidation.state === 'invalid') { setError('Please enter a valid email address.'); return; }
     e.preventDefault();
+    if (emailValidation.state === 'invalid') { setError('Please enter a valid email address.'); return; }
     setStatus('loading');
     setError('');
     try {
@@ -32,7 +32,7 @@ export default function WinPage() {
         throw new Error(d.error || 'Something went wrong');
       }
       trackGenerateLead({
-        lead_source: 'win-entry',
+        lead_source: 'win_entry',
         trip_type: 'Giveaway entry',
         destination: form.destination,
       });

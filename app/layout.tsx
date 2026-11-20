@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AnalyticsEvents from '@/components/AnalyticsEvents';
 import { headers } from 'next/headers';
+import { analyticsBootstrapScript, GTM_CONTAINER_ID, isLiveAnalyticsHost } from '@/lib/analytics-config';
 
 async function NavbarFooterWrapper({ children }: { children: React.ReactNode }) {
   const headersList = await headers();
@@ -109,13 +110,20 @@ const jsonLdFaq = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerList = await headers();
+  const rawHost = headerList.get('x-forwarded-host') || headerList.get('host') || '';
+  const hostname = rawHost.split(',')[0].trim();
+  // Preview deployments and the *.vercel.app production alias share nothing with
+  // the live property. Require both the production environment and the public host.
+  const loadAnalytics = process.env.VERCEL_ENV === 'production' && isLiveAnalyticsHost(hostname);
+
   return (
     <html lang="en">
       <head>
-        {/* Google Tag Manager */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P3HVW4HR');` }} />
-        {/* End Google Tag Manager */}
+        {loadAnalytics && (
+          <script dangerouslySetInnerHTML={{ __html: analyticsBootstrapScript() }} />
+        )}
         <meta charSet="utf-8" />
         <meta name="description" content="Boutique travel agency in Chattanooga specializing in cruises, all-inclusive resorts, and group vacations across GA, TN & AL." />
         <meta name="robots" content="index, follow" />
@@ -146,16 +154,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Google Analytics GA4 */}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-PSD3RNQKRH" strategy="afterInteractive" />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-PSD3RNQKRH', { page_path: window.location.pathname });
-          `}
-        </Script>
         <Script id="utm-capture" strategy="afterInteractive">{`
           (function() {
             try {
@@ -180,9 +178,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/* End TrustBox script */}
       </head>
       <body>
-        {/* Google Tag Manager (noscript) */}
-        <noscript dangerouslySetInnerHTML={{ __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3HVW4HR" height="0" width="0" style="display:none;visibility:hidden"></iframe>` }} />
-        {/* End Google Tag Manager (noscript) */}
+        {loadAnalytics && (
+          <noscript dangerouslySetInnerHTML={{ __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>` }} />
+        )}
         <AnalyticsEvents />
         <NavbarFooterWrapper>
           {children}

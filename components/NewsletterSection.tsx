@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { EmailField, useEmailValidation } from "@/components/EmailField";
+import { portGuideLeadSource } from "@/lib/analytics-config";
 import { trackGenerateLead } from "@/lib/track-generate-lead";
 
 export default function NewsletterSection() {
@@ -24,8 +25,9 @@ export default function NewsletterSection() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
       trackGenerateLead({
-        lead_source: "homepage-port-guide",
+        lead_source: portGuideLeadSource("homepage"),
         trip_type: "Southeast Port Guide",
+        destination: "Southeast",
       });
       setStatus("success");
       setEmail("");

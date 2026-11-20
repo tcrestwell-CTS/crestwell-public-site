@@ -117,8 +117,8 @@ function SearchProgress() {
 }
 
 // Click tracking for the "get a quote" CTAs. Deliberately NOT generate_lead:
-// a click is not a lead (the quote form fires generate_lead on a real submit,
-// with lead_source "triton"), so counting both would double-count.
+// a click is not a lead (the quote form fires generate_lead once on a real
+// submit, with lead_source "triton"), so counting both would double-count.
 function trackQuoteClick(location: 'result_card' | 'none_fit' | 'no_matches' | 'error', cruise?: string): void {
   if (typeof window === 'undefined') return;
   const payload: Record<string, unknown> = {

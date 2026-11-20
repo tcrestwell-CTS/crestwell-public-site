@@ -113,7 +113,7 @@ export default function VacationsByRailClient() {
     });
     if (res.ok) {
       trackGenerateLead({
-        lead_source: 'rail-brochure',
+        lead_source: 'rail_brochure',
         trip_type: modal?.label || 'Rail brochure',
       });
     }

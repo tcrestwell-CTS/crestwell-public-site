@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { EmailField, useEmailValidation } from '@/components/EmailField';
+import { trackGenerateLead } from '@/lib/track-generate-lead';
 
 const BENEFITS = [
   { icon: '🚢', title: 'First Access', desc: 'Every Crestwell-hosted group trip before public release. Always.' },
@@ -50,6 +51,7 @@ export default function CircleClient() {
   });
 
   const doJoin = () => {
+    if (submitting) return;
     if (!name || !email || emailValidation.state === 'invalid') return;
     setSubmitting(true);
     setErr('');
@@ -61,6 +63,7 @@ export default function CircleClient() {
       .then(r => r.json().then(d => ({ ok: r.ok, d })))
       .then(({ ok, d }) => {
         if (!ok) throw new Error(d.error || 'Failed');
+        trackGenerateLead({ lead_source: 'circle' });
         setJoined(true);
       })
       .catch((e: Error) => setErr(e.message))
